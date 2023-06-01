@@ -28,12 +28,12 @@ A Dart project for exercises from [Practice Dart - exercises for beginners](http
 
 2. Functions
 
-   - [ ] Exercise 10: Prime.
-   - [ ] Exercise 11: Makes a new list of only the first and last elements of the given list.
-   - [ ] Exercise 12: Generate Fibonacci numbers.
-   - [ ] Exercise 13: Returns a new list that contains all the elements of the first list minus all the duplicates.
-   - [ ] Exercise 14: Prints out the words of a long string in backwards order.
-   - [ ] Exercise 15: Generate a strong password.
-   - [ ] Exercise 16: Cows and bulls game.
-   - [ ] Exercise 17: Draws a game board.
+   - [x] Exercise 10: Prime.
+   - [x] Exercise 11: Makes a new list of only the first and last elements of the given list.
+   - [x] Exercise 12: Generate Fibonacci numbers.
+   - [x] Exercise 13: Returns a new list that contains all the elements of the first list minus all the duplicates.
+   - [x] Exercise 14: Prints out the words of a long string in backwards order.
+   - [x] Exercise 15: Generate a strong password.
+   - [x] Exercise 16: Cows and bulls game.
+   - [x] Exercise 17: Draws a game board.
    - [ ] Exercise 18: Tic Tac Toe game.
