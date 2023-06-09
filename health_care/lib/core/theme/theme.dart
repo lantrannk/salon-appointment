@@ -3,6 +3,25 @@ import 'package:flutter/material.dart';
 ThemeData theme = ThemeData(
   colorScheme: _colorScheme,
   textTheme: _textTheme,
+  iconTheme: const IconThemeData(
+    size: 20,
+  ),
+  buttonTheme: ButtonThemeData(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: _colorScheme.background,
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20),
+    ),
+  ),
+  sliderTheme: SliderThemeData(
+    activeTrackColor: _colorScheme.onSurface,
+    activeTickMarkColor: _colorScheme.primary,
+  ),
 );
 
 TextStyle defaultTextStyle({
