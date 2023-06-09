@@ -20,11 +20,11 @@ TextStyle defaultTextStyle({
 
 ColorScheme _colorScheme = const ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xff8E56C5),
-  onPrimary: Color(0xff7949AB),
-  primaryContainer: Color(0xffCCB3E6),
-  secondary: Color(0xff045C67),
-  onSecondary: Color(0xffCCB3E6),
+  primary: Color(0xffCCB3E6),
+  onPrimary: Color(0xff8E56C5),
+  primaryContainer: Color(0xff7949AB),
+  secondary: Color(0xffCEF7F6),
+  onSecondary: Color(0xff0C5868),
   error: Color(0xffEB4D53),
   onError: Color(0xffFFFFFF),
   background: Color(0xffFFFFFF),
@@ -38,7 +38,7 @@ TextTheme _textTheme = TextTheme(
   titleLarge: defaultTextStyle(
     fontSize: 22,
     fontWeight: FontWeight.bold,
-    color: _colorScheme.secondary,
+    color: _colorScheme.onSecondary,
   ),
   titleMedium: defaultTextStyle(
     fontSize: 16,
