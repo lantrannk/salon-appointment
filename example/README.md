@@ -14,3 +14,14 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Environment
+
+1. Flutter SDK
+2. Visual Studio Code
+
+## Example
+
+1. Fetch API for to-do list and user list
+2. Show a to-do list page
+3. Filter the list by completion by the button on the app bar
