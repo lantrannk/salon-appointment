@@ -18,17 +18,31 @@ class _TodoListPageState extends State<TodoListPage> {
   late final List<User> _users;
   late String option;
 
+  final todosStream = StreamController<List<Todo>>();
+
+  Future<void> fetchTodos() async {
+    final todos = await httpTodos.fetchTodos();
+    todosStream.sink.add(todos);
+  }
+
   @override
   void initState() {
     httpUsers.fetchUsers().then((value) => _users = value);
+    fetchTodos();
     option = 'all';
     super.initState();
   }
 
   @override
+  void dispose() {
+    todosStream.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: httpTodos.fetchTodos(),
+    return StreamBuilder(
+      stream: todosStream.stream,
       builder: (context, snapshot) {
         List<Todo> todos = [];
         if (snapshot.hasData) {
