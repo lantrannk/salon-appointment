@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:example/data/network/http/todos.dart';
 import 'package:example/data/network/http/users.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +94,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     }
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       const Icon(Icons.filter_list),
                       Text(option),
@@ -103,18 +105,35 @@ class _TodoListPageState extends State<TodoListPage> {
             ),
             body: ListView.builder(
               itemBuilder: ((context, index) {
-                return TodoListItem(
-                  todo: todos[index],
-                  user: _users.where((e) => e.id == todos[index].userId).first,
+                return Dismissible(
+                  key: ValueKey<Todo>(todos[index]),
+                  direction: DismissDirection.horizontal,
+                  onDismissed: (direction) async {
+                    await httpTodos.deleteTodo(index.toString());
+                  },
+                  child: TodoListItem(
+                    todo: todos[index],
+                    user:
+                        _users.where((e) => e.id == todos[index].userId).first,
+                    onChanged: (value) async {
+                      Todo todo = todos[index];
+
+                      setState(() {
+                        todo.completed = value!;
+                      });
+
+                      await httpTodos.updateTodo(todo);
+                    },
+                  ),
                 );
               }),
             ),
           );
         }
-        return Center(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height / 2,
-            child: const CircularProgressIndicator(),
+        return SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: const Center(
+            child: CircularProgressIndicator(),
           ),
         );
       },
@@ -126,15 +145,20 @@ class TodoListItem extends StatelessWidget {
   const TodoListItem({
     required this.todo,
     required this.user,
+    this.onChanged,
     super.key,
   });
 
   final Todo todo;
   final User user;
+  final Function(bool?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    bool completed = todo.completed;
+
+    return Padding(
+      padding: const EdgeInsets.all(4),
       child: ListTile(
         leading: Text(
           '${todo.id}',
@@ -148,8 +172,12 @@ class TodoListItem extends StatelessWidget {
         ),
         subtitle: Text(user.name),
         trailing: Checkbox(
-          value: todo.completed,
-          onChanged: null,
+          value: completed,
+          onChanged: onChanged,
+        ),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
