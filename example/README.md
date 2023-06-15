@@ -25,3 +25,5 @@ samples, guidance on mobile development, and a full API reference.
 1. Fetch API for to-do list and user list
 2. Show a to-do list page
 3. Filter the list by completion by the button on the app bar
+4. Update completion of to-do by checkbox
+5. Delete to-do by dismissible
