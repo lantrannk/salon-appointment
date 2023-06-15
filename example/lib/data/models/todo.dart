@@ -1,5 +1,5 @@
 class Todo {
-  const Todo({
+  Todo({
     required this.id,
     required this.userId,
     required this.title,
@@ -9,7 +9,20 @@ class Todo {
   final int id;
   final int userId;
   final String title;
-  final bool completed;
+  bool completed;
+
+  Todo copyWith({
+    int? id,
+    int? userId,
+    String? title,
+    bool? completed,
+  }) =>
+      Todo(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        completed: completed ?? this.completed,
+      );
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
