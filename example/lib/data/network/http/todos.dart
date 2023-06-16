@@ -6,7 +6,6 @@ import '../../models/todo.dart';
 
 class HttpTodos {
   final String baseUrl = 'https://648ae68b17f1536d65e9ecfd.mockapi.io/todos';
-  // final String baseUrl = 'https://648ae68b17f1536d65e9ecfd.mockapi.io/todos2';
 
   final Map<String, String> headers = {
     'Content-Type': 'application/json; charset=UTF-8',
