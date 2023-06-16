@@ -23,13 +23,13 @@ class _TodoListPageState extends State<TodoListPage> {
   final todosStream = StreamController<List<Todo>>();
 
   Future<void> fetchTodos() async {
+    _users = await httpUsers.fetchUsers();
     final todos = await httpTodos.fetchTodos();
     todosStream.sink.add(todos);
   }
 
   @override
   void initState() {
-    httpUsers.fetchUsers().then((value) => _users = value);
     fetchTodos();
     option = 'all';
     super.initState();
@@ -43,81 +43,85 @@ class _TodoListPageState extends State<TodoListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: todosStream.stream,
-      builder: (context, snapshot) {
-        List<Todo> todos = [];
-        if (snapshot.hasData) {
-          switch (option) {
-            case 'all':
-              todos = snapshot.data!;
-              break;
-            case 'completed':
-              todos = snapshot.data!.where((e) => e.completed == true).toList();
-              break;
-            case 'incomplete':
-              todos =
-                  snapshot.data!.where((e) => e.completed == false).toList();
-              break;
-          }
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text(
-                'HTTP example',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFFF6F00),
-                ),
-              ),
-              backgroundColor: const Color(0xFFFFCC80),
-              actions: [
-                OutlinedButton(
-                  onPressed: () {
-                    switch (option) {
-                      case 'all':
-                        setState(() {
-                          option = 'completed';
-                        });
-                        break;
-                      case 'completed':
-                        setState(() {
-                          option = 'incomplete';
-                        });
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'HTTP example',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFFFF6F00),
+          ),
+        ),
+        backgroundColor: const Color(0xFFFFCC80),
+        actions: [
+          OutlinedButton(
+            onPressed: () {
+              switch (option) {
+                case 'all':
+                  setState(() {
+                    option = 'completed';
+                  });
+                  break;
+                case 'completed':
+                  setState(() {
+                    option = 'incomplete';
+                  });
 
-                        break;
-                      case 'incomplete':
-                        setState(() {
-                          option = 'all';
-                        });
+                  break;
+                case 'incomplete':
+                  setState(() {
+                    option = 'all';
+                  });
 
-                        break;
-                    }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(Icons.filter_list),
-                      Text(option),
-                    ],
-                  ),
-                ),
+                  break;
+              }
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                const Icon(Icons.filter_list),
+                Text(option),
               ],
             ),
-            body: ListView.builder(
+          ),
+        ],
+      ),
+      body: StreamBuilder(
+        stream: todosStream.stream,
+        builder: (context, snapshot) {
+          List<Todo> todos = [];
+          if (snapshot.hasData) {
+            switch (option) {
+              case 'all':
+                todos = snapshot.data!;
+                break;
+              case 'completed':
+                todos =
+                    snapshot.data!.where((e) => e.completed == true).toList();
+                break;
+              case 'incomplete':
+                todos =
+                    snapshot.data!.where((e) => e.completed == false).toList();
+                break;
+            }
+            return ListView.builder(
               itemBuilder: ((context, index) {
+                Todo todo = todos[index];
+
                 return Dismissible(
-                  key: ValueKey<Todo>(todos[index]),
+                  key: ValueKey<Todo>(todo),
                   direction: DismissDirection.horizontal,
                   onDismissed: (direction) async {
-                    await httpTodos.deleteTodo(index.toString());
+                    setState(() {
+                      todos.remove(todo);
+                    });
+
+                    await httpTodos.deleteTodo(todo.id);
                   },
                   child: TodoListItem(
-                    todo: todos[index],
-                    user:
-                        _users.where((e) => e.id == todos[index].userId).first,
+                    todo: todo,
+                    user: _users.where((e) => e.id == todo.userId).first,
                     onChanged: (value) async {
-                      Todo todo = todos[index];
-
                       setState(() {
                         todo.completed = value!;
                       });
@@ -127,16 +131,16 @@ class _TodoListPageState extends State<TodoListPage> {
                   ),
                 );
               }),
+            );
+          }
+          return SizedBox(
+            height: MediaQuery.of(context).size.height / 2,
+            child: const Center(
+              child: CircularProgressIndicator(),
             ),
           );
-        }
-        return SizedBox(
-          height: MediaQuery.of(context).size.height / 2,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
+        },
+      ),
     );
   }
 }
