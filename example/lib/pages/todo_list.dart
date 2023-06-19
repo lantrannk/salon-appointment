@@ -189,7 +189,9 @@ class _TodoListPageState extends State<TodoListPage> {
                   },
                   child: TodoListItem(
                     todo: todo,
-                    user: _users.where((e) => e.id == todo.userId).first,
+                    user: (todo.userId == 0)
+                        ? null
+                        : _users.where((e) => e.id == todo.userId).first,
                     onChanged: (value) async {
                       setState(() {
                         todo.completed = value!;
@@ -223,7 +225,7 @@ class TodoListItem extends StatelessWidget {
   });
 
   final Todo todo;
-  final User user;
+  final User? user;
   final Function(bool?)? onChanged;
 
   @override
@@ -243,7 +245,7 @@ class TodoListItem extends StatelessWidget {
           todo.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(user.name),
+        subtitle: Text(user?.name ?? 'unknown'),
         trailing: Checkbox(
           value: completed,
           onChanged: onChanged,
