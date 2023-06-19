@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:example/data/network/http/todos.dart';
 import 'package:example/data/network/http/users.dart';
@@ -21,6 +22,8 @@ class _TodoListPageState extends State<TodoListPage> {
   late String option;
 
   final todosStream = StreamController<List<Todo>>();
+  final titleTextController = TextEditingController();
+  final userTextController = TextEditingController();
 
   Future<void> fetchTodos() async {
     _users = await httpUsers.fetchUsers();
@@ -86,6 +89,71 @@ class _TodoListPageState extends State<TodoListPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    TextField(
+                      controller: titleTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'Title',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    TextField(
+                      controller: userTextController,
+                      decoration: const InputDecoration(
+                        hintText: 'User Name',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final user = _users.where(
+                            (e) => e.id.toString() == userTextController.text);
+
+                        final todo = Todo(
+                          id: Random().nextInt(900) + 100,
+                          userId: (user.isNotEmpty) ? user.first.id : 0,
+                          title: titleTextController.text,
+                          completed: false,
+                        );
+                        await httpTodos.addTodo(todo);
+                        setState(() {
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const Text('Submit'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        backgroundColor: const Color(0xFFFF6F00),
+        elevation: 5,
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add,
+          color: Color(0xFFFFFFFF),
+          size: 20,
+        ),
+      ),
       body: StreamBuilder(
         stream: todosStream.stream,
         builder: (context, snapshot) {
@@ -104,6 +172,7 @@ class _TodoListPageState extends State<TodoListPage> {
                     snapshot.data!.where((e) => e.completed == false).toList();
                 break;
             }
+
             return ListView.builder(
               itemBuilder: ((context, index) {
                 Todo todo = todos[index];
