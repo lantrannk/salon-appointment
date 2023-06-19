@@ -27,3 +27,4 @@ samples, guidance on mobile development, and a full API reference.
 3. Filter the list by completion by the button on the app bar
 4. Update completion of to-do by checkbox
 5. Delete to-do by dismissible
+6. Add to-do by floating button
