@@ -20,10 +20,10 @@ class _TodoListPageState extends State<TodoListPage> {
   final httpUsers = HttpUsers();
   late final List<User> _users;
   late String option;
+  String? username;
 
   final todosStream = StreamController<List<Todo>>();
   final titleTextController = TextEditingController();
-  final userTextController = TextEditingController();
 
   Future<void> fetchTodos() async {
     final todos = await httpTodos.fetchTodos();
@@ -115,20 +115,29 @@ class _TodoListPageState extends State<TodoListPage> {
                     const SizedBox(
                       height: 16,
                     ),
-                    TextField(
-                      controller: userTextController,
-                      decoration: const InputDecoration(
-                        hintText: 'User Name',
-                        border: OutlineInputBorder(),
-                      ),
+                    DropdownMenu<String>(
+                      dropdownMenuEntries: [for (User user in _users) user.name]
+                          .map<DropdownMenuEntry<String>>((String value) {
+                        return DropdownMenuEntry<String>(
+                          value: value,
+                          label: value,
+                        );
+                      }).toList(),
+                      initialSelection: username,
+                      hintText: 'User Name',
+                      onSelected: (value) {
+                        setState(() {
+                          username = value;
+                        });
+                      },
                     ),
                     const SizedBox(
                       height: 16,
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        final user = _users.where(
-                            (e) => e.id.toString() == userTextController.text);
+                        final user =
+                            _users.where((e) => e.name.toString() == username);
 
                         final todo = Todo(
                           id: (Random().nextInt(900) + 100).toString(),
