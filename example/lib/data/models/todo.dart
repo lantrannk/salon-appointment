@@ -6,13 +6,13 @@ class Todo {
     required this.completed,
   });
 
-  final int id;
+  final String id;
   final int userId;
   final String title;
   bool completed;
 
   Todo copyWith({
-    int? id,
+    String? id,
     int? userId,
     String? title,
     bool? completed,
@@ -26,7 +26,7 @@ class Todo {
 
   factory Todo.fromJson(Map<String, dynamic> json) {
     return Todo(
-      id: json['id'] as int,
+      id: json['id'] as String,
       userId: json['userId'] as int,
       title: json['title'] as String,
       completed: json['completed'] as bool,
