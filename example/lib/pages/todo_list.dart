@@ -131,7 +131,7 @@ class _TodoListPageState extends State<TodoListPage> {
                             (e) => e.id.toString() == userTextController.text);
 
                         final todo = Todo(
-                          id: Random().nextInt(900) + 100,
+                          id: (Random().nextInt(900) + 100).toString(),
                           userId: (user.isNotEmpty) ? user.first.id : 0,
                           title: titleTextController.text,
                           completed: false,
@@ -242,7 +242,7 @@ class TodoListItem extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       child: ListTile(
         leading: Text(
-          '${todo.id}',
+          todo.id,
           style: const TextStyle(
             fontSize: 20,
           ),
