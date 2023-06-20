@@ -251,7 +251,12 @@ class TodoListItem extends StatelessWidget {
           todo.title,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(user?.name ?? 'unknown'),
+        subtitle: Text(
+          user?.name ?? 'unknown',
+          style: const TextStyle(
+            color: Color(0xFF6A1B9A),
+          ),
+        ),
         trailing: Checkbox(
           value: completed,
           onChanged: onChanged,
