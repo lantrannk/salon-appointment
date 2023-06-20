@@ -174,6 +174,7 @@ class _TodoListPageState extends State<TodoListPage> {
             }
 
             return ListView.builder(
+              itemCount: todos.length,
               itemBuilder: ((context, index) {
                 Todo todo = todos[index];
 
