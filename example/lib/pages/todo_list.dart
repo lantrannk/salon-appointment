@@ -26,13 +26,17 @@ class _TodoListPageState extends State<TodoListPage> {
   final userTextController = TextEditingController();
 
   Future<void> fetchTodos() async {
-    _users = await httpUsers.fetchUsers();
     final todos = await httpTodos.fetchTodos();
     todosStream.sink.add(todos);
   }
 
+  Future<void> fetchUsers() async {
+    _users = await httpUsers.fetchUsers();
+  }
+
   @override
   void initState() {
+    fetchUsers();
     fetchTodos();
     option = 'all';
     super.initState();
