@@ -178,6 +178,14 @@ class _TodoListPageState extends State<TodoListPage> {
                 break;
             }
 
+            if (todos.isEmpty) {
+              return const Center(
+                child: SizedBox(
+                  child: Text('Empty'),
+                ),
+              );
+            }
+
             return ListView.builder(
               itemCount: todos.length,
               itemBuilder: ((context, index) {
