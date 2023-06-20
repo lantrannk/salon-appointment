@@ -135,6 +135,7 @@ class _TodoListPageState extends State<TodoListPage> {
                         await httpTodos.addTodo(todo);
                         setState(() {
                           Navigator.pop(context);
+                          fetchTodos();
                         });
                       },
                       child: const Text('Submit'),
