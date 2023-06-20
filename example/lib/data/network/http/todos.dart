@@ -54,7 +54,7 @@ class HttpTodos {
     }
   }
 
-  Future<void> deleteTodo(int todoId) async {
+  Future<void> deleteTodo(String todoId) async {
     final Uri url = Uri.parse('$baseUrl/$todoId');
     try {
       await http.delete(url);
