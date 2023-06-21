@@ -18,10 +18,11 @@ class AppointmentStorage {
   static Future<List<Appointment>> getAppointments() async {
     await setAppointments();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<Appointment> appointments = prefs
-        .getStringList('appointments')!
-        .map((e) => Appointment.fromJson(jsonDecode(e)))
-        .toList();
+    final String appointmentsStr = prefs.getString('appointments')!;
+    final List<Appointment> appointments =
+        (json.decode(appointmentsStr) as List)
+            .map((e) => Appointment.fromJson(e))
+            .toList();
 
     return appointments;
   }
