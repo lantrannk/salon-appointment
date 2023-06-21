@@ -18,10 +18,9 @@ class UserStorage {
   static Future<List<User>> getUsers() async {
     await setUsers();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final List<User> users = prefs
-        .getStringList('users')!
-        .map((e) => User.fromJson(jsonDecode(e)))
-        .toList();
+    final String usersStr = prefs.getString('users')!;
+    final List<User> users =
+        (json.decode(usersStr) as List).map((e) => User.fromJson(e)).toList();
 
     return users;
   }
