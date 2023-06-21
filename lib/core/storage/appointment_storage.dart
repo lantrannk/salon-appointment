@@ -8,14 +8,10 @@ import '../../features/appointments/model/appointment.dart';
 class AppointmentStorage {
   /// Save a [List] of [String] appointment encode
   static Future<void> setAppointments() async {
-    final List<Appointment> appointments =
-        await AppointmentApi.getAppointments();
-
-    final List<String> appointmentsEncode =
-        appointments.map((e) => jsonEncode(e.toJson())).toList();
+    final String appointments = await AppointmentApi.getAppointments();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('appointments', appointmentsEncode);
+    await prefs.setString('appointments', appointments);
   }
 
   /// Returns a [List] of [Appointment] from storage
