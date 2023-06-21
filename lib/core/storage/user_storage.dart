@@ -8,12 +8,10 @@ import '../../features/auth/model/user.dart';
 class UserStorage {
   /// Save a [List] of [String] user encode
   static Future<void> setUsers() async {
-    final List<User> users = await UserApi.getUsers();
-    final List<String> usersEncode =
-        users.map((e) => jsonEncode(e.toJson())).toList();
+    final String users = await UserApi.getUsers();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('users', usersEncode);
+    await prefs.setString('users', users);
   }
 
   /// Returns a [List] of [User] from storage
