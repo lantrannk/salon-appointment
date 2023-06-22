@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_appointment/core/widgets/buttons.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_screen.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../core/constants/assets.dart';
@@ -9,12 +7,14 @@ import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/utils.dart';
+import '../../../core/widgets/buttons.dart';
 import '../../../core/widgets/icons.dart';
 import '../../../core/widgets/indicator.dart';
 import '../../../core/widgets/text.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
+import '../screens/appointments_screen.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({
@@ -58,31 +58,33 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
-                return TableCalendar<Appointment>(
-                  firstDay: firstDay,
-                  lastDay: lastDay,
-                  focusedDay: _focusedDay,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  rangeStartDay: _rangeStart,
-                  rangeEndDay: _rangeEnd,
-                  calendarFormat: _calendarFormat,
-                  rangeSelectionMode: _rangeSelectionMode,
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                  calendarStyle: CalendarStyle(
+                return Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: TableCalendar<Appointment>(
+                    firstDay: firstDay,
+                    lastDay: lastDay,
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    rangeStartDay: _rangeStart,
+                    rangeEndDay: _rangeEnd,
+                    calendarFormat: _calendarFormat,
+                    rangeSelectionMode: _rangeSelectionMode,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    calendarStyle: CalendarStyle(
                       outsideDaysVisible: true,
                       cellMargin: EdgeInsets.zero,
                       cellPadding: const EdgeInsets.all(2),
                       cellAlignment: Alignment.topRight,
-                    selectedDecoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
+                      selectedDecoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
                             colorScheme.primary,
-                          colorScheme.onSurface,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      shape: BoxShape.rectangle,
+                            colorScheme.onSurface,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        shape: BoxShape.rectangle,
                         borderRadius: BorderRadius.circular(2),
                       ),
                       defaultDecoration: const BoxDecoration(
@@ -145,15 +147,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     daysOfWeekHeight: 44,
                     rowHeight: 52,
                     pageJumpingEnabled: true,
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(_selectedDay, selectedDay)) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                        _rangeStart = null;
-                        _rangeEnd = null;
-                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                      });
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                          _rangeStart = null;
+                          _rangeEnd = null;
+                          _rangeSelectionMode = RangeSelectionMode.toggledOff;
+                        });
 
                         context
                             .read<AppointmentBloc>()
@@ -181,6 +183,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           .read<AppointmentBloc>()
                           .add(AppointmentLoad(_selectedDay!));
                     },
+                  ),
                 );
               },
             ),
