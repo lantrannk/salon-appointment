@@ -22,4 +22,6 @@ class Assets {
   static const IconData editIcon = Icons.edit;
 
   static const IconData removeIcon = Icons.delete_outline;
+
+  static const IconData logoutIcon = Icons.logout;
 }
