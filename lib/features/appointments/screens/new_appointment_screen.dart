@@ -98,7 +98,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => AppointmentScreen(
-                        selectedDay: dateTime,
+                        focusedDay: dateTime,
                       ),
                     ),
                   );

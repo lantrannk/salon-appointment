@@ -20,11 +20,11 @@ import 'edit_appointment_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
-    this.selectedDay,
+    this.focusedDay,
     super.key,
   });
 
-  final DateTime? selectedDay;
+  final DateTime? focusedDay;
 
   @override
   State<AppointmentScreen> createState() => _AppointmentScreenState();

@@ -166,7 +166,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => AppointmentScreen(
-                              selectedDay: _selectedDay,
+                              focusedDay: _selectedDay,
                             ),
                           ),
                         );
