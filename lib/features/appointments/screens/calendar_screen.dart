@@ -144,6 +144,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     daysOfWeekHeight: 44,
                     rowHeight: 52,
+                    pageJumpingEnabled: true,
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
                       setState(() {
@@ -154,21 +155,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
 
+                        context
+                            .read<AppointmentBloc>()
+                            .add(AppointmentLoad(_selectedDay!));
+                      }
+                    },
+                    onFormatChanged: (format) {
+                      if (_calendarFormat != format) {
+                        setState(() {
+                          _calendarFormat = format;
+                        });
+                      }
+                    },
+                    onPageChanged: (focusedDay) {
+                      setState(() {
+                        _focusedDay = DateTime(
+                          focusedDay.year,
+                          focusedDay.month,
+                          _focusedDay.day,
+                        );
+                        _selectedDay = _focusedDay;
+                      });
+
                       context
                           .read<AppointmentBloc>()
                           .add(AppointmentLoad(_selectedDay!));
-                    }
-                  },
-                  onFormatChanged: (format) {
-                    if (_calendarFormat != format) {
-                      setState(() {
-                        _calendarFormat = format;
-                      });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
+                    },
                 );
               },
             ),
