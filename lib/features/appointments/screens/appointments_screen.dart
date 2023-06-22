@@ -196,11 +196,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           avatar: findUser(events[index].userId).avatar,
                           appointment: events[index],
                           onEditPressed: () {
-                            if (events[index]
-                                    .date
-                                    .difference(DateTime.now())
-                                    .inHours <
-                                24) {
+                            if (isLessThan24HoursFromNow(events[index])) {
                               SASnackBar.show(
                                 context: context,
                                 message: l10n.unableEditError,
