@@ -71,6 +71,6 @@ bool isFullAppointments(List<Appointment> appointments, DateTime dateTime) {
   return appointmentsOfDateTime.length >= 5;
 }
 
-final kToday = DateTime.now();
-final kFirstDay = DateTime(kToday.year - 10, kToday.month, kToday.day);
-final kLastDay = DateTime(kToday.year + 10, kToday.month, kToday.day);
+final today = DateTime.now();
+final firstDay = DateTime(today.year - 10, today.month, today.day);
+final lastDay = DateTime(today.year + 10, today.month, today.day);
