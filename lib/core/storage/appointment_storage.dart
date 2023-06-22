@@ -28,9 +28,9 @@ class AppointmentStorage {
   }
 
   static Future<List<Appointment>> getAppointmentsOfUser(String userId) async {
-    final List<Appointment> appointments = await getAppointments()
-      ..where((e) => e.userId == userId).toList();
-
-    return appointments;
+    final List<Appointment> appointments = await getAppointments();
+    final List<Appointment> appointmentsOfUser =
+        appointments.where((e) => e.userId == userId).toList();
+    return appointmentsOfUser;
   }
 }
