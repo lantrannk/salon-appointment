@@ -95,6 +95,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                   ),
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary,
+                      ),
+                      leftChevronIcon: CalendarChevronText(
+                        focusedDay: DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month - 1,
+                          _focusedDay.day,
+                        ),
+                      ),
+                      rightChevronIcon: CalendarChevronText(
+                        focusedDay: DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month + 1,
+                          _focusedDay.day,
+                        ),
+                      ),
+                      titleTextStyle: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                    ),
                   daysOfWeekStyle: DaysOfWeekStyle(
                     weekdayStyle: TextStyle(
                       color: colorScheme.secondary,
