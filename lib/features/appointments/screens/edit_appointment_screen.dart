@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/utils.dart';
@@ -64,7 +65,7 @@ class _EditAppointmentState extends State<EditAppointment> {
           SAButton.icon(
             onPressed: () => Navigator.of(context).pop(),
             child: const SAIcons(
-              icon: Icons.close,
+              icon: Assets.closeIcon,
             ),
           ),
         ],

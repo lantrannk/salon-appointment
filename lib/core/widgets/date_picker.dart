@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
 import '../constants/date_format.dart';
 
 class DatePicker extends StatelessWidget {
@@ -20,7 +21,7 @@ class DatePicker extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Icon(
-            Icons.schedule,
+            Assets.scheduleIcon,
             size: 24,
             color: Theme.of(context).colorScheme.secondaryContainer,
           ),
@@ -36,7 +37,7 @@ class DatePicker extends StatelessWidget {
             child: IconButton(
               onPressed: onPressed,
               icon: Icon(
-                Icons.calendar_month,
+                Assets.calendarIcon,
                 size: 24,
                 color: Theme.of(context).colorScheme.secondaryContainer,
               ),

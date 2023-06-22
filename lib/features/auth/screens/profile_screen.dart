@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/assets.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/widgets/buttons.dart';
@@ -96,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             builder: (ctx, state) {
                               return SAButton.icon(
                                 child: Icon(
-                                  Icons.logout,
+                                  Assets.logoutIcon,
                                   color: colorScheme.onPrimary,
                                   size: 24,
                                 ),

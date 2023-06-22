@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants/assets.dart';
+
 class Dropdown extends StatelessWidget {
   const Dropdown({
     required this.items,
@@ -34,7 +36,7 @@ class Dropdown extends StatelessWidget {
                   child: Text(value),
                 ))
             .toList(),
-        icon: const Icon(Icons.arrow_drop_down),
+        icon: const Icon(Assets.dropdownIcon),
         iconSize: 24,
         underline: const SizedBox(),
         isExpanded: true,
