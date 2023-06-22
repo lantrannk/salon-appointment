@@ -233,6 +233,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
   }
 }
 
+class CalendarChevronText extends StatelessWidget {
+  const CalendarChevronText({
+    required this.focusedDay,
+    super.key,
+  });
+
+  final DateTime focusedDay;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData themeData = Theme.of(context);
+
+    return Text(
+      calendarTitleFormat.format(focusedDay),
+      style: themeData.textTheme.bodyMedium!.copyWith(
+        color: themeData.colorScheme.onPrimary.withOpacity(0.3991),
+      ),
+    );
+  }
+}
+
 class CalendarSchedule extends StatelessWidget {
   const CalendarSchedule({
     required this.appointment,
