@@ -66,8 +66,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 builder: (ctx, state) {
               return TableCalendar<Appointment>(
                 headerVisible: false,
-                firstDay: kFirstDay,
-                lastDay: kLastDay,
+                firstDay: firstDay,
+                lastDay: lastDay,
                 focusedDay: _focusedDay!,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 rangeStartDay: _rangeStart,

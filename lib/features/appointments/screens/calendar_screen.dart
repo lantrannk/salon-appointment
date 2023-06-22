@@ -59,8 +59,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
                 return TableCalendar<Appointment>(
-                  firstDay: kFirstDay,
-                  lastDay: kLastDay,
+                  firstDay: firstDay,
+                  lastDay: lastDay,
                   focusedDay: _focusedDay,
                   selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                   rangeStartDay: _rangeStart,
