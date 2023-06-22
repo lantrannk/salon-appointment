@@ -35,7 +35,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
 
-  DateTime _focusedDay = DateTime.now();
+  DateTime? _focusedDay;
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
@@ -43,7 +43,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedDay = widget.selectedDay ?? _focusedDay;
+    _focusedDay = widget.focusedDay ?? DateTime.now();
+    _selectedDay = _focusedDay;
   }
 
   @override
@@ -67,7 +68,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 headerVisible: false,
                 firstDay: kFirstDay,
                 lastDay: kLastDay,
-                focusedDay: _focusedDay,
+                focusedDay: _focusedDay!,
                 selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
                 rangeStartDay: _rangeStart,
                 rangeEndDay: _rangeEnd,
