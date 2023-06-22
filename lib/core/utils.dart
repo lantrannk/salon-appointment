@@ -13,25 +13,20 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
 }
 
 /// Returns a [DateTime] added 30 minutes from [time]
-DateTime autoAddHalfHour(DateTime time) {
-  return time.add(const Duration(minutes: 30));
-}
+DateTime autoAddHalfHour(DateTime time) =>
+    time.add(const Duration(minutes: 30));
 
 /// returns a [DateTime] with date of [date] and time of [time]
-DateTime setDateTime(DateTime date, TimeOfDay time) {
-  return DateTime(
-    date.year,
-    date.month,
-    date.day,
-    time.hour,
-    time.minute,
-  );
-}
+DateTime setDateTime(DateTime date, TimeOfDay time) => DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
 
 /// Returns a [String] of [DateTime] formatted from [time]
-String formatTime(DateTime time) {
-  return timeFormat.format(time).toString();
-}
+String formatTime(DateTime time) => timeFormat.format(time).toString();
 
 /// Returns [bool] that [start] or [end] conflict the break time or not
 bool isBreakTime(DateTime start, DateTime end) {
@@ -40,38 +35,36 @@ bool isBreakTime(DateTime start, DateTime end) {
   final DateTime afterTime =
       DateTime(start.year, start.month, start.day, 15, 20);
 
-  if ((start.isAfter(beforeTime) && start.isBefore(afterTime)) ||
-      (end.isAfter(beforeTime) && end.isBefore(afterTime))) {
-    return true;
-  }
-  return false;
+  return (start.isAfter(beforeTime) && start.isBefore(afterTime)) ||
+      (end.isAfter(beforeTime) && end.isBefore(afterTime));
 }
 
 /// Returns [bool] that [start] or [end] conflict the close time or not
 bool isClosedTime(DateTime start, DateTime end) {
-  final DateTime beforeTime =
+  final DateTime closedTime =
       DateTime(start.year, start.month, start.day, 22, 0);
-  final DateTime afterTime = DateTime(start.year, start.month, start.day, 8, 0);
+  final DateTime openedTime =
+      DateTime(start.year, start.month, start.day, 7, 59);
 
-  if (start.isAfter(beforeTime) ||
-      start.isBefore(afterTime) ||
-      end.isAfter(beforeTime) ||
-      end.isBefore(afterTime)) {
-    return true;
-  }
-  return false;
+  return start.isAfter(closedTime) ||
+      start.isBefore(openedTime) ||
+      end.isAfter(closedTime) ||
+      end.isBefore(openedTime);
 }
 
-bool isBeforeNow(DateTime time) {
-  return time.isBefore(DateTime.now());
-}
+/// Returns [bool] that [time] is before now or not
+bool isBeforeNow(DateTime time) => time.isBefore(DateTime.now());
 
-bool isAfterStartTime(DateTime start, DateTime end) {
-  return end.isAfter(
-    start.add(const Duration(minutes: 30)),
-  );
-}
+/// Returns [bool] that date of [appointment] is less than 24 hours from now
+bool isLessThan24HoursFromNow(Appointment appointment) =>
+    appointment.date.difference(DateTime.now()).inHours < 24;
 
+/// Returns [bool] that [end] is after [start] 30 minutes
+bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
+      start.add(const Duration(minutes: 30)),
+    );
+
+/// Returns [bool] that [appointments] at [dateTime] is not full
 bool isFullAppointments(List<Appointment> appointments, DateTime dateTime) {
   final appointmentsOfDateTime =
       appointments.where((e) => e.startTime == dateTime);
