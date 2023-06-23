@@ -76,7 +76,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 startingDayOfWeek: StartingDayOfWeek.monday,
                 calendarStyle: CalendarStyle(
                   outsideDaysVisible: false,
+                  isTodayHighlighted: false,
                   cellMargin: EdgeInsets.zero,
+                  cellPadding: const EdgeInsets.only(bottom: 4),
+                  tablePadding: const EdgeInsets.symmetric(vertical: 4),
+                  selectedTextStyle: textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onPrimary,
+                  ),
                   selectedDecoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -88,13 +95,35 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                     shape: BoxShape.rectangle,
                   ),
-                  todayDecoration: BoxDecoration(
-                    color: colorScheme.primary.withOpacity(0.0798),
-                    shape: BoxShape.rectangle,
+                  defaultTextStyle: textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onPrimary,
                   ),
-                  todayTextStyle: TextStyle(color: colorScheme.secondary),
+                  defaultDecoration: BoxDecoration(
+                    color: colorScheme.primary,
+                  ),
+                  weekendTextStyle: textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onPrimary,
+                  ),
+                  rowDecoration: BoxDecoration(
+                    color: colorScheme.primary,
+                  ),
                 ),
-                daysOfWeekHeight: 44,
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onPrimary.withOpacity(0.6429),
+                  ),
+                  weekendStyle: textTheme.bodySmall!.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onPrimary.withOpacity(0.6429),
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary,
+                  ),
+                ),
+                rowHeight: 20,
                 onDaySelected: (selectedDay, focusedDay) {
                   if (!isSameDay(_selectedDay, selectedDay)) {
                     setState(() {
