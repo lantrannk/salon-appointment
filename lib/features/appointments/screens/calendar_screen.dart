@@ -189,56 +189,72 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ),
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
-                if (state is AppointmentLoading) {
-                  return SAIndicator(
-                    height: indicatorHeight,
-                  );
-                }
-                if (state is AppointmentLoadSuccess &&
-                    state.appointments!.isNotEmpty) {
-                  final events = state.appointments;
-                  return Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    alignment: Alignment.centerLeft,
-                    width: double.infinity,
-                    height: 228,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          colorScheme.primary,
-                          colorScheme.onSurface,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                    child: CalendarSchedule(
-                      appointment: events!.first,
-                      countOfAppointments: events.length,
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AppointmentScreen(
-                              focusedDay: _selectedDay,
+                switch (state.runtimeType) {
+                  case AppointmentLoading:
+                    return SAIndicator(
+                      height: indicatorHeight,
+                    );
+                  case AppointmentLoadSuccess:
+                    List<Appointment> events = state.appointments!;
+                    return (events.isNotEmpty)
+                        ? Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            alignment: Alignment.centerLeft,
+                            width: double.infinity,
+                            height: 228,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  colorScheme.primary,
+                                  colorScheme.onSurface,
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }
-                return SizedBox(
-                  height: indicatorHeight,
-                  child: Center(
-                    child: Text(
-                      S.of(context).emptyAppointments,
-                      style: textTheme.bodyLarge!.copyWith(
-                        color: colorScheme.secondary,
+                            child: CalendarSchedule(
+                              appointment: events.first,
+                              countOfAppointments: events.length,
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AppointmentScreen(
+                                      focusedDay: _selectedDay,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : SizedBox(
+                            height: indicatorHeight,
+                            child: Center(
+                              child: Text(
+                                S.of(context).emptyAppointments,
+                                style: textTheme.bodyLarge!.copyWith(
+                                  color: colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                          );
+                  case AppointmentLoadError:
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: indicatorHeight,
                       ),
-                    ),
-                  ),
-                );
+                      child: Center(
+                        child: Text(
+                          state.error!,
+                          style: textTheme.bodyLarge!.copyWith(
+                            color: colorScheme.secondary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                }
+                return Container();
               },
             ),
           ],
