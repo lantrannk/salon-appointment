@@ -88,6 +88,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                   );
                 }
                 if (state is AppointmentAdded) {
+                  loadingIndicator.hide(ctx);
+
                   SASnackBar.show(
                     context: context,
                     message: S.of(context).addSuccess,
