@@ -2,6 +2,12 @@ part of 'appointment_bloc.dart';
 
 abstract class AppointmentState {
   const AppointmentState();
+
+  List<Appointment>? get appointments => [];
+
+  List<User> get users => [];
+
+  String? get error => '';
 }
 
 class UserLoaded extends AppointmentState {
@@ -13,6 +19,7 @@ class UserLoaded extends AppointmentState {
 class UserLoadError extends AppointmentState {
   const UserLoadError({this.error});
 
+  @override
   final String? error;
 }
 
@@ -23,16 +30,20 @@ class AppointmentLoading extends AppointmentState {}
 class AppointmentLoadSuccess extends AppointmentState {
   const AppointmentLoadSuccess({
     required this.users,
-    this.appointments,
+    required this.appointments,
   });
 
+  @override
   final List<Appointment>? appointments;
+
+  @override
   final List<User> users;
 }
 
 class AppointmentLoadError extends AppointmentState {
   const AppointmentLoadError({this.error});
 
+  @override
   final String? error;
 }
 
@@ -43,6 +54,7 @@ class AppointmentAdded extends AppointmentState {}
 class AppointmentAddError extends AppointmentState {
   const AppointmentAddError({this.error});
 
+  @override
   final String? error;
 }
 
@@ -53,6 +65,7 @@ class AppointmentEdited extends AppointmentState {}
 class AppointmentEditError extends AppointmentState {
   const AppointmentEditError({this.error});
 
+  @override
   final String? error;
 }
 
@@ -63,5 +76,6 @@ class AppointmentRemoved extends AppointmentState {}
 class AppointmentRemoveError extends AppointmentState {
   const AppointmentRemoveError({this.error});
 
+  @override
   final String? error;
 }
