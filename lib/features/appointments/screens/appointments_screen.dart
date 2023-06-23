@@ -126,48 +126,46 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             const SizedBox(height: 8),
             BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
-                if (state is AppointmentRemoving) {
-                  loadingIndicator.show(
-                    context: ctx,
-                    height: indicatorHeight,
-                  );
-                }
-                if (state is AppointmentRemoved) {
-                  Navigator.pop(context, true);
-                  ctx.read<AppointmentBloc>().add(
-                        AppointmentLoad(_selectedDay!),
-                      );
-                }
-                if (state is AppointmentRemoveError) {
-                  SASnackBar.show(
-                    context: context,
-                    message: state.error!,
-                    isSuccess: false,
-                  );
-                }
-                if (state is AppointmentEditing) {
-                  loadingIndicator.show(
-                    context: ctx,
-                    height: indicatorHeight,
-                  );
-                }
-                if (state is AppointmentEdited) {
-                  Navigator.pop(context, true);
-                  SASnackBar.show(
-                    context: context,
-                    message: l10n.updateSuccess,
-                    isSuccess: true,
-                  );
-                  ctx.read<AppointmentBloc>().add(
-                        AppointmentLoad(_selectedDay!),
-                      );
-                }
-                if (state is AppointmentEditError) {
-                  SASnackBar.show(
-                    context: context,
-                    message: state.error!,
-                    isSuccess: false,
-                  );
+                switch (state.runtimeType) {
+                  case AppointmentRemoving:
+                  case AppointmentEditing:
+                    return loadingIndicator.show(
+                      context: ctx,
+                      height: indicatorHeight,
+                    );
+                  case AppointmentRemoved:
+                    loadingIndicator.hide(ctx);
+                    Navigator.of(ctx).pop(true);
+                    SASnackBar.show(
+                      context: ctx,
+                      message: l10n.deleteSuccess,
+                      isSuccess: true,
+                    );
+                    ctx.read<AppointmentBloc>().add(
+                          AppointmentLoad(_selectedDay!),
+                        );
+                    break;
+                  case AppointmentEdited:
+                    loadingIndicator.hide(ctx);
+                    Navigator.of(ctx).pop(true);
+
+                    SASnackBar.show(
+                      context: ctx,
+                      message: l10n.updateSuccess,
+                      isSuccess: true,
+                    );
+
+                    ctx.read<AppointmentBloc>().add(
+                          AppointmentLoad(_selectedDay!),
+                        );
+                    break;
+                  case AppointmentRemoveError:
+                  case AppointmentEditError:
+                    return SASnackBar.show(
+                      context: context,
+                      message: state.error!,
+                      isSuccess: false,
+                    );
                 }
               },
               builder: (ctx, state) {
