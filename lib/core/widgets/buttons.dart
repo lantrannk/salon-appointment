@@ -19,6 +19,7 @@ class SAButton extends StatelessWidget {
   const factory SAButton.text({
     required Widget child,
     VoidCallback? onPressed,
+    ButtonStyle style,
   }) = _SATextButton;
 
   const factory SAButton.icon({
@@ -77,13 +78,17 @@ class _SAOutlinedButton extends SAButton {
 class _SATextButton extends SAButton {
   const _SATextButton({
     required super.child,
+    this.style,
     super.onPressed,
   });
+
+  final ButtonStyle? style;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
+      style: style,
       child: child,
     );
   }
