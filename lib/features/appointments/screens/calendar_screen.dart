@@ -325,10 +325,16 @@ class CalendarSchedule extends StatelessWidget {
                 const Spacer(),
                 SAButton.text(
                   onPressed: onPressed,
-                  child: SAText.calendarSchedule(
-                    text: 'Show appointments ($countOfAppointments)',
-                    style: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.bold,
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: SAText.calendarSchedule(
+                      text: 'Show appointments ($countOfAppointments)',
+                      style: textTheme.bodySmall!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
