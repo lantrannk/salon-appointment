@@ -55,8 +55,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (context) =>
-          AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
+      create: (_) => AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
       child: MainLayout(
         currentIndex: 0,
         title: l10n.appointmentAppBarTitle,
@@ -189,7 +188,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   return Expanded(
                     child: ListView.builder(
                       itemCount: events!.length,
-                      itemBuilder: (_, index) => Padding(
+                      itemBuilder: (ctx, index) => Padding(
                         padding: const EdgeInsets.all(8),
                         child: AppointmentCard(
                           name: findUser(events[index].userId).name,
@@ -230,7 +229,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     );
                               },
                               onPressedLeft: () {
-                                Navigator.pop(context, false);
+                                Navigator.pop(ctx, false);
                               },
                             );
                           },
