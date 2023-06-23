@@ -1,10 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_appointment/core/storage/user_storage.dart';
-import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
-import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
 
+import '../../../core/storage/user_storage.dart';
 import '../../auth/model/user.dart';
+import '../api/appointment_api.dart';
 import '../model/appointment.dart';
+import '../repository/appointment_repository.dart';
+
 part 'appointment_event.dart';
 part 'appointment_state.dart';
 
