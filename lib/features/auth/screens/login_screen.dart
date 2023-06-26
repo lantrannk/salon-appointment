@@ -35,6 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
   String password = '';
 
   @override
+  void dispose() {
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
