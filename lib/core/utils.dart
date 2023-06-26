@@ -61,7 +61,11 @@ bool isLessThan24HoursFromNow(Appointment appointment) =>
 
 /// Returns [bool] that [end] is after [start] 30 minutes
 bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
-      start.add(const Duration(minutes: 30)),
+      start.add(
+        const Duration(
+          minutes: 29,
+        ),
+      ),
     );
 
 /// Returns [bool] that [appointments] at [dateTime] is not full
