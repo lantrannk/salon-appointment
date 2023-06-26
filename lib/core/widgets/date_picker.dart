@@ -15,6 +15,9 @@ class DatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(left: 10),
       child: Row(
@@ -23,14 +26,14 @@ class DatePicker extends StatelessWidget {
           Icon(
             Assets.scheduleIcon,
             size: 24,
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: colorScheme.secondaryContainer,
           ),
           Text(
             dateFormat.format(dateTime),
-            style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.secondaryContainer,
-                  fontWeight: FontWeight.w400,
-                ),
+            style: textTheme.labelLarge!.copyWith(
+              color: colorScheme.secondaryContainer,
+              fontWeight: FontWeight.w400,
+            ),
           ),
           Align(
             alignment: Alignment.centerRight,
@@ -39,7 +42,7 @@ class DatePicker extends StatelessWidget {
               icon: Icon(
                 Assets.calendarIcon,
                 size: 24,
-                color: Theme.of(context).colorScheme.secondaryContainer,
+                color: colorScheme.secondaryContainer,
               ),
             ),
           ),
