@@ -32,7 +32,6 @@ class EditAppointment extends StatefulWidget {
 }
 
 class _EditAppointmentState extends State<EditAppointment> {
-  final nameController = TextEditingController();
   final descpController = TextEditingController();
 
   final nameFocusNode = FocusNode();
@@ -46,6 +45,7 @@ class _EditAppointmentState extends State<EditAppointment> {
     super.initState();
     _appointment = widget.appointment;
     _user = widget.user;
+    descpController.text = _appointment.description;
   }
 
   @override
