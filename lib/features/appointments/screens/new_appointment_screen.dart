@@ -30,7 +30,6 @@ class NewAppointmentScreen extends StatefulWidget {
 }
 
 class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
-  final nameController = TextEditingController();
   final descpController = TextEditingController();
 
   final nameFocusNode = FocusNode();
@@ -41,6 +40,12 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   late DateTime endTime = autoAddHalfHour(startTime);
 
   String? selectedValue;
+
+  @override
+  void dispose() {
+    descpController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
