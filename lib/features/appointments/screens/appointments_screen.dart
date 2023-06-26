@@ -158,10 +158,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 switch (state.runtimeType) {
                   case AppointmentRemoving:
                   case AppointmentEditing:
-                    return loadingIndicator.show(
+                    loadingIndicator.show(
                       context: ctx,
                       height: indicatorHeight,
                     );
+                    break;
                   case AppointmentRemoved:
                     loadingIndicator.hide(ctx);
                     Navigator.of(ctx).pop(true);
@@ -190,11 +191,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     break;
                   case AppointmentRemoveError:
                   case AppointmentEditError:
-                    return SASnackBar.show(
+                    SASnackBar.show(
                       context: context,
                       message: state.error!,
                       isSuccess: false,
                     );
+                    break;
                 }
               },
               builder: (ctx, state) {
