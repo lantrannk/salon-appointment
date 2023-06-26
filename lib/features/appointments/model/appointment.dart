@@ -34,6 +34,25 @@ class Appointment {
         'isCompleted': isCompleted,
       };
 
+  Appointment copyWith({
+    String? userId,
+    DateTime? date,
+    DateTime? startTime,
+    DateTime? endTime,
+    String? services,
+    String? description,
+    bool? isCompleted,
+  }) =>
+      Appointment(
+        userId: userId ?? this.userId,
+        date: date ?? this.date,
+        startTime: startTime ?? this.startTime,
+        endTime: endTime ?? this.endTime,
+        services: services ?? this.services,
+        description: description ?? this.description,
+        isCompleted: isCompleted ?? this.isCompleted,
+      );
+
   final String? id;
   late String services;
   late DateTime date;
