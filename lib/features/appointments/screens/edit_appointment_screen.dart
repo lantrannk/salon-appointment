@@ -45,7 +45,13 @@ class _EditAppointmentState extends State<EditAppointment> {
     super.initState();
     _appointment = widget.appointment;
     _user = widget.user;
-    descpController.text = _appointment.description;
+    descpController.text = widget.appointment.description;
+  }
+
+  @override
+  void dispose() {
+    descpController.dispose();
+    super.dispose();
   }
 
   @override
