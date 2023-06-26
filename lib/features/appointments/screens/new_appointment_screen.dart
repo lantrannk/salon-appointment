@@ -72,45 +72,46 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           child: Center(
             child: BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
-                if (state is UserLoadError) {
-                  SASnackBar.show(
-                    context: context,
-                    message: S.of(context).addSuccess,
-                    isSuccess: true,
-                  );
+                switch (state.runtimeType) {
+                  case UserLoadError:
+                    SASnackBar.show(
+                      context: context,
+                      message: S.of(context).addSuccess,
+                      isSuccess: true,
+                    );
 
-                  Navigator.pop(context);
-                }
-                if (state is AppointmentAdding) {
-                  loadingIndicator.show(
-                    context: ctx,
-                    height: indicatorHeight,
-                  );
-                }
-                if (state is AppointmentAdded) {
-                  loadingIndicator.hide(ctx);
+                    Navigator.pop(context);
+                    break;
+                  case AppointmentAdding:
+                    loadingIndicator.show(
+                      context: ctx,
+                      height: indicatorHeight,
+                    );
+                    break;
+                  case AppointmentAdded:
+                    loadingIndicator.hide(ctx);
+                    SASnackBar.show(
+                      context: context,
+                      message: S.of(context).addSuccess,
+                      isSuccess: true,
+                    );
 
-                  SASnackBar.show(
-                    context: context,
-                    message: S.of(context).addSuccess,
-                    isSuccess: true,
-                  );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AppointmentScreen(
-                        focusedDay: dateTime,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppointmentScreen(
+                          focusedDay: dateTime,
+                        ),
                       ),
-                    ),
-                  );
-                }
-                if (state is AppointmentAddError) {
-                  SASnackBar.show(
-                    context: context,
-                    message: state.error!,
-                    isSuccess: false,
-                  );
+                    );
+                    break;
+                  case AppointmentAddError:
+                    SASnackBar.show(
+                      context: context,
+                      message: state.error!,
+                      isSuccess: false,
+                    );
+                    break;
                 }
               },
               builder: (context, state) {
