@@ -39,11 +39,14 @@ class _EditAppointmentState extends State<EditAppointment> {
 
   late User _user;
   late Appointment _appointment;
+  late DateTime dateTime = widget.appointment.date;
+  late DateTime startTime = widget.appointment.startTime;
+  late DateTime endTime = widget.appointment.endTime;
+  late String services = widget.appointment.services;
 
   @override
   void initState() {
     super.initState();
-    _appointment = widget.appointment;
     _user = widget.user;
     descpController.text = widget.appointment.description;
   }
@@ -90,74 +93,66 @@ class _EditAppointmentState extends State<EditAppointment> {
                   ),
                   const SizedBox(height: 12),
                   DatePicker(
-                      dateTime: _appointment.date,
+                      dateTime: dateTime,
                       onPressed: () async {
                         final DateTime? date = await showDatePicker(
                           context: context,
-                          initialDate: _appointment.date,
+                          initialDate: dateTime,
                           firstDate: DateTime.now(),
-                          lastDate: DateTime(_appointment.date.year + 5),
+                          lastDate: DateTime(dateTime.year + 5),
                         );
 
-                        if (date != null && date != _appointment.date) {
+                        if (date != null && date != dateTime) {
                           setState(() {
-                            _appointment
-                              ..date = date
-                              ..startTime = setDateTime(
-                                _appointment.date,
-                                TimeOfDay.fromDateTime(_appointment.startTime),
-                              )
-                              ..endTime = setDateTime(
-                                _appointment.date,
-                                TimeOfDay.fromDateTime(_appointment.endTime),
-                              );
+                            dateTime = date;
+                            startTime = setDateTime(
+                              dateTime,
+                              TimeOfDay.fromDateTime(startTime),
+                            );
+                            endTime = setDateTime(
+                              dateTime,
+                              TimeOfDay.fromDateTime(endTime),
+                            );
                           });
                         }
                       }),
                   const SizedBox(height: 12),
                   TimePicker(
-                    startTime: _appointment.startTime,
-                    endTime: _appointment.endTime,
+                    startTime: startTime,
+                    endTime: endTime,
                     onStartTimePressed: () async {
                       final TimeOfDay? time = await showTimePicker(
                         context: context,
-                        initialTime:
-                            TimeOfDay.fromDateTime(_appointment.startTime),
+                        initialTime: TimeOfDay.fromDateTime(startTime),
                       );
                       if (time != null &&
-                          time !=
-                              TimeOfDay.fromDateTime(_appointment.startTime)) {
+                          time != TimeOfDay.fromDateTime(startTime)) {
                         setState(() {
-                          _appointment
-                            ..startTime = setDateTime(
-                              _appointment.date,
-                              time,
-                            )
-                            ..endTime = autoAddHalfHour(_appointment.startTime);
+                          startTime = setDateTime(
+                            dateTime,
+                            time,
+                          );
+                          endTime = autoAddHalfHour(startTime);
                         });
                       }
                     },
                     onEndTimePressed: () async {
                       final TimeOfDay? time = await showTimePicker(
                         context: context,
-                        initialTime:
-                            TimeOfDay.fromDateTime(_appointment.endTime),
+                        initialTime: TimeOfDay.fromDateTime(endTime),
                       );
                       if (time != null) {
                         final DateTime tempEndTime =
-                            setDateTime(_appointment.date, time);
-                        if (!isAfterStartTime(
-                            _appointment.startTime, tempEndTime)) {
+                            setDateTime(dateTime, time);
+                        if (!isAfterStartTime(startTime, tempEndTime)) {
                           SASnackBar.show(
                             context: context,
                             message: S.of(context).invalidEndTimeError,
                             isSuccess: false,
                           );
-                        } else if (time !=
-                            TimeOfDay.fromDateTime(_appointment.endTime)) {
+                        } else if (time != TimeOfDay.fromDateTime(endTime)) {
                           setState(() {
-                            _appointment.endTime =
-                                setDateTime(_appointment.date, time);
+                            endTime = setDateTime(dateTime, time);
                           });
                         }
                       }
@@ -166,17 +161,18 @@ class _EditAppointmentState extends State<EditAppointment> {
                   const SizedBox(height: 12),
                   Dropdown(
                       items: items,
-                      selectedValue: _appointment.services,
+                      selectedValue: services,
                       onChanged: (value) {
                         setState(() {
-                          _appointment.services = value!;
+                          services = value!;
                         });
                       }),
                   const SizedBox(height: 12),
                   Input(
                     controller: descpController,
-                    text: _appointment.description,
+                    text: S.of(context).description,
                     focusNode: descpFocusNode,
+                    textInputAction: TextInputAction.done,
                     onEditCompleted: () {
                       FocusScope.of(context).unfocus();
                     },
@@ -194,8 +190,8 @@ class _EditAppointmentState extends State<EditAppointment> {
                   ElevatedButton(
                     onPressed: () {
                       if (isBreakTime(
-                        _appointment.startTime,
-                        _appointment.endTime,
+                        startTime,
+                        endTime,
                       )) {
                         SASnackBar.show(
                           context: context,
@@ -203,8 +199,8 @@ class _EditAppointmentState extends State<EditAppointment> {
                           isSuccess: false,
                         );
                       } else if (isClosedTime(
-                        _appointment.startTime,
-                        _appointment.endTime,
+                        startTime,
+                        endTime,
                       )) {
                         SASnackBar.show(
                           context: context,
@@ -212,19 +208,21 @@ class _EditAppointmentState extends State<EditAppointment> {
                           isSuccess: false,
                         );
                       } else {
+                        FocusScope.of(context).unfocus();
+
+                        _appointment = widget.appointment.copyWith(
+                          date: dateTime,
+                          startTime: startTime,
+                          endTime: endTime,
+                          services: services,
+                          description: descpController.text == ''
+                              ? S.of(context).defaultDescription
+                              : descpController.text,
+                        );
+
                         context.read<AppointmentBloc>().add(
                               AppointmentEdit(
-                                appointment: Appointment(
-                                  id: _appointment.id,
-                                  userId: _appointment.userId,
-                                  date: _appointment.date,
-                                  startTime: _appointment.startTime,
-                                  endTime: _appointment.endTime,
-                                  services: _appointment.services,
-                                  description: descpController.text == ''
-                                      ? _appointment.description
-                                      : descpController.text,
-                                ),
+                                appointment: _appointment,
                               ),
                             );
                       }
