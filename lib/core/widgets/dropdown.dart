@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/widgets/icons.dart';
+import 'package:salon_appointment/core/widgets/widgets.dart';
 
 import '../constants/assets.dart';
 

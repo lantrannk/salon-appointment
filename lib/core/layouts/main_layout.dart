@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/generated/l10n.dart';
 import '../constants/assets.dart';
-import '../widgets/buttons.dart';
-import '../widgets/icons.dart';
-import '../widgets/text.dart';
+import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({

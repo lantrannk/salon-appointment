@@ -4,10 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
-import '../../../core/widgets/buttons.dart';
-import '../../../core/widgets/dialog.dart';
-import '../../../core/widgets/indicator.dart';
-import '../../../core/widgets/text.dart';
+import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
 import '../model/user.dart';
 

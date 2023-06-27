@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salon_appointment/core/utils.dart';
-import 'package:salon_appointment/core/widgets/text.dart';
+import 'package:salon_appointment/core/widgets/widgets.dart';
 
 import '../generated/l10n.dart';
 
