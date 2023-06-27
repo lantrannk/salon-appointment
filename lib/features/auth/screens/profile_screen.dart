@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           shape: BoxShape.circle,
                           color: colorScheme.onPrimary,
                           image: DecorationImage(
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                             image: NetworkImage(user.avatar),
                           ),
                         ),

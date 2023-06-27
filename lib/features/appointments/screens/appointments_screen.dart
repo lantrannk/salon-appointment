@@ -414,7 +414,7 @@ class Customer extends StatelessWidget {
             shape: BoxShape.circle,
             color: colorScheme.onPrimary,
             image: DecorationImage(
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
               image: NetworkImage(avatar),
             ),
           ),
