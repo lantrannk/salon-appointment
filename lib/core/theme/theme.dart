@@ -101,7 +101,7 @@ ThemeData themeData = ThemeData(
   primaryColor: colorScheme.primary,
   iconTheme: IconThemeData(
     color: colorScheme.onSecondary,
-    size: 20,
+    size: 24,
   ),
   inputDecorationTheme: InputDecorationTheme(
     hintStyle: SATextTheme.textTheme.labelSmall!.copyWith(
