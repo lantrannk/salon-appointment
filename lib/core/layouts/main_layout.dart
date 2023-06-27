@@ -46,13 +46,19 @@ class _MainLayoutState extends State<MainLayout> {
         automaticallyImplyLeading: false,
       ),
       body: widget.child,
-      floatingActionButton: SAButton.floating(
-        child: SAIcons(
-          icon: Assets.addIcon,
-          size: 30,
-          color: colorScheme.onPrimary,
+      floatingActionButton: SizedBox(
+        height: 68,
+        width: 68,
+        child: FittedBox(
+          child: SAButton.floating(
+            onPressed: () => Navigator.pushNamed(context, '/newAppointment'),
+            child: SAIcons(
+              icon: Assets.addIcon,
+              size: 30,
+              color: colorScheme.onPrimary,
+            ),
+          ),
         ),
-        onPressed: () => Navigator.pushNamed(context, '/newAppointment'),
       ),
       floatingActionButtonLocation: _fabLocation,
       bottomNavigationBar: CustomBottomAppBar(
