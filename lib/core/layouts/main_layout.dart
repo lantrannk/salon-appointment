@@ -99,32 +99,72 @@ class CustomBottomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final l10n = S.of(context);
 
     return BottomNavigationBar(
       backgroundColor: colorScheme.onPrimary,
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: colorScheme.primary,
-      unselectedItemColor: colorScheme.onTertiary,
       showSelectedLabels: false,
       showUnselectedLabels: false,
+      selectedFontSize: 0,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: const Icon(Assets.checkIcon),
-          label: S.of(context).appointmentsLabel,
+          icon: _buildIcon(
+            icon: Assets.checkIcon,
+            topColor: colorScheme.onTertiary,
+            bottomColor: colorScheme.onSecondary,
+          ),
+          activeIcon: _buildIcon(
+            icon: Assets.checkIcon,
+            topColor: colorScheme.primary,
+            bottomColor: colorScheme.onSurface,
+            isActive: true,
+          ),
+          label: l10n.appointmentsLabel,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Assets.scheduleIcon),
-          label: S.of(context).calendarLabel,
+          icon: _buildIcon(
+            icon: Assets.scheduleIcon,
+            topColor: colorScheme.onTertiary,
+            bottomColor: colorScheme.onSecondary,
+          ),
+          activeIcon: _buildIcon(
+            icon: Assets.scheduleIcon,
+            topColor: colorScheme.primary,
+            bottomColor: colorScheme.onSurface,
+            isActive: true,
+          ),
+          label: l10n.calendarLabel,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Assets.personIcon),
-          label: S.of(context).profileLabel,
+          icon: _buildIcon(
+            icon: Assets.personIcon,
+            topColor: colorScheme.onTertiary,
+            bottomColor: colorScheme.onSecondary,
+          ),
+          activeIcon: _buildIcon(
+            icon: Assets.personIcon,
+            topColor: colorScheme.primary,
+            bottomColor: colorScheme.onSurface,
+            isActive: true,
+          ),
+          label: l10n.profileLabel,
         ),
         BottomNavigationBarItem(
-          icon: const Icon(Assets.notificationsIcon),
-          label: S.of(context).notificationsLabel,
+          icon: _buildIcon(
+            icon: Assets.notificationsIcon,
+            topColor: colorScheme.onTertiary,
+            bottomColor: colorScheme.onSecondary,
+          ),
+          activeIcon: _buildIcon(
+            icon: Assets.notificationsIcon,
+            topColor: colorScheme.primary,
+            bottomColor: colorScheme.onSurface,
+            isActive: true,
+          ),
+          label: l10n.notificationsLabel,
         ),
       ],
     );
