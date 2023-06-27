@@ -130,3 +130,51 @@ class CustomBottomAppBar extends StatelessWidget {
     );
   }
 }
+
+Widget _buildIcon({
+  required IconData icon,
+  required Color topColor,
+  required Color bottomColor,
+  double size = 24,
+  double bottomNavigationBarHeight = 80,
+  bool isActive = false,
+}) {
+  return Container(
+    width: double.infinity,
+    height: bottomNavigationBarHeight,
+    margin: EdgeInsets.zero,
+    padding: EdgeInsets.zero,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        if (!isActive)
+          const SizedBox(
+            height: 18,
+          )
+        else
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            height: 2,
+            child: Divider(
+              thickness: 2,
+              indent: 40,
+              endIndent: 40,
+              color: topColor,
+            ),
+          ),
+        GradientIcon(
+          icon: icon,
+          size: size,
+          gradient: LinearGradient(
+            colors: [
+              topColor,
+              bottomColor,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+      ],
+    ),
+  );
+}
