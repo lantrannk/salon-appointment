@@ -25,7 +25,6 @@ class DatePicker extends StatelessWidget {
         children: [
           Icon(
             Assets.scheduleIcon,
-            size: 24,
             color: colorScheme.secondaryContainer,
           ),
           Text(
@@ -41,7 +40,6 @@ class DatePicker extends StatelessWidget {
               onPressed: onPressed,
               icon: Icon(
                 Assets.calendarIcon,
-                size: 24,
                 color: colorScheme.secondaryContainer,
               ),
             ),
