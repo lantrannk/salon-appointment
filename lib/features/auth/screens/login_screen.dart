@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double indicatorHeight = MediaQuery.of(context).size.height / 2;
+    final double indicatorHeight = screenHeight / 2;
 
     return CommonLayout(
       child: Container(

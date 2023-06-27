@@ -41,11 +41,14 @@ class _AppBarTitle extends SAText {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Text(
       text,
-      style: Theme.of(context).textTheme.titleLarge!.copyWith(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
+      style: textTheme.titleLarge!.copyWith(
+        color: colorScheme.secondary,
+      ),
     );
   }
 }

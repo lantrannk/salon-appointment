@@ -268,7 +268,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   );
                 }
                 return SizedBox(
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: indicatorHeight / 2,
                   child: Center(
                     child: Text(
                       l10n.emptyAppointments,
@@ -346,9 +346,13 @@ class AppointmentCard extends StatelessWidget {
               avatar: avatar,
             ),
             const SizedBox(height: 24),
-            Services(services: appointment.services),
+            Services(
+              services: appointment.services,
+            ),
             const SizedBox(height: 24),
-            Description(description: appointment.description),
+            Description(
+              description: appointment.description,
+            ),
             const SizedBox(height: 12),
           ],
         ),
@@ -369,25 +373,21 @@ class Time extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final ThemeData themeData = Theme.of(context);
 
-    return Column(
+    return Row(
       children: [
-        Row(
-          children: [
-            SAIcons(
-              icon: Assets.scheduleIcon,
-              size: 20,
-              color: theme.colorScheme.secondary,
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              '${formatTime(startTime)} - ${formatTime(endTime)}',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
+        SAIcons(
+          icon: Assets.scheduleIcon,
+          size: 20,
+          color: themeData.colorScheme.tertiary,
+        ),
+        const SizedBox(
+          width: 10,
+        ),
+        Text(
+          '${formatTime(startTime)} - ${formatTime(endTime)}',
+          style: themeData.textTheme.bodyLarge,
         ),
       ],
     );

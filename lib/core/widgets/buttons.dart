@@ -136,7 +136,10 @@ class _SAFloatingButton extends SAButton {
         height: height,
         width: width,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 6),
+          border: Border.all(
+            color: colorScheme.onPrimary,
+            width: 6,
+          ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
