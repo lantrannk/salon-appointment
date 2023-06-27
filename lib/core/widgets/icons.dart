@@ -48,6 +48,7 @@ class GradientIcon extends StatelessWidget {
           child: Icon(
             icon,
             size: size,
+            color: Theme.of(context).colorScheme.background,
           ),
           shaderCallback: (bounds) {
             final Rect rect = Rect.fromLTRB(0, 0, size!, size!);
