@@ -147,7 +147,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                         if (!isAfterStartTime(startTime, tempEndTime)) {
                           SASnackBar.show(
                             context: context,
-                            message: S.of(context).invalidEndTimeError,
+                            message: l10n.invalidEndTimeError,
                             isSuccess: false,
                           );
                         } else if (time != TimeOfDay.fromDateTime(endTime)) {
@@ -170,7 +170,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                   const SizedBox(height: 12),
                   Input(
                     controller: descpController,
-                    text: S.of(context).description,
+                    text: l10n.description,
                     focusNode: descpFocusNode,
                     textInputAction: TextInputAction.done,
                     onEditCompleted: () {
@@ -216,7 +216,7 @@ class _EditAppointmentState extends State<EditAppointment> {
                           endTime: endTime,
                           services: services,
                           description: descpController.text == ''
-                              ? S.of(context).defaultDescription
+                              ? l10n.defaultDescription
                               : descpController.text,
                         );
 

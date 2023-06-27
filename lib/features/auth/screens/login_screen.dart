@@ -48,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     final double screenHeight = MediaQuery.of(context).size.height;
     final double indicatorHeight = screenHeight / 2;
+    final l10n = S.of(context);
 
     return CommonLayout(
       child: Container(
@@ -68,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         bottom: 147,
                       ),
                       child: SAText(
-                        text: S.of(context).logo,
+                        text: l10n.logo,
                         style: TextStyle(
                           fontSize: 40,
                           color: colorScheme.onPrimary,
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
             ),
             Input.phoneNumber(
-              text: S.of(context).phoneNumber,
+              text: l10n.phoneNumber,
               controller: phoneNumberController,
               height: 72,
               focusNode: phoneNumberFocusNode,
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 16),
             Input.password(
-              text: S.of(context).password,
+              text: l10n.password,
               controller: passwordController,
               height: 72,
               focusNode: passwordFocusNode,
@@ -116,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextButton(
                 onPressed: () {},
                 child: SAText(
-                  text: S.of(context).forgotPassword,
+                  text: l10n.forgotPassword,
                   style: textTheme.bodySmall!.copyWith(
                     color: colorScheme.onPrimary.withOpacity(0.6429),
                   ),
@@ -142,14 +143,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       case 'invalid-account':
                         SASnackBar.show(
                           context: context,
-                          message: S.of(context).invalidAccountError,
+                          message: l10n.invalidAccountError,
                           isSuccess: false,
                         );
                         break;
                       case 'incorrect-account':
                         SASnackBar.show(
                           context: context,
-                          message: S.of(context).incorrectAccountError,
+                          message: l10n.incorrectAccountError,
                           isSuccess: false,
                         );
                         break;
@@ -167,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   builder: (ctx, state) {
                     return SAButton.outlined(
                       child: SAText(
-                        text: S.of(context).loginButton,
+                        text: l10n.loginButton,
                         style: textTheme.labelMedium!.copyWith(
                           color: colorScheme.onPrimary,
                         ),

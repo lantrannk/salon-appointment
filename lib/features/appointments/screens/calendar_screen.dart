@@ -47,13 +47,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 4;
+    final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
       create: (context) =>
           AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
       child: MainLayout(
         currentIndex: 1,
-        title: S.of(context).calendarAppBarTitle,
+        title: l10n.calendarAppBarTitle,
         child: Column(
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
@@ -231,7 +232,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             height: indicatorHeight,
                             child: Center(
                               child: Text(
-                                S.of(context).emptyAppointments,
+                                l10n.emptyAppointments,
                                 style: textTheme.bodyLarge!.copyWith(
                                   color: colorScheme.secondary,
                                 ),
@@ -307,7 +308,10 @@ class CalendarSchedule extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.only(top: 26, left: 15),
+          padding: const EdgeInsets.only(
+            top: 26,
+            left: 15,
+          ),
           child: SAIcons(
             icon: Assets.scheduleIcon,
             size: 20,

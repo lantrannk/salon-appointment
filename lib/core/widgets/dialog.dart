@@ -24,6 +24,7 @@ class AlertConfirmDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final l10n = S.of(context);
 
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.end,
@@ -50,7 +51,7 @@ class AlertConfirmDialog extends StatelessWidget {
         SAButton.text(
           onPressed: onPressedLeft,
           child: Text(
-            textButtonLeft ?? S.of(context).noConfirm,
+            textButtonLeft ?? l10n.noConfirm,
             style: textTheme.labelMedium!.copyWith(
               color: colorScheme.onTertiary,
             ),
@@ -59,7 +60,7 @@ class AlertConfirmDialog extends StatelessWidget {
         SAButton.text(
           onPressed: onPressedRight,
           child: Text(
-            textButtonRight ?? S.of(context).yesConfirm,
+            textButtonRight ?? l10n.yesConfirm,
             style: textTheme.labelMedium!.copyWith(
               color: colorScheme.primary,
               fontWeight: FontWeight.bold,

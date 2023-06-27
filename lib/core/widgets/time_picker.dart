@@ -20,10 +20,14 @@ class TimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = S.of(context);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        SAText.timePicker(text: S.of(context).fromText),
+        SAText.timePicker(
+          text: l10n.fromText,
+        ),
         OutlinedButton(
           onPressed: onStartTimePressed,
           child: SAText.timePicker(
@@ -32,7 +36,9 @@ class TimePicker extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8),
-          child: SAText.timePicker(text: S.of(context).toText),
+          child: SAText.timePicker(
+            text: l10n.toText,
+          ),
         ),
         OutlinedButton(
           onPressed: onEndTimePressed,

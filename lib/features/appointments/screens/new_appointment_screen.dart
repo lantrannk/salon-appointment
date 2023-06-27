@@ -52,13 +52,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
+    final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
       create: (context) => AppointmentBloc()..add(UserLoad()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
-            text: S.of(context).newAppointmentAppBarTitle,
+            text: l10n.newAppointmentAppBarTitle,
             style: textTheme.titleLarge!,
           ),
           automaticallyImplyLeading: false,
@@ -81,7 +82,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                   case UserLoadError:
                     SASnackBar.show(
                       context: context,
-                      message: S.of(context).addSuccess,
+                      message: l10n.addSuccess,
                       isSuccess: true,
                     );
 
@@ -97,7 +98,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     loadingIndicator.hide(ctx);
                     SASnackBar.show(
                       context: context,
-                      message: S.of(context).addSuccess,
+                      message: l10n.addSuccess,
                       isSuccess: true,
                     );
 
@@ -171,7 +172,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                             if (isBeforeNow(tempStartTime)) {
                               SASnackBar.show(
                                 context: context,
-                                message: S.of(context).invalidStartTimeError,
+                                message: l10n.invalidStartTimeError,
                                 isSuccess: false,
                               );
                             } else if (time !=
@@ -180,7 +181,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                   appointments, tempStartTime)) {
                                 SASnackBar.show(
                                   context: context,
-                                  message: S.of(context).fullAppointmentsError,
+                                  message: l10n.fullAppointmentsError,
                                   isSuccess: false,
                                 );
                               } else {
@@ -203,7 +204,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                             if (!isAfterStartTime(startTime, tempEndTime)) {
                               SASnackBar.show(
                                 context: context,
-                                message: S.of(context).invalidEndTimeError,
+                                message: l10n.invalidEndTimeError,
                                 isSuccess: false,
                               );
                             } else if (time !=
@@ -227,7 +228,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       const SizedBox(height: 12),
                       Input(
                         controller: descpController,
-                        text: S.of(context).description,
+                        text: l10n.description,
                         focusNode: descpFocusNode,
                         onEditCompleted: () {
                           FocusScope.of(context).unfocus();
@@ -248,19 +249,19 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           if (isBreakTime(startTime, endTime)) {
                             SASnackBar.show(
                               context: context,
-                              message: S.of(context).breakTimeConflictError,
+                              message: l10n.breakTimeConflictError,
                               isSuccess: false,
                             );
                           } else if (isClosedTime(startTime, endTime)) {
                             SASnackBar.show(
                               context: context,
-                              message: S.of(context).closedTimeError,
+                              message: l10n.closedTimeError,
                               isSuccess: false,
                             );
                           } else if (selectedValue == null) {
                             SASnackBar.show(
                               context: context,
-                              message: S.of(context).emptyServicesError,
+                              message: l10n.emptyServicesError,
                               isSuccess: false,
                             );
                           } else {
@@ -273,7 +274,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                       endTime: endTime,
                                       services: selectedValue!,
                                       description: descpController.text == ''
-                                          ? S.of(context).defaultDescription
+                                          ? l10n.defaultDescription
                                           : descpController.text,
                                     ),
                                   ),
@@ -284,7 +285,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           backgroundColor: colorScheme.primary,
                         ),
                         child: Text(
-                          S.of(context).createAppointmentButton,
+                          l10n.createAppointmentButton,
                           style: textTheme.labelMedium!.copyWith(
                             color: colorScheme.onPrimary,
                           ),
