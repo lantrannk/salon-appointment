@@ -8,7 +8,7 @@ class ColorName {
   static const descriptionColor = Color(0xFFA4A8B2);
   static const breakTimeColor = Color(0xFF474F63);
   static const timeIconColor = Color(0xFFFDA901);
-  static const iconButtonColor = Color(0xFFBFC8DC);
+  static const iconColor = Color(0xFFD1D3DA);
   static const errorColor = Color(0xFFCF2600);
   static const borderColor = Color(0xFFF7F8FC);
   static const backgroundColor = Color(0xFFFFFFFF);
@@ -23,7 +23,7 @@ const ColorScheme colorScheme = ColorScheme(
   onSecondary: ColorName.descriptionColor,
   secondaryContainer: ColorName.breakTimeColor,
   tertiary: ColorName.timeIconColor,
-  onTertiary: ColorName.iconButtonColor,
+  onTertiary: ColorName.iconColor,
   error: ColorName.errorColor,
   onError: ColorName.errorColor,
   background: ColorName.backgroundColor,
