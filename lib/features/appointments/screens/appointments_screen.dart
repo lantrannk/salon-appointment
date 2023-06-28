@@ -315,20 +315,29 @@ class AppointmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       borderOnForeground: false,
-      elevation: 2,
       shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.16),
+      margin: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        top: 8,
+      ),
+      elevation: 2,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 12,
+        ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(height: 12),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Time(
                   startTime: appointment.startTime,
                   endTime: appointment.endTime,
+                  text: S.of(context).beautySalonText,
                 ),
                 Row(
                   children: [
@@ -348,16 +357,16 @@ class AppointmentCard extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Customer(
               name: name,
               avatar: avatar,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Services(
               services: appointment.services,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Description(
               description: appointment.description,
             ),
@@ -373,30 +382,52 @@ class Time extends StatelessWidget {
   const Time({
     required this.startTime,
     required this.endTime,
+    required this.text,
     super.key,
   });
 
   final DateTime startTime;
   final DateTime endTime;
+  final String text;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
 
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SAIcons(
-          icon: Assets.scheduleIcon,
-          size: 20,
-          color: themeData.colorScheme.tertiary,
+        Row(
+          children: [
+            SAIcons(
+              icon: Assets.scheduleIcon,
+              size: 20,
+              color: themeData.colorScheme.tertiary,
+            ),
+            const SizedBox(
+              width: 12,
+            ),
+            Text(
+              '${formatTime(startTime)} - ${formatTime(endTime)}',
+              style: themeData.textTheme.bodyLarge!.copyWith(
+                height: 24 / 14,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          '${formatTime(startTime)} - ${formatTime(endTime)}',
-          style: themeData.textTheme.bodyLarge,
-        ),
+        Row(
+          children: [
+            const SizedBox(
+              width: 32,
+            ),
+            Text(
+              text,
+              style: themeData.textTheme.bodySmall!.copyWith(
+                color: themeData.colorScheme.onSecondary,
+              ),
+            ),
+          ],
+        )
       ],
     );
   }
@@ -432,12 +463,13 @@ class Customer extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          width: 10,
+          width: 12,
         ),
         Text(
           name,
           style: textTheme.bodyLarge!.copyWith(
             color: colorScheme.primary,
+            height: 24 / 14,
           ),
         )
       ],
@@ -456,21 +488,32 @@ class Services extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return Row(
-      children: [
-        const SizedBox(
-          width: 34,
-        ),
-        Expanded(
-          child: Text(
-            services,
-            style: textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w500,
+    return IntrinsicHeight(
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 1,
+          ),
+          VerticalDivider(
+            color: colorScheme.onSecondary,
+            thickness: 1,
+          ),
+          const SizedBox(
+            width: 13,
+          ),
+          Expanded(
+            child: Text(
+              services,
+              style: textTheme.bodyLarge!.copyWith(
+                fontWeight: FontWeight.w500,
+                height: 20 / 14,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -493,6 +536,8 @@ class Description extends StatelessWidget {
         Expanded(
           child: Text(
             description,
+            maxLines: 3,
+            textAlign: TextAlign.justify,
             style: textTheme.bodySmall!.copyWith(
               color: colorScheme.onSecondary,
             ),
