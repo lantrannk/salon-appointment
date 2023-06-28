@@ -54,24 +54,20 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                top: 60,
+                top: 102,
               ),
-              child: (keyboardHeight > 0)
-                  ? const SizedBox(
-                      height: 60,
-                    )
-                  : Container(
-                      padding: const EdgeInsets.only(
-                        bottom: 147,
-                      ),
-                      child: SAText(
-                        text: l10n.logo,
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                    ),
+              child: Container(
+                padding: EdgeInsets.only(
+                  bottom: keyboardHeight > 0 ? 100 : 140,
+                ),
+                child: SAText(
+                  text: l10n.logo,
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: colorScheme.onPrimary,
+                  ),
+                ),
+              ),
             ),
             Input.phoneNumber(
               text: l10n.phoneNumber,
