@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: MainLayout(
         title: l10n.profileAppBarTitle,
         currentIndex: 2,
+        selectedDay: DateTime.now(),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

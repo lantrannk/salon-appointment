@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/generated/l10n.dart';
+import '../../features/appointments/screens/new_appointment_screen.dart';
 import '../constants/assets.dart';
+import '../generated/l10n.dart';
 import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {
@@ -9,12 +10,14 @@ class MainLayout extends StatefulWidget {
     required this.title,
     required this.currentIndex,
     required this.child,
+    required this.selectedDay,
     super.key,
   });
 
   final String title;
   final Widget child;
   final int currentIndex;
+  final DateTime selectedDay;
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
@@ -47,7 +50,14 @@ class _MainLayoutState extends State<MainLayout> {
       ),
       body: widget.child,
       floatingActionButton: SAButton.floating(
-        onPressed: () => Navigator.pushNamed(context, '/newAppointment'),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewAppointmentScreen(
+              selectedDay: widget.selectedDay,
+            ),
+          ),
+        ),
         child: SAIcons(
           icon: Assets.addIcon,
           size: 30,

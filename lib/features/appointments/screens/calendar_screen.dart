@@ -51,6 +51,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
       child: MainLayout(
         currentIndex: 1,
+        selectedDay: _selectedDay!,
         title: l10n.calendarAppBarTitle,
         child: Column(
           children: [
