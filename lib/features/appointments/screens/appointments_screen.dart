@@ -60,93 +60,114 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
                 builder: (ctx, state) {
-              return TableCalendar<Appointment>(
-                headerVisible: false,
-                firstDay: firstDay,
-                lastDay: lastDay,
-                focusedDay: _focusedDay!,
-                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                rangeStartDay: _rangeStart,
-                rangeEndDay: _rangeEnd,
-                calendarFormat: CalendarFormat.week,
-                rangeSelectionMode: _rangeSelectionMode,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                calendarStyle: CalendarStyle(
-                  outsideDaysVisible: false,
-                  isTodayHighlighted: false,
-                  cellMargin: EdgeInsets.zero,
-                  cellPadding: const EdgeInsets.only(bottom: 4),
-                  tablePadding: const EdgeInsets.symmetric(vertical: 4),
-                  selectedTextStyle: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onPrimary,
-                  ),
-                  selectedDecoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        colorScheme.onSurface,
-                        colorScheme.primary,
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+              return Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      offset: const Offset(0, 8),
+                      blurRadius: 12,
+                      spreadRadius: 0,
+                      color: colorScheme.primary.withOpacity(0.3219),
                     ),
-                    shape: BoxShape.rectangle,
-                  ),
-                  defaultTextStyle: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onPrimary,
-                  ),
-                  defaultDecoration: BoxDecoration(
-                    color: colorScheme.primary,
-                  ),
-                  weekendTextStyle: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onPrimary,
-                  ),
-                  rowDecoration: BoxDecoration(
-                    color: colorScheme.primary,
-                  ),
+                  ],
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(50),
                 ),
-                daysOfWeekStyle: DaysOfWeekStyle(
-                  weekdayStyle: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onPrimary.withOpacity(0.6429),
+                child: TableCalendar<Appointment>(
+                  headerVisible: false,
+                  firstDay: firstDay,
+                  lastDay: lastDay,
+                  focusedDay: _focusedDay!,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  rangeStartDay: _rangeStart,
+                  rangeEndDay: _rangeEnd,
+                  calendarFormat: CalendarFormat.week,
+                  rangeSelectionMode: _rangeSelectionMode,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarStyle: CalendarStyle(
+                    outsideDaysVisible: true,
+                    isTodayHighlighted: false,
+                    cellMargin: EdgeInsets.zero,
+                    cellPadding: const EdgeInsets.only(bottom: 4),
+                    tablePadding: const EdgeInsets.symmetric(vertical: 4),
+                    selectedTextStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary,
+                    ),
+                    selectedDecoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.onSurface,
+                          colorScheme.primary,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      shape: BoxShape.rectangle,
+                    ),
+                    defaultTextStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary,
+                    ),
+                    defaultDecoration: BoxDecoration(
+                      color: colorScheme.primary,
+                    ),
+                    weekendTextStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary,
+                    ),
+                    outsideTextStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary,
+                    ),
+                    rowDecoration: BoxDecoration(
+                      color: colorScheme.primary,
+                    ),
                   ),
-                  weekendStyle: textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: colorScheme.onPrimary.withOpacity(0.6429),
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    weekdayStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary.withOpacity(0.6429),
+                    ),
+                    weekendStyle: textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: colorScheme.onPrimary.withOpacity(0.6429),
+                    ),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                  ),
-                ),
-                rowHeight: 20,
-                onDaySelected: (selectedDay, focusedDay) {
-                  if (!isSameDay(_selectedDay, selectedDay)) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                      _rangeStart = null;
-                      _rangeEnd = null;
-                      _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                    });
+                  daysOfWeekHeight: 22,
+                  rowHeight: 22,
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDay, selectedDay)) {
+                      setState(() {
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                        _rangeStart = null;
+                        _rangeEnd = null;
+                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+                      });
 
-                    ctx
-                        .read<AppointmentBloc>()
-                        .add(AppointmentLoad(_selectedDay!));
-                  }
-                },
-                onPageChanged: (focusedDay) {
-                  _focusedDay = focusedDay;
-                },
+                      ctx
+                          .read<AppointmentBloc>()
+                          .add(AppointmentLoad(_selectedDay!));
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    _focusedDay = focusedDay;
+                  },
+                ),
               );
             }),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               monthCharFormat.format(_selectedDay!),
               style: textTheme.labelSmall!.copyWith(
                 color: colorScheme.secondary,
                 fontWeight: FontWeight.w600,
+                letterSpacing: -0.24,
               ),
             ),
             const SizedBox(height: 8),
@@ -181,85 +202,90 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 }
               },
               builder: (ctx, state) {
-                if (state is AppointmentLoading) {
-                  return SAIndicator(
-                    height: indicatorHeight,
-                  );
-                }
+                switch (state.runtimeType) {
+                  case AppointmentLoading:
+                    return SAIndicator(
+                      height: indicatorHeight,
+                    );
+                  case AppointmentLoadSuccess:
+                    if (state.appointments!.isNotEmpty) {
+                      final events = state.appointments;
+                      final users = state.users;
+                      User findUser(String userId) =>
+                          users.where((e) => e.id == userId).first;
 
-                if (state is AppointmentLoadSuccess &&
-                    state.appointments!.isNotEmpty) {
-                  final events = state.appointments;
-                  final users = state.users;
-                  User findUser(String userId) {
-                    return users.where((e) => e.id == userId).first;
-                  }
-
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: events!.length,
-                      itemBuilder: (ctx, index) => Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: AppointmentCard(
-                          name: findUser(events[index].userId).name,
-                          avatar: findUser(events[index].userId).avatar,
-                          appointment: events[index],
-                          onEditPressed: () {
-                            if (isLessThan24HoursFromNow(events[index])) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.unableEditError,
-                                isSuccess: false,
-                              );
-                            } else {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BlocProvider.value(
-                                    value: ctx.read<AppointmentBloc>(),
-                                    child: NewAppointmentScreen(
-                                      appointment: events[index],
-                                      user: findUser(events[index].userId),
-                                      selectedDay: _selectedDay!,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                          },
-                          onRemovePressed: () {
-                            AlertConfirmDialog.show(
-                              context: ctx,
-                              title: l10n.removeConfirmTitle,
-                              message: l10n.removeConfirmMessage,
-                              onPressedRight: () {
-                                ctx.read<AppointmentBloc>().add(
-                                      AppointmentRemovePressed(
-                                        appointmentId: events[index].id!,
+                      return Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: colorScheme.tertiaryContainer,
+                          ),
+                          child: ListView.builder(
+                            itemCount: events!.length,
+                            itemBuilder: (ctx, index) => AppointmentCard(
+                              name: findUser(events[index].userId).name,
+                              avatar: findUser(events[index].userId).avatar,
+                              appointment: events[index],
+                              onEditPressed: () {
+                                if (isLessThan24HoursFromNow(events[index])) {
+                                  SASnackBar.show(
+                                    context: context,
+                                    message: l10n.unableEditError,
+                                    isSuccess: false,
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => BlocProvider.value(
+                                        value: ctx.read<AppointmentBloc>(),
+                                        child: NewAppointmentScreen(
+                                          appointment: events[index],
+                                          user: findUser(events[index].userId),
+                                          selectedDay: _selectedDay!,
+                                        ),
                                       ),
-                                    );
+                                    ),
+                                  );
+                                }
                               },
-                              onPressedLeft: () {
-                                Navigator.pop(ctx, false);
+                              onRemovePressed: () {
+                                AlertConfirmDialog.show(
+                                  context: ctx,
+                                  title: l10n.removeConfirmTitle,
+                                  message: l10n.removeConfirmMessage,
+                                  onPressedRight: () {
+                                    ctx.read<AppointmentBloc>().add(
+                                          AppointmentRemovePressed(
+                                            appointmentId: events[index].id!,
+                                          ),
+                                        );
+                                  },
+                                  onPressedLeft: () {
+                                    Navigator.pop(ctx, false);
+                                  },
+                                );
                               },
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  );
+                      );
+                    } else {
+                      return ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: indicatorHeight,
+                        ),
+                        child: Center(
+                          child: Text(
+                            l10n.emptyAppointments,
+                            style: textTheme.bodyLarge!.copyWith(
+                              color: colorScheme.secondary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                 }
-                return SizedBox(
-                  height: indicatorHeight / 2,
-                  child: Center(
-                    child: Text(
-                      l10n.emptyAppointments,
-                      style: textTheme.bodyLarge!.copyWith(
-                        color: colorScheme.secondary,
-                      ),
-                    ),
-                  ),
-                );
+                return Container();
               },
             ),
           ],
