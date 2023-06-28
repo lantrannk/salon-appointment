@@ -308,7 +308,7 @@ class CalendarSchedule extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             top: 26,
-            left: 15,
+            left: 27,
           ),
           child: SAIcons(
             icon: Assets.scheduleIcon,
@@ -318,7 +318,10 @@ class CalendarSchedule extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.only(
+              left: 12,
+              right: 8,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -339,6 +342,7 @@ class CalendarSchedule extends StatelessWidget {
                 SAText.calendarSchedule(
                   text: appointment.description,
                   style: textTheme.bodySmall!,
+                  maxLines: 5,
                 ),
                 const Spacer(),
                 SAButton.text(
