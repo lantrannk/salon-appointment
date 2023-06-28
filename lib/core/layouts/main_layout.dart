@@ -42,9 +42,12 @@ class _MainLayoutState extends State<MainLayout> {
 
     return Scaffold(
       appBar: AppBar(
-        title: SAText.appBarTitle(
-          text: widget.title,
-          style: textTheme.titleLarge!,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: SAText.appBarTitle(
+            text: widget.title,
+            style: textTheme.titleLarge!,
+          ),
         ),
         automaticallyImplyLeading: false,
       ),
