@@ -64,6 +64,9 @@ class Input extends StatelessWidget {
           hintStyle: textTheme.labelSmall!.copyWith(
             color: color,
           ),
+          contentPadding: const EdgeInsets.only(
+            left: 20,
+          ),
           border: border,
         ),
         maxLines: maxLines,
@@ -107,6 +110,9 @@ class _PhoneNumberInput extends Input {
         decoration: InputDecoration(
           hintText: text,
           errorText: errorText,
+          contentPadding: const EdgeInsets.only(
+            left: 20,
+          ),
         ),
         onEditingComplete: onEditCompleted,
         validator: FormValidation.isValidPhoneNumber,
@@ -151,6 +157,9 @@ class _PasswordInput extends Input {
         decoration: InputDecoration(
           hintText: text,
           errorText: errorText,
+          contentPadding: const EdgeInsets.only(
+            left: 20,
+          ),
         ),
         onEditingComplete: onEditCompleted,
         validator: FormValidation.isValidPassword,
