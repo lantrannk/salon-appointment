@@ -46,47 +46,54 @@ class _MainLayoutState extends State<MainLayout> {
         automaticallyImplyLeading: false,
       ),
       body: widget.child,
-      floatingActionButton: SizedBox(
-        height: 68,
-        width: 68,
-        child: FittedBox(
-          child: SAButton.floating(
-            onPressed: () => Navigator.pushNamed(context, '/newAppointment'),
-            child: SAIcons(
-              icon: Assets.addIcon,
-              size: 30,
-              color: colorScheme.onPrimary,
-            ),
-          ),
+      floatingActionButton: SAButton.floating(
+        onPressed: () => Navigator.pushNamed(context, '/newAppointment'),
+        child: SAIcons(
+          icon: Assets.addIcon,
+          size: 30,
+          color: colorScheme.onPrimary,
         ),
       ),
       floatingActionButtonLocation: _fabLocation,
-      bottomNavigationBar: CustomBottomAppBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          if (_currentIndex == index) {
-            return;
-          } else {
-            setState(() {
-              _currentIndex = index;
-              switch (_currentIndex) {
-                case 0:
-                  // Appointment Screen
-                  Navigator.pushNamed(context, '/appointment');
-                  break;
-                case 1:
-                  // Calendar Screen
-                  Navigator.pushNamed(context, '/calendar');
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.primary.withOpacity(0.1601),
+              offset: const Offset(0, 2),
+              blurRadius: 8,
+              spreadRadius: 0,
+              blurStyle: BlurStyle.outer,
+            ),
+          ],
+        ),
+        child: CustomBottomAppBar(
+          currentIndex: _currentIndex,
+          onTap: (index) {
+            if (_currentIndex == index) {
+              return;
+            } else {
+              setState(() {
+                _currentIndex = index;
+                switch (_currentIndex) {
+                  case 0:
+                    // Appointment Screen
+                    Navigator.pushNamed(context, '/appointment');
+                    break;
+                  case 1:
+                    // Calendar Screen
+                    Navigator.pushNamed(context, '/calendar');
 
-                  break;
-                case 2:
-                  // Profile Screen
-                  Navigator.pushNamed(context, '/profile');
-                  break;
-              }
-            });
-          }
-        },
+                    break;
+                  case 2:
+                    // Profile Screen
+                    Navigator.pushNamed(context, '/profile');
+                    break;
+                }
+              });
+            }
+          },
+        ),
       ),
     );
   }
