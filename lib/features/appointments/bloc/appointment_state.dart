@@ -58,17 +58,6 @@ class AppointmentAddError extends AppointmentState {
   final String? error;
 }
 
-class AppointmentEditing extends AppointmentState {}
-
-class AppointmentEdited extends AppointmentState {}
-
-class AppointmentEditError extends AppointmentState {
-  const AppointmentEditError({this.error});
-
-  @override
-  final String? error;
-}
-
 class AppointmentRemoving extends AppointmentState {}
 
 class AppointmentRemoved extends AppointmentState {}

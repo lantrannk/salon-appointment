@@ -20,14 +20,6 @@ class AppointmentAdd extends AppointmentEvent {
   final Appointment appointment;
 }
 
-class AppointmentEdit extends AppointmentEvent {
-  const AppointmentEdit({
-    required this.appointment,
-  });
-
-  final Appointment appointment;
-}
-
 class AppointmentRemovePressed extends AppointmentEvent {
   const AppointmentRemovePressed({
     required this.appointmentId,
