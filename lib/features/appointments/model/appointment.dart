@@ -44,6 +44,7 @@ class Appointment {
     bool? isCompleted,
   }) =>
       Appointment(
+        id: id,
         userId: userId ?? this.userId,
         date: date ?? this.date,
         startTime: startTime ?? this.startTime,
