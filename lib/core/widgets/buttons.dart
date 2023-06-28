@@ -103,6 +103,7 @@ class _SAIconButton extends SAButton {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      padding: EdgeInsets.zero,
       onPressed: onPressed,
       icon: child,
     );
@@ -139,6 +140,7 @@ class _SAFloatingButton extends SAButton {
           border: Border.all(
             color: colorScheme.onPrimary,
             width: 6,
+            strokeAlign: BorderSide.strokeAlignOutside,
           ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
