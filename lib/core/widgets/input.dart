@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/validations/validations.dart';
+
+import '../validations/validations.dart';
 
 class Input extends StatelessWidget {
   const Input({
@@ -63,9 +64,6 @@ class Input extends StatelessWidget {
           hintText: text,
           hintStyle: textTheme.labelSmall!.copyWith(
             color: color,
-          ),
-          contentPadding: const EdgeInsets.only(
-            left: 20,
           ),
           border: border,
         ),
