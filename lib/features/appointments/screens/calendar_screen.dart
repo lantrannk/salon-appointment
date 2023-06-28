@@ -57,132 +57,132 @@ class _CalendarScreenState extends State<CalendarScreen> {
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
-                return Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: TableCalendar<Appointment>(
-                    firstDay: firstDay,
-                    lastDay: lastDay,
-                    focusedDay: _focusedDay,
-                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                    rangeStartDay: _rangeStart,
-                    rangeEndDay: _rangeEnd,
-                    calendarFormat: _calendarFormat,
-                    rangeSelectionMode: _rangeSelectionMode,
-                    startingDayOfWeek: StartingDayOfWeek.monday,
-                    calendarStyle: CalendarStyle(
-                      outsideDaysVisible: true,
-                      cellMargin: EdgeInsets.zero,
-                      cellPadding: const EdgeInsets.all(2),
-                      cellAlignment: Alignment.topRight,
-                      selectedDecoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            colorScheme.primary,
-                            colorScheme.onSurface,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(2),
+                return TableCalendar<Appointment>(
+                  firstDay: firstDay,
+                  lastDay: lastDay,
+                  focusedDay: _focusedDay,
+                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                  rangeStartDay: _rangeStart,
+                  rangeEndDay: _rangeEnd,
+                  calendarFormat: _calendarFormat,
+                  rangeSelectionMode: _rangeSelectionMode,
+                  startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarStyle: CalendarStyle(
+                    outsideDaysVisible: true,
+                    cellMargin: EdgeInsets.zero,
+                    cellPadding: const EdgeInsets.all(2),
+                    cellAlignment: Alignment.topRight,
+                    selectedDecoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          colorScheme.primary,
+                          colorScheme.onSurface,
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                      defaultDecoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                      ),
-                      weekendDecoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                      ),
-                      outsideDecoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                      ),
-                      todayDecoration: BoxDecoration(
-                        color: colorScheme.primary.withOpacity(0.0798),
-                        shape: BoxShape.rectangle,
-                      ),
-                      todayTextStyle: TextStyle(
-                        color: colorScheme.secondary,
-                      ),
-                      rowDecoration: BoxDecoration(
-                        border: Border.all(
-                          color: colorScheme.surface,
-                        ),
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                    defaultDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                    ),
+                    weekendDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                    ),
+                    outsideDecoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                    ),
+                    todayDecoration: BoxDecoration(
+                      color: colorScheme.primary.withOpacity(0.0798),
+                      shape: BoxShape.rectangle,
+                    ),
+                    todayTextStyle: TextStyle(
+                      color: colorScheme.secondary,
+                    ),
+                    rowDecoration: BoxDecoration(
+                      border: Border.all(
+                        color: colorScheme.surface,
+                        width: 1,
+                        strokeAlign: BorderSide.strokeAlignOutside,
                       ),
                     ),
-                    headerStyle: HeaderStyle(
-                      titleCentered: true,
-                      formatButtonVisible: false,
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary,
-                      ),
-                      leftChevronIcon: CalendarChevronText(
-                        focusedDay: DateTime(
-                          _focusedDay.year,
-                          _focusedDay.month - 1,
-                          _focusedDay.day,
-                        ),
-                      ),
-                      rightChevronIcon: CalendarChevronText(
-                        focusedDay: DateTime(
-                          _focusedDay.year,
-                          _focusedDay.month + 1,
-                          _focusedDay.day,
-                        ),
-                      ),
-                      titleTextStyle: textTheme.bodyMedium!.copyWith(
-                        color: colorScheme.onPrimary,
+                  ),
+                  headerStyle: HeaderStyle(
+                    titleCentered: true,
+                    formatButtonVisible: false,
+                    headerPadding: EdgeInsets.zero,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary,
+                    ),
+                    leftChevronIcon: CalendarChevronText(
+                      focusedDay: DateTime(
+                        _focusedDay.year,
+                        _focusedDay.month - 1,
+                        _focusedDay.day,
                       ),
                     ),
-                    daysOfWeekStyle: DaysOfWeekStyle(
-                      weekdayStyle: TextStyle(
-                        color: colorScheme.secondary,
-                      ),
-                      weekendStyle: TextStyle(
-                        color: colorScheme.secondary,
-                      ),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
+                    rightChevronIcon: CalendarChevronText(
+                      focusedDay: DateTime(
+                        _focusedDay.year,
+                        _focusedDay.month + 1,
+                        _focusedDay.day,
                       ),
                     ),
-                    daysOfWeekHeight: 44,
-                    rowHeight: 52,
-                    pageJumpingEnabled: true,
-                    onDaySelected: (selectedDay, focusedDay) {
-                      if (!isSameDay(_selectedDay, selectedDay)) {
-                        setState(() {
-                          _selectedDay = selectedDay;
-                          _focusedDay = focusedDay;
-                          _rangeStart = null;
-                          _rangeEnd = null;
-                          _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                        });
-
-                        context
-                            .read<AppointmentBloc>()
-                            .add(AppointmentLoad(_selectedDay!));
-                      }
-                    },
-                    onFormatChanged: (format) {
-                      if (_calendarFormat != format) {
-                        setState(() {
-                          _calendarFormat = format;
-                        });
-                      }
-                    },
-                    onPageChanged: (focusedDay) {
+                    titleTextStyle: textTheme.bodyMedium!.copyWith(
+                      color: colorScheme.onPrimary,
+                    ),
+                  ),
+                  daysOfWeekStyle: DaysOfWeekStyle(
+                    weekdayStyle: TextStyle(
+                      color: colorScheme.secondary,
+                    ),
+                    weekendStyle: TextStyle(
+                      color: colorScheme.secondary,
+                    ),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                    ),
+                  ),
+                  daysOfWeekHeight: 44,
+                  rowHeight: 56,
+                  pageJumpingEnabled: true,
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(_selectedDay, selectedDay)) {
                       setState(() {
-                        _focusedDay = DateTime(
-                          focusedDay.year,
-                          focusedDay.month,
-                          _focusedDay.day,
-                        );
-                        _selectedDay = _focusedDay;
+                        _selectedDay = selectedDay;
+                        _focusedDay = focusedDay;
+                        _rangeStart = null;
+                        _rangeEnd = null;
+                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
 
                       context
                           .read<AppointmentBloc>()
                           .add(AppointmentLoad(_selectedDay!));
-                    },
-                  ),
+                    }
+                  },
+                  onFormatChanged: (format) {
+                    if (_calendarFormat != format) {
+                      setState(() {
+                        _calendarFormat = format;
+                      });
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    setState(() {
+                      _focusedDay = DateTime(
+                        focusedDay.year,
+                        focusedDay.month,
+                        _focusedDay.day,
+                      );
+                      _selectedDay = _focusedDay;
+                    });
+
+                    context
+                        .read<AppointmentBloc>()
+                        .add(AppointmentLoad(_selectedDay!));
+                  },
                 );
               },
             ),
