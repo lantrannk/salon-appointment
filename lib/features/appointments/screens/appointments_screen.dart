@@ -12,7 +12,7 @@ import '../../auth/model/user.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
-import 'edit_appointment_screen.dart';
+import 'new_appointment_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
@@ -54,6 +54,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
       create: (_) => AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
       child: MainLayout(
         currentIndex: 0,
+        selectedDay: _selectedDay!,
         title: l10n.appointmentAppBarTitle,
         child: Column(
           children: [
@@ -153,7 +154,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               listener: (ctx, state) {
                 switch (state.runtimeType) {
                   case AppointmentRemoving:
-                  case AppointmentEditing:
                     loadingIndicator.show(
                       context: ctx,
                       height: indicatorHeight,
@@ -171,22 +171,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           AppointmentLoad(_selectedDay!),
                         );
                     break;
-                  case AppointmentEdited:
-                    loadingIndicator.hide(ctx);
-                    Navigator.of(ctx).pop(true);
-
-                    SASnackBar.show(
-                      context: ctx,
-                      message: l10n.updateSuccess,
-                      isSuccess: true,
-                    );
-
-                    ctx.read<AppointmentBloc>().add(
-                          AppointmentLoad(_selectedDay!),
-                        );
-                    break;
                   case AppointmentRemoveError:
-                  case AppointmentEditError:
                     SASnackBar.show(
                       context: context,
                       message: state.error!,
@@ -232,9 +217,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 MaterialPageRoute(
                                   builder: (_) => BlocProvider.value(
                                     value: ctx.read<AppointmentBloc>(),
-                                    child: EditAppointment(
+                                    child: NewAppointmentScreen(
                                       appointment: events[index],
                                       user: findUser(events[index].userId),
+                                      selectedDay: _selectedDay!,
                                     ),
                                   ),
                                 ),
