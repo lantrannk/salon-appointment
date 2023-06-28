@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_screen.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
@@ -11,11 +10,19 @@ import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
+import '../screens/appointments_screen.dart';
 
 class NewAppointmentScreen extends StatefulWidget {
   const NewAppointmentScreen({
+    required this.selectedDay,
+    this.user,
+    this.appointment,
     super.key,
   });
+
+  final User? user;
+  final Appointment? appointment;
+  final DateTime selectedDay;
 
   @override
   State<NewAppointmentScreen> createState() => _NewAppointmentScreenState();
@@ -27,11 +34,25 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   final nameFocusNode = FocusNode();
   final descpFocusNode = FocusNode();
 
-  late DateTime dateTime = DateTime.now();
-  late DateTime startTime = DateTime.now();
-  late DateTime endTime = autoAddHalfHour(startTime);
+  late DateTime dateTime = widget.appointment?.date ??
+      setDateTime(
+        widget.selectedDay,
+        TimeOfDay.fromDateTime(DateTime.now()),
+      );
+  late DateTime startTime = widget.appointment?.startTime ??
+      setDateTime(
+        widget.selectedDay,
+        TimeOfDay.fromDateTime(DateTime.now()),
+      );
+  late DateTime endTime =
+      widget.appointment?.endTime ?? autoAddHalfHour(startTime);
+  late String? services = widget.appointment?.services;
 
-  String? selectedValue;
+  @override
+  void initState() {
+    descpController.text = widget.appointment?.description ?? '';
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -47,11 +68,13 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (context) => AppointmentBloc()..add(UserLoad()),
+      create: (_) => AppointmentBloc()..add(UserLoad()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
-            text: l10n.newAppointmentAppBarTitle,
+            text: widget.appointment == null
+                ? l10n.newAppointmentAppBarTitle
+                : l10n.editAppointmentAppBarTitle,
             style: textTheme.titleLarge!,
           ),
           automaticallyImplyLeading: false,
@@ -88,9 +111,12 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     break;
                   case AppointmentAdded:
                     loadingIndicator.hide(ctx);
+
                     SASnackBar.show(
                       context: context,
-                      message: l10n.addSuccess,
+                      message: widget.appointment == null
+                          ? l10n.addSuccess
+                          : l10n.updateSuccess,
                       isSuccess: true,
                     );
 
@@ -114,7 +140,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
               },
               builder: (context, state) {
                 if (state is UserLoaded) {
-                  final User user = state.user;
+                  final User user = widget.user ?? state.user;
                   return Column(
                     children: [
                       const SizedBox(height: 12),
@@ -211,10 +237,10 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       const SizedBox(height: 12),
                       Dropdown(
                           items: items,
-                          selectedValue: selectedValue,
+                          selectedValue: services,
                           onChanged: (value) {
                             setState(() {
-                              selectedValue = value;
+                              services = value;
                             });
                           }),
                       const SizedBox(height: 12),
@@ -250,7 +276,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                               message: l10n.closedTimeError,
                               isSuccess: false,
                             );
-                          } else if (selectedValue == null) {
+                          } else if (services == null) {
                             SASnackBar.show(
                               context: context,
                               message: l10n.emptyServicesError,
@@ -259,16 +285,28 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           } else {
                             context.read<AppointmentBloc>().add(
                                   AppointmentAdd(
-                                    appointment: Appointment(
-                                      userId: user.id,
-                                      date: dateTime,
-                                      startTime: startTime,
-                                      endTime: endTime,
-                                      services: selectedValue!,
-                                      description: descpController.text == ''
-                                          ? l10n.defaultDescription
-                                          : descpController.text,
-                                    ),
+                                    appointment: widget.appointment == null
+                                        ? Appointment(
+                                            userId: user.id,
+                                            date: dateTime,
+                                            startTime: startTime,
+                                            endTime: endTime,
+                                            services: services!,
+                                            description:
+                                                descpController.text == ''
+                                                    ? l10n.defaultDescription
+                                                    : descpController.text,
+                                          )
+                                        : widget.appointment!.copyWith(
+                                            date: dateTime,
+                                            startTime: startTime,
+                                            endTime: endTime,
+                                            services: services,
+                                            description:
+                                                descpController.text == ''
+                                                    ? l10n.defaultDescription
+                                                    : descpController.text,
+                                          ),
                                   ),
                                 );
                           }
@@ -277,7 +315,9 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           backgroundColor: colorScheme.primary,
                         ),
                         child: Text(
-                          l10n.createAppointmentButton,
+                          widget.appointment == null
+                              ? l10n.createAppointmentButton
+                              : l10n.editAppointmentButton,
                           style: textTheme.labelMedium!.copyWith(
                             color: colorScheme.onPrimary,
                           ),
