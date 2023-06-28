@@ -12,6 +12,7 @@ class ColorName {
   static const errorColor = Color(0xFFCF2600);
   static const borderColor = Color(0xFFF7F8FC);
   static const backgroundColor = Color(0xFFFFFFFF);
+  static const appointmentBackgroundColor = Color(0xFFF2F1F7);
   static const onBackgroundColor = Color(0x1F000000);
 }
 
@@ -24,6 +25,7 @@ const ColorScheme colorScheme = ColorScheme(
   secondaryContainer: ColorName.breakTimeColor,
   tertiary: ColorName.timeIconColor,
   onTertiary: ColorName.iconColor,
+  tertiaryContainer: ColorName.appointmentBackgroundColor,
   error: ColorName.errorColor,
   onError: ColorName.errorColor,
   background: ColorName.backgroundColor,
