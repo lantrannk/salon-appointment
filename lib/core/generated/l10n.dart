@@ -90,10 +90,10 @@ class S {
     );
   }
 
-  /// `Phone Number`
+  /// `Phone number`
   String get phoneNumber {
     return Intl.message(
-      'Phone Number',
+      'Phone number',
       name: 'phoneNumber',
       desc: '',
       args: [],
@@ -110,20 +110,20 @@ class S {
     );
   }
 
-  /// `Forgot Password?`
+  /// `Forgot password?`
   String get forgotPassword {
     return Intl.message(
-      'Forgot Password?',
+      'Forgot password?',
       name: 'forgotPassword',
       desc: '',
       args: [],
     );
   }
 
-  /// `Login`
+  /// `Log in`
   String get loginButton {
     return Intl.message(
-      'Login',
+      'Log in',
       name: 'loginButton',
       desc: '',
       args: [],

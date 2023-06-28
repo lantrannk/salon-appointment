@@ -50,7 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "emptyServicesError":
             MessageLookupByLibrary.simpleMessage("You must choose a service."),
         "forgotPassword":
-            MessageLookupByLibrary.simpleMessage("Forgot Password?"),
+            MessageLookupByLibrary.simpleMessage("Forgot password?"),
         "fromText": MessageLookupByLibrary.simpleMessage("From:"),
         "fullAppointmentsError": MessageLookupByLibrary.simpleMessage(
             "This time is full of appointments. Please pick another time."),
@@ -62,7 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "The end time must be after the start time of at least 30 minutes."),
         "invalidStartTimeError": MessageLookupByLibrary.simpleMessage(
             "You cannot choose a time before now."),
-        "loginButton": MessageLookupByLibrary.simpleMessage("Login"),
+        "loginButton": MessageLookupByLibrary.simpleMessage("Log in"),
         "logo": MessageLookupByLibrary.simpleMessage("avisit"),
         "logoText": MessageLookupByLibrary.simpleMessage("av"),
         "logoutConfirmMessage": MessageLookupByLibrary.simpleMessage(
@@ -74,7 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "notificationsLabel":
             MessageLookupByLibrary.simpleMessage("Notifications"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
-        "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
+        "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone number"),
         "profileAppBarTitle": MessageLookupByLibrary.simpleMessage("Profile"),
         "profileLabel": MessageLookupByLibrary.simpleMessage("Profile"),
         "removeConfirmMessage": MessageLookupByLibrary.simpleMessage(
