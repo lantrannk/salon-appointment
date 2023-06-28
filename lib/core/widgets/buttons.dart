@@ -30,7 +30,8 @@ class SAButton extends StatelessWidget {
   const factory SAButton.outlined({
     required Widget child,
     VoidCallback? onPressed,
-    Size size,
+    double height,
+    double width,
   }) = _SAOutlinedButton;
 
   final Widget child;
@@ -48,29 +49,35 @@ class _SAOutlinedButton extends SAButton {
   const _SAOutlinedButton({
     required super.child,
     super.onPressed,
-    this.size = const Size(311, 44),
+    this.height = 44,
+    this.width = double.infinity,
   });
 
-  final Size size;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        fixedSize: size,
-        side: BorderSide(
-          width: 2,
-          color: colorScheme.onPrimary,
+    return SizedBox(
+      height: height,
+      width: width,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(
+            width: 2,
+            color: colorScheme.onPrimary,
+            strokeAlign: BorderSide.strokeAlignOutside,
+          ),
+          backgroundColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
         ),
-        backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
+        child: child,
       ),
-      child: child,
     );
   }
 }
