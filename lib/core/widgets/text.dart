@@ -14,6 +14,7 @@ class SAText extends StatelessWidget {
   const factory SAText.calendarSchedule({
     required String text,
     required TextStyle style,
+    int maxLines,
   }) = _CalendarSchedule;
 
   const factory SAText.appBarTitle({
@@ -57,7 +58,10 @@ class _CalendarSchedule extends SAText {
   const _CalendarSchedule({
     required super.text,
     required super.style,
+    this.maxLines,
   });
+
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +71,7 @@ class _CalendarSchedule extends SAText {
       style: style!.copyWith(
         color: Theme.of(context).colorScheme.onPrimary,
       ),
+      maxLines: maxLines,
     );
   }
 }
