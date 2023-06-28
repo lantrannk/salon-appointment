@@ -107,19 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 });
               },
             ),
-            const SizedBox(height: 16),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: SAText(
-                  text: l10n.forgotPassword,
-                  style: textTheme.bodySmall!.copyWith(
-                    color: colorScheme.onPrimary.withOpacity(0.6429),
-                  ),
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
             SizedBox(
               child: BlocListener<AuthBloc, AuthState>(
