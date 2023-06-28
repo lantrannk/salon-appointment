@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:salon_appointment/features/appointments/model/appointment.dart';
 
 import '../../../core/constants/constants.dart';
+import '../model/appointment.dart';
 
 class AppointmentApi {
   static const String baseUrl = '$apiUrl/appointments';
