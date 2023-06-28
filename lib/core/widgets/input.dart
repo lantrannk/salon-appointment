@@ -57,6 +57,7 @@ class Input extends StatelessWidget {
         focusNode: focusNode,
         style: textTheme.labelSmall!.copyWith(
           color: color,
+          letterSpacing: -0.24,
         ),
         decoration: InputDecoration(
           hintText: text,
@@ -101,6 +102,7 @@ class _PhoneNumberInput extends Input {
         keyboardType: TextInputType.phone,
         style: textTheme.labelSmall!.copyWith(
           color: colorScheme.onPrimary,
+          letterSpacing: -0.24,
         ),
         decoration: InputDecoration(
           hintText: text,
@@ -144,6 +146,7 @@ class _PasswordInput extends Input {
         obscureText: true,
         style: textTheme.labelSmall!.copyWith(
           color: colorScheme.onPrimary,
+          letterSpacing: -0.24,
         ),
         decoration: InputDecoration(
           hintText: text,
