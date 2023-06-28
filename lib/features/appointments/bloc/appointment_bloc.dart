@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/storage/appointment_storage.dart';
 import '../../../core/storage/user_storage.dart';
 import '../../auth/model/user.dart';
 import '../api/appointment_api.dart';
@@ -43,7 +44,16 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAdding());
-      await AppointmentApi.addAppointment(event.appointment);
+
+      List<Appointment> appointments =
+          await AppointmentStorage.getAppointments();
+      if ([for (Appointment appointment in appointments) appointment.id]
+          .contains(event.appointment.id)) {
+        await AppointmentApi.updateAppointment(event.appointment);
+      } else {
+        await AppointmentApi.addAppointment(event.appointment);
+      }
+
       emit(AppointmentAdded());
     } on Exception catch (e) {
       emit(AppointmentAddError(error: e.toString()));
