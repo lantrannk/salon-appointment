@@ -90,6 +90,16 @@ class S {
     );
   }
 
+  /// `Beauty Salon`
+  String get beautySalonText {
+    return Intl.message(
+      'Beauty Salon',
+      name: 'beautySalonText',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Phone number`
   String get phoneNumber {
     return Intl.message(

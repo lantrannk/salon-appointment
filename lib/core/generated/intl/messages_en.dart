@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Appointments"),
         "appointmentsLabel":
             MessageLookupByLibrary.simpleMessage("Appointments"),
+        "beautySalonText": MessageLookupByLibrary.simpleMessage("Beauty Salon"),
         "breakTimeConflictError": MessageLookupByLibrary.simpleMessage(
             "This is the break time of Salon. You must pick another time not between 12 pm and 3:20 pm."),
         "calendarAppBarTitle": MessageLookupByLibrary.simpleMessage("Calendar"),
