@@ -67,39 +67,66 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   calendarFormat: _calendarFormat,
                   rangeSelectionMode: _rangeSelectionMode,
                   startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarBuilders: CalendarBuilders(
+                    todayBuilder: (context, day, focusedDay) {
+                      final String text = day.day.toString();
+                      final events = groupByDate(state.appointments!, day);
+                      return MonthCalendarCell(
+                        text: text,
+                        events: events,
+                        bgColor: colorScheme.primary.withOpacity(0.0798),
+                      );
+                    },
+                    defaultBuilder: (context, day, focusedDay) {
+                      final String text = day.day.toString();
+                      final events = groupByDate(state.appointments!, day);
+
+                      return MonthCalendarCell(
+                        text: text,
+                        events: events,
+                      );
+                    },
+                    outsideBuilder: (context, day, focusedDay) {
+                      final String text = day.day.toString();
+                      final events = groupByDate(state.appointments!, day);
+
+                      return MonthCalendarCell(
+                        text: text,
+                        events: events,
+                        dayColor: colorScheme.onSecondary,
+                      );
+                    },
+                    selectedBuilder: (context, day, focusedDay) {
+                      final String text = day.day.toString();
+                      final events = groupByDate(state.appointments!, day);
+
+                      return MonthCalendarCell(
+                        text: text,
+                        events: events,
+                        gradient: LinearGradient(
+                          colors: [
+                            colorScheme.onSurface,
+                            colorScheme.primary,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                        dayColor: colorScheme.onPrimary,
+                        timeColor: colorScheme.onPrimary,
+                      );
+                    },
+                    dowBuilder: (context, day) {
+                      return Container(
+                        alignment: Alignment.centerRight,
+                        child: SAText.weekCalendarCell(
+                          text: dayOfWeekFormat.format(day),
+                          color: colorScheme.secondary,
+                        ),
+                      );
+                    },
+                  ),
                   calendarStyle: CalendarStyle(
                     outsideDaysVisible: true,
-                    cellMargin: EdgeInsets.zero,
-                    cellPadding: const EdgeInsets.all(2),
-                    cellAlignment: Alignment.topRight,
-                    selectedDecoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          colorScheme.primary,
-                          colorScheme.onSurface,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                    defaultDecoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
-                    ),
-                    weekendDecoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
-                    ),
-                    outsideDecoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
-                    ),
-                    todayDecoration: BoxDecoration(
-                      color: colorScheme.primary.withOpacity(0.0798),
-                      shape: BoxShape.rectangle,
-                    ),
-                    todayTextStyle: TextStyle(
-                      color: colorScheme.secondary,
-                    ),
                     rowDecoration: BoxDecoration(
                       border: Border.all(
                         color: colorScheme.surface,
@@ -131,17 +158,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     ),
                     titleTextStyle: textTheme.bodyMedium!.copyWith(
                       color: colorScheme.onPrimary,
-                    ),
-                  ),
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                    weekdayStyle: TextStyle(
-                      color: colorScheme.secondary,
-                    ),
-                    weekendStyle: TextStyle(
-                      color: colorScheme.secondary,
-                    ),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.rectangle,
                     ),
                   ),
                   daysOfWeekHeight: 44,
@@ -194,7 +210,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       height: indicatorHeight,
                     );
                   case AppointmentLoadSuccess:
-                    List<Appointment> events = state.appointments!;
+                    final List<Appointment> events =
+                        groupByDate(state.appointments!, _selectedDay!);
                     return (events.isNotEmpty)
                         ? Container(
                             margin: const EdgeInsets.only(top: 8),
