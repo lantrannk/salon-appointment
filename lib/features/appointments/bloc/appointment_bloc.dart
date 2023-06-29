@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/storage/appointment_storage.dart';
 import '../../../core/storage/user_storage.dart';
 import '../../auth/model/user.dart';
 import '../api/appointment_api.dart';
@@ -15,6 +14,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentLoad>(_getAppointmentList);
     on<AppointmentRemovePressed>(_removeAppointment);
     on<AppointmentAdd>(_addAppointment);
+    on<AppointmentEdit>(_editAppointment);
     on<UserLoad>(_getUser);
   }
 
@@ -44,17 +44,21 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAdding());
-
-      List<Appointment> appointments =
-          await AppointmentStorage.getAppointments();
-      if ([for (Appointment appointment in appointments) appointment.id]
-          .contains(event.appointment.id)) {
-        await AppointmentApi.updateAppointment(event.appointment);
-      } else {
-        await AppointmentApi.addAppointment(event.appointment);
-      }
-
+      await AppointmentApi.addAppointment(event.appointment);
       emit(AppointmentAdded());
+    } on Exception catch (e) {
+      emit(AppointmentAddError(error: e.toString()));
+    }
+  }
+
+  Future<void> _editAppointment(
+    AppointmentEdit event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    try {
+      emit(AppointmentAdding());
+      await AppointmentApi.updateAppointment(event.appointment);
+      emit(AppointmentEdited());
     } on Exception catch (e) {
       emit(AppointmentAddError(error: e.toString()));
     }

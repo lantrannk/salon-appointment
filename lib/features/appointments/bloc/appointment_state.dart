@@ -51,6 +51,8 @@ class AppointmentAdding extends AppointmentState {}
 
 class AppointmentAdded extends AppointmentState {}
 
+class AppointmentEdited extends AppointmentState {}
+
 class AppointmentAddError extends AppointmentState {
   const AppointmentAddError({this.error});
 
