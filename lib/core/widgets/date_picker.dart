@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/assets.dart';
 import '../constants/date_format.dart';
+import '../widgets/widgets.dart';
 
 class DatePicker extends StatelessWidget {
   const DatePicker({
@@ -27,21 +28,21 @@ class DatePicker extends StatelessWidget {
             Assets.scheduleIcon,
             color: colorScheme.secondaryContainer,
           ),
-          Text(
-            dateFormat.format(dateTime),
-            style: textTheme.labelLarge!.copyWith(
-              color: colorScheme.secondaryContainer,
-              fontWeight: FontWeight.w400,
+          SAButton.text(
+            onPressed: onPressed,
+            child: Text(
+              dateFormat.format(dateTime),
+              style: textTheme.labelLarge!.copyWith(
+                color: colorScheme.secondaryContainer,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
-            child: IconButton(
-              onPressed: onPressed,
-              icon: Icon(
-                Assets.calendarIcon,
-                color: colorScheme.secondaryContainer,
-              ),
+            child: Icon(
+              Assets.calendarIcon,
+              color: colorScheme.secondaryContainer,
             ),
           ),
         ],
