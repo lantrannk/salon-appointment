@@ -72,10 +72,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     ),
                   ],
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(50),
                 ),
                 child: TableCalendar<Appointment>(
                   headerVisible: false,
+                  daysOfWeekVisible: false,
                   firstDay: firstDay,
                   lastDay: lastDay,
                   focusedDay: _focusedDay!,
@@ -85,6 +85,36 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   calendarFormat: CalendarFormat.week,
                   rangeSelectionMode: _rangeSelectionMode,
                   startingDayOfWeek: StartingDayOfWeek.monday,
+                  calendarBuilders: CalendarBuilders(
+                    selectedBuilder: (context, day, focusedDay) {
+                      return CalendarCell(
+                        dayOfWeek: dayOfWeekFormat.format(day),
+                        day: day.day.toString(),
+                        gradient: LinearGradient(
+                          colors: [
+                            colorScheme.onSurface,
+                            colorScheme.primary,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      );
+                    },
+                    defaultBuilder: (context, day, focusedDay) {
+                      return CalendarCell(
+                        dayOfWeek: dayOfWeekFormat.format(day),
+                        day: day.day.toString(),
+                        bgColor: colorScheme.primary,
+                      );
+                    },
+                    outsideBuilder: (context, day, focusedDay) {
+                      return CalendarCell(
+                        dayOfWeek: dayOfWeekFormat.format(day),
+                        day: day.day.toString(),
+                        bgColor: colorScheme.primary,
+                      );
+                    },
+                  ),
                   calendarStyle: CalendarStyle(
                     outsideDaysVisible: true,
                     isTodayHighlighted: false,
@@ -125,21 +155,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       color: colorScheme.primary,
                     ),
                   ),
-                  daysOfWeekStyle: DaysOfWeekStyle(
-                    weekdayStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary.withOpacity(0.6429),
-                    ),
-                    weekendStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary.withOpacity(0.6429),
-                    ),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
-                    ),
-                  ),
-                  daysOfWeekHeight: 22,
-                  rowHeight: 22,
+                  rowHeight: 44,
                   onDaySelected: (selectedDay, focusedDay) {
                     if (!isSameDay(_selectedDay, selectedDay)) {
                       setState(() {
@@ -208,8 +224,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       height: indicatorHeight,
                     );
                   case AppointmentLoadSuccess:
-                    if (state.appointments!.isNotEmpty) {
-                      final events = state.appointments;
+                    final events =
+                        groupByDate(state.appointments!, _selectedDay!);
+                    if (events.isNotEmpty) {
                       final users = state.users;
                       User findUser(String userId) =>
                           users.where((e) => e.id == userId).first;
@@ -220,7 +237,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                             color: colorScheme.tertiaryContainer,
                           ),
                           child: ListView.builder(
-                            itemCount: events!.length,
+                            itemCount: events.length,
                             itemBuilder: (ctx, index) => AppointmentCard(
                               name: findUser(events[index].userId).name,
                               avatar: findUser(events[index].userId).avatar,
