@@ -75,6 +75,17 @@ bool isFullAppointments(List<Appointment> appointments, DateTime dateTime) {
   return appointmentsOfDateTime.length >= 5;
 }
 
+List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
+  final dateStr = dateFormat.format(date);
+
+  final List<Appointment> appointmentsOfDate = appointments
+      .where((e) => dateFormat.format(e.date) == dateStr)
+      .toList()
+    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
+  return appointmentsOfDate;
+}
+
 final today = DateTime.now();
 final firstDay = DateTime(today.year - 10, today.month, today.day);
 final lastDay = DateTime(today.year + 10, today.month, today.day);
