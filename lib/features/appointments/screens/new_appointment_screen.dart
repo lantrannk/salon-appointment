@@ -110,6 +110,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     );
                     break;
                   case AppointmentAdded:
+                  case AppointmentEdited:
                     loadingIndicator.hide(ctx);
 
                     SASnackBar.show(
@@ -261,65 +262,70 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (isBreakTime(startTime, endTime)) {
-                            SASnackBar.show(
-                              context: context,
-                              message: l10n.breakTimeConflictError,
-                              isSuccess: false,
-                            );
-                          } else if (isClosedTime(startTime, endTime)) {
-                            SASnackBar.show(
-                              context: context,
-                              message: l10n.closedTimeError,
-                              isSuccess: false,
-                            );
-                          } else if (services == null) {
-                            SASnackBar.show(
-                              context: context,
-                              message: l10n.emptyServicesError,
-                              isSuccess: false,
-                            );
-                          } else {
-                            context.read<AppointmentBloc>().add(
-                                  AppointmentAdd(
-                                    appointment: widget.appointment == null
-                                        ? Appointment(
-                                            userId: user.id,
-                                            date: dateTime,
-                                            startTime: startTime,
-                                            endTime: endTime,
-                                            services: services!,
-                                            description:
-                                                descpController.text == ''
-                                                    ? l10n.defaultDescription
-                                                    : descpController.text,
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        height: 44,
+                        width: double.infinity,
+                        child: SAButton.elevation(
+                          onPressed: () {
+                            if (isBreakTime(startTime, endTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.breakTimeConflictError,
+                                isSuccess: false,
+                              );
+                            } else if (isClosedTime(startTime, endTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.closedTimeError,
+                                isSuccess: false,
+                              );
+                            } else if (services == null) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.emptyServicesError,
+                                isSuccess: false,
+                              );
+                            } else {
+                              context.read<AppointmentBloc>().add(
+                                    widget.appointment == null
+                                        ? AppointmentAdd(
+                                            appointment: Appointment(
+                                              userId: user.id,
+                                              date: dateTime,
+                                              startTime: startTime,
+                                              endTime: endTime,
+                                              services: services!,
+                                              description:
+                                                  descpController.text == ''
+                                                      ? l10n.defaultDescription
+                                                      : descpController.text,
+                                            ),
                                           )
-                                        : widget.appointment!.copyWith(
-                                            date: dateTime,
-                                            startTime: startTime,
-                                            endTime: endTime,
-                                            services: services,
-                                            description:
-                                                descpController.text == ''
-                                                    ? l10n.defaultDescription
-                                                    : descpController.text,
+                                        : AppointmentEdit(
+                                            appointment:
+                                                widget.appointment!.copyWith(
+                                              date: dateTime,
+                                              startTime: startTime,
+                                              endTime: endTime,
+                                              services: services,
+                                              description:
+                                                  descpController.text == ''
+                                                      ? l10n.defaultDescription
+                                                      : descpController.text,
+                                            ),
                                           ),
-                                  ),
-                                );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: colorScheme.primary,
-                        ),
-                        child: Text(
-                          widget.appointment == null
-                              ? l10n.createAppointmentButton
-                              : l10n.editAppointmentButton,
-                          style: textTheme.labelMedium!.copyWith(
-                            color: colorScheme.onPrimary,
+                                  );
+                            }
+                          },
+                          bgColor: colorScheme.primary,
+                          child: Text(
+                            widget.appointment == null
+                                ? l10n.createAppointmentButton
+                                : l10n.editAppointmentButton,
+                            style: textTheme.labelMedium!.copyWith(
+                              color: colorScheme.onPrimary,
+                            ),
                           ),
                         ),
                       ),
