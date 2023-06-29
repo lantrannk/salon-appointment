@@ -34,6 +34,14 @@ class SAButton extends StatelessWidget {
     double width,
   }) = _SAOutlinedButton;
 
+  const factory SAButton.elevation({
+    required Widget child,
+    VoidCallback? onPressed,
+    double height,
+    double width,
+    Color bgColor,
+  }) = _SAElevationButton;
+
   final Widget child;
   final VoidCallback? onPressed;
 
@@ -113,6 +121,35 @@ class _SAIconButton extends SAButton {
       padding: EdgeInsets.zero,
       onPressed: onPressed,
       icon: child,
+    );
+  }
+}
+
+class _SAElevationButton extends SAButton {
+  const _SAElevationButton({
+    required super.child,
+    this.bgColor,
+    this.height,
+    this.width,
+    super.onPressed,
+  });
+
+  final Color? bgColor;
+  final double? height;
+  final double? width;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bgColor,
+        alignment: Alignment.center,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+      onPressed: onPressed,
+      child: child,
     );
   }
 }
