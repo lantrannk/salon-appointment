@@ -172,10 +172,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         _rangeEnd = null;
                         _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
-
-                      context
-                          .read<AppointmentBloc>()
-                          .add(AppointmentLoad(_selectedDay!));
                     }
                   },
                   onFormatChanged: (format) {
