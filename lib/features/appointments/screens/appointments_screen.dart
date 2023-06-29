@@ -233,9 +233,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                       return Expanded(
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: colorScheme.tertiaryContainer,
-                          ),
+                          color: colorScheme.tertiaryContainer,
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (ctx, index) => AppointmentCard(
