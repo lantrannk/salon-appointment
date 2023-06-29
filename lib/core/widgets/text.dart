@@ -22,6 +22,16 @@ class SAText extends StatelessWidget {
     TextStyle style,
   }) = _AppBarTitle;
 
+  const factory SAText.timeCell({
+    required String text,
+    Color color,
+  }) = _TimeCell;
+
+  const factory SAText.weekCalendarCell({
+    required String text,
+    Color color,
+  }) = _WeekCalendarCell;
+
   final String text;
   final TextStyle? style;
 
@@ -91,6 +101,53 @@ class _TimePicker extends SAText {
       textAlign: TextAlign.justify,
       style: textTheme.labelLarge!.copyWith(
         color: colorScheme.secondaryContainer,
+      ),
+    );
+  }
+}
+
+class _TimeCell extends SAText {
+  const _TimeCell({
+    required super.text,
+    this.color,
+  });
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Text(
+      text,
+      style: textTheme.bodySmall!.copyWith(
+        fontSize: 10,
+        fontWeight: FontWeight.w400,
+        height: 12 / 10,
+        color: color ?? colorScheme.onSecondary,
+      ),
+    );
+  }
+}
+
+class _WeekCalendarCell extends SAText {
+  const _WeekCalendarCell({
+    required super.text,
+    this.color,
+  });
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return Text(
+      text,
+      style: textTheme.bodySmall!.copyWith(
+        fontWeight: FontWeight.w500,
+        color: color,
       ),
     );
   }
