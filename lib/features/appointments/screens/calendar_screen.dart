@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../core/constants/assets.dart';
 import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
@@ -12,6 +11,7 @@ import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
 import '../screens/appointments_screen.dart';
+import 'appointments_widgets/appointments_widgets.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({
@@ -113,6 +113,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                         dayColor: colorScheme.onPrimary,
                         timeColor: colorScheme.onPrimary,
+                        iconColor: colorScheme.onPrimary,
                       );
                     },
                     dowBuilder: (context, day) {
@@ -292,170 +293,6 @@ class CalendarChevronText extends StatelessWidget {
       calendarTitleFormat.format(focusedDay),
       style: themeData.textTheme.bodyMedium!.copyWith(
         color: themeData.colorScheme.onPrimary.withOpacity(0.3991),
-      ),
-    );
-  }
-}
-
-class CalendarSchedule extends StatelessWidget {
-  const CalendarSchedule({
-    required this.appointment,
-    required this.countOfAppointments,
-    this.onPressed,
-    super.key,
-  });
-
-  final Appointment appointment;
-  final int countOfAppointments;
-  final Function()? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 26,
-            left: 27,
-          ),
-          child: SAIcons(
-            icon: Assets.scheduleIcon,
-            size: 20,
-            color: colorScheme.onPrimary,
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 12,
-              right: 8,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 22),
-                SAText.calendarSchedule(
-                  text: monthCharFormat.format(appointment.date),
-                  style: textTheme.labelLarge!,
-                ),
-                const SizedBox(height: 7),
-                SAText.calendarSchedule(
-                  text:
-                      '${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}',
-                  style: textTheme.bodyLarge!.copyWith(
-                    height: 24 / 14,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SAText.calendarSchedule(
-                  text: appointment.description,
-                  style: textTheme.bodySmall!,
-                  maxLines: 5,
-                ),
-                const Spacer(),
-                SAButton.text(
-                  onPressed: onPressed,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.zero,
-                    child: SAText.calendarSchedule(
-                      text: 'Show appointments ($countOfAppointments)',
-                      style: textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class MonthCalendarCell extends StatelessWidget {
-  const MonthCalendarCell({
-    required this.text,
-    required this.events,
-    this.dayColor,
-    this.timeColor,
-    this.bgColor,
-    this.gradient,
-    super.key,
-  });
-
-  final String text;
-  final List<Appointment> events;
-  final Color? dayColor;
-  final Color? timeColor;
-  final Color? bgColor;
-  final Gradient? gradient;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        vertical: 5,
-        horizontal: 2,
-      ),
-      decoration: BoxDecoration(
-        color: bgColor,
-        gradient: gradient,
-        shape: BoxShape.rectangle,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // SAIcons(
-              //   icon: Assets.breakIcon,
-              //   color: colorScheme.primary,
-              //   size: 12,
-              // ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: SizedBox(
-                  width: 15,
-                  child: Text(
-                    text,
-                    style: textTheme.bodySmall!.copyWith(
-                      height: 18 / 12,
-                      color: dayColor ?? colorScheme.secondary,
-                    ),
-                    textAlign: TextAlign.end,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 2,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              for (int i = 0; i < events.length && i < 2; i++)
-                SAText.timeCell(
-                  text: timeFormat.format(events[i].startTime),
-                  color: timeColor ?? colorScheme.onSecondary,
-                ),
-            ],
-          )
-        ],
       ),
     );
   }
