@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Assets {
-  static const AssetImage bgImage = AssetImage('assets/images/background.png');
+  static const _kFontFam = 'CustomIcons';
 
-  static const IconData scheduleIcon = Icons.schedule_outlined;
+  static const String? _kFontPkg = null;
+
+  static const AssetImage bgImage = AssetImage('assets/images/background.png');
 
   static const IconData addIcon = Icons.add;
 
   static const IconData closeIcon = Icons.close;
-
-  static const IconData checkIcon = Icons.check;
-
-  static const IconData personIcon = Icons.person;
-
-  static const IconData notificationsIcon = Icons.notifications;
 
   static const IconData calendarIcon = Icons.calendar_month;
 
@@ -24,4 +20,40 @@ class Assets {
   static const IconData removeIcon = Icons.delete_outline;
 
   static const IconData logoutIcon = Icons.logout;
+
+  static const IconData breakIcon = IconData(
+    0xe800,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
+
+  static const IconData differentIcon = IconData(
+    0xe801,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
+
+  static const IconData checkIcon = IconData(
+    0xe802,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
+
+  static const IconData scheduleIcon = IconData(
+    0xe803,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
+
+  static const IconData personIcon = IconData(
+    0xe804,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
+
+  static const IconData notificationsIcon = IconData(
+    0xe805,
+    fontFamily: _kFontFam,
+    fontPackage: _kFontPkg,
+  );
 }
