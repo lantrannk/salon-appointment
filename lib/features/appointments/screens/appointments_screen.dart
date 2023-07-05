@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../core/constants/assets.dart';
 import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
@@ -12,6 +11,7 @@ import '../../auth/model/user.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
+import 'appointments_widgets/appointments_widgets.dart';
 import 'new_appointment_screen.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -116,49 +116,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       return CalendarCell(
                         dayOfWeek: dayOfWeekFormat.format(day),
                         day: day.day.toString(),
-                        bgColor: colorScheme.primary,
                       );
                     },
                   ),
-                  calendarStyle: CalendarStyle(
+                  calendarStyle: const CalendarStyle(
                     outsideDaysVisible: true,
-                    isTodayHighlighted: false,
-                    cellMargin: EdgeInsets.zero,
-                    cellPadding: const EdgeInsets.only(bottom: 4),
-                    tablePadding: const EdgeInsets.symmetric(vertical: 4),
-                    selectedTextStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary,
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          colorScheme.onSurface,
-                          colorScheme.primary,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      shape: BoxShape.rectangle,
-                    ),
-                    defaultTextStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary,
-                    ),
-                    defaultDecoration: BoxDecoration(
-                      color: colorScheme.primary,
-                    ),
-                    weekendTextStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary,
-                    ),
-                    outsideTextStyle: textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onPrimary,
-                    ),
-                    rowDecoration: BoxDecoration(
-                      color: colorScheme.primary,
-                    ),
                   ),
                   rowHeight: 44,
                   onDaySelected: (selectedDay, focusedDay) {
@@ -170,10 +132,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         _rangeEnd = null;
                         _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
-
-                      ctx
-                          .read<AppointmentBloc>()
-                          .add(AppointmentLoad(_selectedDay!));
                     }
                   },
                   onPageChanged: (focusedDay) {
@@ -310,306 +268,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AppointmentCard extends StatelessWidget {
-  const AppointmentCard({
-    required this.appointment,
-    required this.name,
-    required this.avatar,
-    required this.onEditPressed,
-    required this.onRemovePressed,
-    super.key,
-  });
-
-  final Appointment appointment;
-  final String name;
-  final String avatar;
-  final VoidCallback onEditPressed;
-  final VoidCallback onRemovePressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      borderOnForeground: false,
-      shadowColor: Theme.of(context).colorScheme.primary.withOpacity(0.16),
-      margin: const EdgeInsets.only(
-        left: 8,
-        right: 8,
-        top: 8,
-      ),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 24,
-          right: 24,
-          top: 12,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Time(
-                  startTime: appointment.startTime,
-                  endTime: appointment.endTime,
-                  text: S.of(context).beautySalonText,
-                ),
-                Row(
-                  children: [
-                    SAButton.icon(
-                      onPressed: onEditPressed,
-                      child: const SAIcons(
-                        icon: Assets.editIcon,
-                      ),
-                    ),
-                    SAButton.icon(
-                      onPressed: onRemovePressed,
-                      child: const SAIcons(
-                        icon: Assets.removeIcon,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            const SizedBox(height: 12),
-            Customer(
-              name: name,
-              avatar: avatar,
-            ),
-            const SizedBox(height: 12),
-            Services(
-              services: appointment.services,
-            ),
-            const SizedBox(height: 12),
-            Description(
-              description: appointment.description,
-            ),
-            const SizedBox(height: 12),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Time extends StatelessWidget {
-  const Time({
-    required this.startTime,
-    required this.endTime,
-    required this.text,
-    super.key,
-  });
-
-  final DateTime startTime;
-  final DateTime endTime;
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            SAIcons(
-              icon: Assets.scheduleIcon,
-              size: 20,
-              color: themeData.colorScheme.tertiary,
-            ),
-            const SizedBox(
-              width: 12,
-            ),
-            Text(
-              '${formatTime(startTime)} - ${formatTime(endTime)}',
-              style: themeData.textTheme.bodyLarge!.copyWith(
-                height: 24 / 14,
-              ),
-            ),
-          ],
-        ),
-        Row(
-          children: [
-            const SizedBox(
-              width: 32,
-            ),
-            Text(
-              text,
-              style: themeData.textTheme.bodySmall!.copyWith(
-                color: themeData.colorScheme.onSecondary,
-              ),
-            ),
-          ],
-        )
-      ],
-    );
-  }
-}
-
-class Customer extends StatelessWidget {
-  const Customer({
-    required this.name,
-    required this.avatar,
-    super.key,
-  });
-
-  final String name;
-  final String avatar;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      children: [
-        Container(
-          width: 18,
-          height: 18,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: colorScheme.onPrimary,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage(avatar),
-            ),
-          ),
-        ),
-        const SizedBox(
-          width: 12,
-        ),
-        Text(
-          name,
-          style: textTheme.bodyLarge!.copyWith(
-            color: colorScheme.primary,
-            height: 24 / 14,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class Services extends StatelessWidget {
-  const Services({
-    required this.services,
-    super.key,
-  });
-
-  final String services;
-
-  @override
-  Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          const SizedBox(
-            width: 1,
-          ),
-          VerticalDivider(
-            color: colorScheme.onSecondary,
-            thickness: 1,
-          ),
-          const SizedBox(
-            width: 13,
-          ),
-          Expanded(
-            child: Text(
-              services,
-              style: textTheme.bodyLarge!.copyWith(
-                fontWeight: FontWeight.w500,
-                height: 20 / 14,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Description extends StatelessWidget {
-  const Description({
-    required this.description,
-    super.key,
-  });
-
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            description,
-            maxLines: 3,
-            textAlign: TextAlign.justify,
-            style: textTheme.bodySmall!.copyWith(
-              color: colorScheme.onSecondary,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class CalendarCell extends StatelessWidget {
-  const CalendarCell({
-    required this.dayOfWeek,
-    required this.day,
-    this.dayOfWeekColor,
-    this.dayColor,
-    this.bgColor,
-    this.gradient,
-    super.key,
-  });
-
-  final Color? dayOfWeekColor;
-  final Color? dayColor;
-  final Color? bgColor;
-  final Gradient? gradient;
-  final String dayOfWeek;
-  final String day;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: bgColor,
-        gradient: gradient,
-        shape: BoxShape.rectangle,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SAText.weekCalendarCell(
-            text: dayOfWeek,
-            color: dayOfWeekColor ?? colorScheme.onPrimary.withOpacity(0.6429),
-          ),
-          SAText.weekCalendarCell(
-            text: day,
-            color: dayColor ?? colorScheme.onPrimary,
-          ),
-        ],
       ),
     );
   }
