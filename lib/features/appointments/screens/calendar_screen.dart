@@ -105,8 +105,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         events: events,
                         gradient: LinearGradient(
                           colors: [
-                            colorScheme.onSurface,
                             colorScheme.primary,
+                            colorScheme.onSurface,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
