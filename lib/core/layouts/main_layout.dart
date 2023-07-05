@@ -164,6 +164,12 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
           label: l10n.calendarLabel,
         ),
+        const BottomNavigationBarItem(
+          icon: SizedBox(
+            width: 119,
+          ),
+          label: '',
+        ),
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.personIcon,
@@ -223,8 +229,8 @@ Widget _buildIcon({
             height: 2,
             child: Divider(
               thickness: 2,
-              indent: 40,
-              endIndent: 40,
+              indent: 29,
+              endIndent: 29,
               color: topColor,
             ),
           ),
