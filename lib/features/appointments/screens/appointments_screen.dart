@@ -104,7 +104,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       return CalendarCell(
                         dayOfWeek: dayOfWeekFormat.format(day),
                         day: day.day.toString(),
-                        bgColor: colorScheme.primary,
+                      );
+                    },
+                    todayBuilder: (context, day, focusedDay) {
+                      return CalendarCell(
+                        dayOfWeek: dayOfWeekFormat.format(day),
+                        day: day.day.toString(),
                       );
                     },
                     outsideBuilder: (context, day, focusedDay) {
