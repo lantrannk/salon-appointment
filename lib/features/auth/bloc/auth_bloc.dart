@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_appointment/core/storage/user_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/storage/user_storage.dart';
 import '../../../core/validations/validations.dart';
 import '../model/user.dart';
+import '../repository/user_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -51,8 +51,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogoutEvent event,
     Emitter<AuthState> emit,
   ) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user');
+    emit(LogoutInProgress());
+    await UserRepository.removeUser();
     emit(LogoutSuccess());
   }
 
@@ -61,10 +61,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final user = await UserStorage.getUser();
-      emit(UserLoaded(User.fromJson(user)));
+      final userMap = await UserStorage.getUser();
+      final user = User.fromJson(userMap);
+
+      emit(
+        UserLoaded(
+          user.name,
+          user.avatar,
+        ),
+      );
     } on Exception catch (e) {
-      emit(UserLoadError(error: e.toString()));
+      emit(
+        UserLoadError(
+          error: e.toString(),
+        ),
+      );
     }
   }
 }
