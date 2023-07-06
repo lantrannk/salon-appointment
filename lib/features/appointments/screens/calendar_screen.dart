@@ -25,13 +25,8 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   final appointmentRepo = AppointmentRepository();
 
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-
-  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
 
   @override
   void initState() {
@@ -62,46 +57,39 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   lastDay: lastDay,
                   focusedDay: _focusedDay,
                   selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  rangeStartDay: _rangeStart,
-                  rangeEndDay: _rangeEnd,
-                  calendarFormat: _calendarFormat,
-                  rangeSelectionMode: _rangeSelectionMode,
+                  calendarFormat: CalendarFormat.month,
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   calendarBuilders: CalendarBuilders(
                     todayBuilder: (context, day, focusedDay) {
-                      final String text = day.day.toString();
                       final events = groupByDate(state.appointments!, day);
                       return MonthCalendarCell(
-                        text: text,
+                        day: day,
                         events: events,
                         bgColor: colorScheme.primary.withOpacity(0.0798),
                       );
                     },
                     defaultBuilder: (context, day, focusedDay) {
-                      final String text = day.day.toString();
                       final events = groupByDate(state.appointments!, day);
 
                       return MonthCalendarCell(
-                        text: text,
+                        day: day,
                         events: events,
                       );
                     },
                     outsideBuilder: (context, day, focusedDay) {
-                      final String text = day.day.toString();
                       final events = groupByDate(state.appointments!, day);
 
                       return MonthCalendarCell(
-                        text: text,
+                        day: day,
                         events: events,
                         dayColor: colorScheme.onSecondary,
                       );
                     },
                     selectedBuilder: (context, day, focusedDay) {
-                      final String text = day.day.toString();
                       final events = groupByDate(state.appointments!, day);
 
                       return MonthCalendarCell(
-                        text: text,
+                        day: day,
                         events: events,
                         gradient: LinearGradient(
                           colors: [
@@ -169,16 +157,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
-                        _rangeStart = null;
-                        _rangeEnd = null;
-                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
-                      });
-                    }
-                  },
-                  onFormatChanged: (format) {
-                    if (_calendarFormat != format) {
-                      setState(() {
-                        _calendarFormat = format;
                       });
                     }
                   },
@@ -191,10 +169,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                       _selectedDay = _focusedDay;
                     });
-
-                    context
-                        .read<AppointmentBloc>()
-                        .add(AppointmentLoad(_selectedDay!));
                   },
                 );
               },
