@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/date_format.dart';
+import '../../../../core/utils.dart';
 import '../../../../core/widgets/widgets.dart';
 
 class CalendarCell extends StatelessWidget {
   const CalendarCell({
-    required this.dayOfWeek,
     required this.day,
     this.dayOfWeekColor,
     this.dayColor,
@@ -17,8 +18,7 @@ class CalendarCell extends StatelessWidget {
   final Color? dayColor;
   final Color? bgColor;
   final Gradient? gradient;
-  final String dayOfWeek;
-  final String day;
+  final DateTime day;
 
   @override
   Widget build(BuildContext context) {
@@ -30,21 +30,40 @@ class CalendarCell extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.primary,
         gradient: gradient,
+        borderRadius: borderRadius(day),
         shape: BoxShape.rectangle,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SAText.weekCalendarCell(
-            text: dayOfWeek,
+            text: dayOfWeekFormat.format(day),
             color: dayOfWeekColor ?? colorScheme.onPrimary.withOpacity(0.6429),
           ),
           SAText.weekCalendarCell(
-            text: day,
+            text: day.day.toString(),
             color: dayColor ?? colorScheme.onPrimary,
           ),
         ],
       ),
     );
   }
+}
+
+BorderRadiusGeometry? borderRadius(DateTime dateTime) {
+  if (dateTime == rangeStartDay(dateTime)) {
+    return const BorderRadius.only(
+      topLeft: Radius.circular(8),
+      bottomLeft: Radius.circular(8),
+    );
+  }
+
+  if (dateTime == rangeEndDay(dateTime)) {
+    return const BorderRadius.only(
+      topRight: Radius.circular(8),
+      bottomRight: Radius.circular(8),
+    );
+  }
+
+  return null;
 }
