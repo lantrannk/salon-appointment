@@ -10,7 +10,6 @@ import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
-import '../repository/appointment_repository.dart';
 import 'appointments_widgets/appointments_widgets.dart';
 import 'new_appointment_screen.dart';
 
@@ -27,14 +26,8 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  final appointmentRepo = AppointmentRepository();
-
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
-
   DateTime? _focusedDay;
   DateTime? _selectedDay;
-  DateTime? _rangeStart;
-  DateTime? _rangeEnd;
 
   @override
   void initState() {
@@ -61,7 +54,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             BlocBuilder<AppointmentBloc, AppointmentState>(
                 builder: (ctx, state) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -80,16 +73,12 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   lastDay: lastDay,
                   focusedDay: _focusedDay!,
                   selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  rangeStartDay: _rangeStart,
-                  rangeEndDay: _rangeEnd,
                   calendarFormat: CalendarFormat.week,
-                  rangeSelectionMode: _rangeSelectionMode,
                   startingDayOfWeek: StartingDayOfWeek.monday,
                   calendarBuilders: CalendarBuilders(
                     selectedBuilder: (context, day, focusedDay) {
                       return CalendarCell(
-                        dayOfWeek: dayOfWeekFormat.format(day),
-                        day: day.day.toString(),
+                        day: day,
                         gradient: LinearGradient(
                           colors: [
                             colorScheme.onSurface,
@@ -100,24 +89,15 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         ),
                       );
                     },
-                    defaultBuilder: (context, day, focusedDay) {
-                      return CalendarCell(
-                        dayOfWeek: dayOfWeekFormat.format(day),
-                        day: day.day.toString(),
-                      );
-                    },
-                    todayBuilder: (context, day, focusedDay) {
-                      return CalendarCell(
-                        dayOfWeek: dayOfWeekFormat.format(day),
-                        day: day.day.toString(),
-                      );
-                    },
-                    outsideBuilder: (context, day, focusedDay) {
-                      return CalendarCell(
-                        dayOfWeek: dayOfWeekFormat.format(day),
-                        day: day.day.toString(),
-                      );
-                    },
+                    defaultBuilder: (context, day, focusedDay) => CalendarCell(
+                      day: day,
+                    ),
+                    todayBuilder: (context, day, focusedDay) => CalendarCell(
+                      day: day,
+                    ),
+                    outsideBuilder: (context, day, focusedDay) => CalendarCell(
+                      day: day,
+                    ),
                   ),
                   calendarStyle: const CalendarStyle(
                     outsideDaysVisible: true,
@@ -128,14 +108,14 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       setState(() {
                         _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
-                        _rangeStart = null;
-                        _rangeEnd = null;
-                        _rangeSelectionMode = RangeSelectionMode.toggledOff;
                       });
                     }
                   },
                   onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
+                    setState(() {
+                      _focusedDay = focusedDay;
+                      _selectedDay = focusedDay;
+                    });
                   },
                 ),
               );
