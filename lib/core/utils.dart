@@ -57,7 +57,7 @@ bool isBeforeNow(DateTime time) => time.isBefore(DateTime.now());
 
 /// Returns [bool] that date of [appointment] is less than 24 hours from now
 bool isLessThan24HoursFromNow(Appointment appointment) =>
-    appointment.date.difference(DateTime.now()).inHours < 24;
+    appointment.startTime.difference(DateTime.now()).inHours < 24;
 
 /// Returns [bool] that [end] is after [start] 30 minutes
 bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
@@ -85,6 +85,18 @@ List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
 
   return appointmentsOfDate;
 }
+
+DateTime rangeStartDay(DateTime dateTime) => dateTime.subtract(
+      Duration(
+        days: dateTime.weekday - 1,
+      ),
+    );
+
+DateTime rangeEndDay(DateTime dateTime) => dateTime.add(
+      Duration(
+        days: DateTime.daysPerWeek - dateTime.weekday,
+      ),
+    );
 
 final today = DateTime.now();
 final firstDay = DateTime(today.year - 10, today.month, today.day);
