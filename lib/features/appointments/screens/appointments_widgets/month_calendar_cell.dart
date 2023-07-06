@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/date_format.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../model/appointment.dart';
 
 class MonthCalendarCell extends StatelessWidget {
   const MonthCalendarCell({
-    required this.text,
+    required this.day,
     required this.events,
     this.dayColor,
     this.timeColor,
@@ -16,7 +17,7 @@ class MonthCalendarCell extends StatelessWidget {
     super.key,
   });
 
-  final String text;
+  final DateTime day;
   final List<Appointment> events;
   final Color? dayColor;
   final Color? timeColor;
@@ -45,23 +46,19 @@ class MonthCalendarCell extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // SAIcons(
-              //   icon: Assets.differentIcon,
-              //   color: iconColor ?? colorScheme.primary,
-              //   size: 12,
-              // ),
-              // const SizedBox(width: 5),
-              // SAIcons(
-              //   icon: Assets.breakIcon,
-              //   color: iconColor ?? colorScheme.primary,
-              //   size: 12,
-              // ),
-              const SizedBox(width: 8),
+              events.isNotEmpty
+                  ? SAIcons(
+                      icon: Assets.differentIcon,
+                      color: iconColor ?? colorScheme.primary,
+                      size: 12,
+                    )
+                  : const SizedBox(),
+              const SizedBox(width: 12),
               Flexible(
                 child: SizedBox(
                   width: 15,
                   child: Text(
-                    text,
+                    day.day.toString(),
                     style: textTheme.bodySmall!.copyWith(
                       height: 18 / 12,
                       color: dayColor ?? colorScheme.secondary,
