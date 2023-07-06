@@ -6,7 +6,6 @@ import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
-import '../model/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -42,91 +41,88 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           child: Center(
-            child: BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is UserLoaded) {
-                  final User user = state.user;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.onPrimary,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(user.avatar),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SAText(
-                        text: user.name,
-                        style: textTheme.displaySmall!.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 200,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.primary.withOpacity(0.1),
-                        ),
-                        child: BlocListener<AuthBloc, AuthState>(
-                          listener: (context, state) {
-                            if (state is LogoutSuccess) {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/login',
-                                (route) => false,
-                              );
-                            }
-                          },
-                          child: BlocBuilder<AuthBloc, AuthState>(
-                            builder: (ctx, state) {
-                              return SAButton.icon(
-                                child: Icon(
-                                  Assets.logoutIcon,
-                                  color: colorScheme.onPrimary,
-                                  size: 24,
-                                ),
-                                onPressed: () {
-                                  AlertConfirmDialog.show(
-                                    context: context,
-                                    title: l10n.logoutConfirmTitle,
-                                    message: l10n.logoutConfirmMessage,
-                                    onPressedRight: () {
-                                      loadingIndicator.show(
-                                        context: context,
-                                        height: indicatorHeight,
-                                      );
-                                      ctx.read<AuthBloc>().add(
-                                            const LogoutEvent(),
-                                          );
-                                    },
-                                    onPressedLeft: () {
-                                      Navigator.pop(context, false);
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
+            child: BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is LogoutInProgress) {
+                  loadingIndicator.show(
+                    context: context,
+                    height: indicatorHeight,
                   );
                 }
-                return Container();
+                if (state is LogoutSuccess) {
+                  loadingIndicator.hide(context);
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/login',
+                    (route) => false,
+                  );
+                }
+              },
+              builder: (context, state) {
+                final String userName = state.name;
+                final String userAvatar = state.avatar;
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    Container(
+                      width: 150,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colorScheme.onPrimary,
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(userAvatar),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    SAText(
+                      text: userName,
+                      style: textTheme.displaySmall!.copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 200,
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: colorScheme.primary.withOpacity(0.1),
+                      ),
+                      child: SAButton.icon(
+                        child: Icon(
+                          Assets.logoutIcon,
+                          color: colorScheme.onPrimary,
+                          size: 24,
+                        ),
+                        onPressed: () {
+                          AlertConfirmDialog.show(
+                            context: context,
+                            title: l10n.logoutConfirmTitle,
+                            message: l10n.logoutConfirmMessage,
+                            onPressedRight: () {
+                              context.read<AuthBloc>().add(
+                                    const LogoutEvent(),
+                                  );
+                            },
+                            onPressedLeft: () {
+                              Navigator.pop(context, false);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
               },
             ),
           ),
