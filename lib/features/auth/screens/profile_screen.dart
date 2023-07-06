@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       create: (context) => AuthBloc()..add(const UserLoad()),
       child: MainLayout(
         title: l10n.profileAppBarTitle,
-        currentIndex: 2,
+        currentIndex: 3,
         selectedDay: DateTime.now(),
         child: Container(
           decoration: BoxDecoration(

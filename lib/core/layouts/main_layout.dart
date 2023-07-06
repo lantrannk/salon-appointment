@@ -96,9 +96,8 @@ class _MainLayoutState extends State<MainLayout> {
                   case 1:
                     // Calendar Screen
                     Navigator.pushNamed(context, '/calendar');
-
                     break;
-                  case 2:
+                  case 3:
                     // Profile Screen
                     Navigator.pushNamed(context, '/profile');
                     break;
@@ -218,6 +217,7 @@ Widget _buildIcon({
     padding: EdgeInsets.zero,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (!isActive)
           const SizedBox(
