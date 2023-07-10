@@ -82,6 +82,7 @@ class _CalendarSchedule extends SAText {
         color: Theme.of(context).colorScheme.onPrimary,
       ),
       maxLines: maxLines,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }
