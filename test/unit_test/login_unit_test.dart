@@ -23,7 +23,7 @@ void main() {
 
       expect(
         FormValidation.isValidPhoneNumber(phoneNumber),
-        'Phone number is invalid.',
+        'Phone number must have 10 digits.',
       );
     });
 
@@ -33,7 +33,17 @@ void main() {
 
       expect(
         FormValidation.isValidPhoneNumber(phoneNumber),
-        'Phone number is invalid.',
+        'Phone number must have 10 digits.',
+      );
+    });
+
+    test('phone number is not a string of digits then return an error string',
+        () {
+      const String phoneNumber = '415465463s';
+
+      expect(
+        FormValidation.isValidPhoneNumber(phoneNumber),
+        'Phone number must be a string of digits.',
       );
     });
 
