@@ -5,7 +5,9 @@ class FormValidation {
     if (phoneNumber == '') {
       return 'Phone number is blank.';
     } else if (phoneNumber!.length != 10) {
-      return 'Phone number is invalid.';
+      return 'Phone number must have 10 digits.';
+    } else if (int.tryParse(phoneNumber) == null) {
+      return 'Phone number must be a string of digits.';
     }
     return null;
   }
