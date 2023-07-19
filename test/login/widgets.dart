@@ -109,4 +109,38 @@ void main() {
           find.text('Phone number must be a string of digits.'), findsNothing);
     });
   });
+
+  group('test password text form field -', () {
+    testWidgets(
+        'Enter an empty text to password text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).last, '123');
+      await tester.enterText(find.byType(TextFormField).last, '');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Password is blank.'), findsOneWidget);
+    });
+
+    testWidgets(
+        'Enter a less-6-character text to password text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).last, '123');
+      await tester.pumpAndSettle();
+
+      expect(
+          find.text('Password must be at least 6 characters.'), findsOneWidget);
+    });
+
+    testWidgets('Enter a valid text to password text field', (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).last, '123456789');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Password is blank.'), findsNothing);
+      expect(
+          find.text('Password must be at least 6 characters.'), findsNothing);
+    });
+  });
 }
