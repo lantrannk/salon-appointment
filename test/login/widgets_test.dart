@@ -143,4 +143,16 @@ void main() {
           find.text('Password must be at least 6 characters.'), findsNothing);
     });
   });
+
+  group('test outlined button -', () {
+    testWidgets('Press login button with invalid phone number', (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, '');
+      await tester.enterText(find.byType(TextFormField).last, '');
+      await tester.tap(find.byType(OutlinedButton));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
+  });
 }
