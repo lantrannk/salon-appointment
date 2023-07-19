@@ -53,4 +53,60 @@ void main() {
       expect(find.byType(OutlinedButton), findsOneWidget);
     });
   });
+
+  group('test phone number text form field -', () {
+    testWidgets(
+        'Enter an empty text to phone number text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, '123');
+      await tester.enterText(find.byType(TextFormField).first, '');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Phone number is blank.'), findsOneWidget);
+    });
+
+    testWidgets(
+        'Enter a less-10-digit text to phone number text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, '123');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Phone number must have 10 digits.'), findsOneWidget);
+    });
+
+    testWidgets(
+        'Enter a greater-10-digit text to phone number text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, '0905123456789');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Phone number must have 10 digits.'), findsOneWidget);
+    });
+
+    testWidgets(
+        'Enter a not-number text to phone number text field then show an error text',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, 'test_phone');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Phone number must be a string of digits.'),
+          findsOneWidget);
+    });
+
+    testWidgets('Enter a valid text to phone number text field',
+        (tester) async {
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, '0905123456');
+      await tester.pumpAndSettle();
+
+      expect(find.text('Phone number is blank.'), findsNothing);
+      expect(find.text('Phone number must have 10 digits.'), findsNothing);
+      expect(
+          find.text('Phone number must be a string of digits.'), findsNothing);
+    });
+  });
 }
