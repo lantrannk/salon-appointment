@@ -3,11 +3,15 @@ import 'package:http/http.dart' as http;
 import '../../../core/constants/constants.dart';
 
 class UserApi {
-  static Future<String> getUsers() async {
+  Future<String> getUsers(http.Client client) async {
     final url = Uri.parse('$apiUrl/users');
 
-    final response = await http.get(url);
+    final response = await client.get(url);
 
-    return response.body;
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      return '';
+    }
   }
 }

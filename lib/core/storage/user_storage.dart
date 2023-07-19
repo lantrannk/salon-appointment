@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/auth/api/user_api.dart';
@@ -8,7 +9,8 @@ import '../../features/auth/model/user.dart';
 class UserStorage {
   /// Save a [List] of [String] user encode
   static Future<void> setUsers() async {
-    final String users = await UserApi.getUsers();
+    final UserApi userApi = UserApi();
+    final String users = await userApi.getUsers(http.Client());
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('users', users);
@@ -33,9 +35,9 @@ class UserStorage {
   }
 
   /// Returns a [Map] of a user from storage
-  static Future<Map<String, dynamic>> getUser() async {
+  static Future<User?> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String userStr = prefs.getString('user') ?? '{}';
-    return jsonDecode(userStr);
+    final String? userStr = prefs.getString('user');
+    return userStr != null ? User.fromJson(jsonDecode(userStr)) : null;
   }
 }
