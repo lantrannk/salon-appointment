@@ -268,7 +268,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         width: double.infinity,
                         child: SAButton.elevation(
                           onPressed: () {
-                            if (isBreakTime(startTime, endTime)) {
+                            if (isBreakTime(startTime) ||
+                                isBreakTime(endTime)) {
                               SASnackBar.show(
                                 context: context,
                                 message: l10n.breakTimeConflictError,

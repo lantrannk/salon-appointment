@@ -28,15 +28,12 @@ DateTime setDateTime(DateTime date, TimeOfDay time) => DateTime(
 /// Returns a [String] of [DateTime] formatted from [time]
 String formatTime(DateTime time) => timeFormat.format(time).toString();
 
-/// Returns [bool] that [start] or [end] conflict the break time or not
-bool isBreakTime(DateTime start, DateTime end) {
-  final DateTime beforeTime =
-      DateTime(start.year, start.month, start.day, 12, 0);
-  final DateTime afterTime =
-      DateTime(start.year, start.month, start.day, 15, 20);
+/// Returns [bool] that [time] conflict the break time or not
+bool isBreakTime(DateTime time) {
+  final DateTime beforeTime = DateTime(time.year, time.month, time.day, 11, 59);
+  final DateTime afterTime = DateTime(time.year, time.month, time.day, 15, 20);
 
-  return (start.isAfter(beforeTime) && start.isBefore(afterTime)) ||
-      (end.isAfter(beforeTime) && end.isBefore(afterTime));
+  return time.isAfter(beforeTime) && time.isBefore(afterTime);
 }
 
 /// Returns [bool] that [start] or [end] conflict the close time or not
