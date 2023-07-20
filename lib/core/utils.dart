@@ -36,17 +36,12 @@ bool isBreakTime(DateTime time) {
   return time.isAfter(beforeTime) && time.isBefore(afterTime);
 }
 
-/// Returns [bool] that [start] or [end] conflict the close time or not
-bool isClosedTime(DateTime start, DateTime end) {
-  final DateTime closedTime =
-      DateTime(start.year, start.month, start.day, 22, 0);
-  final DateTime openedTime =
-      DateTime(start.year, start.month, start.day, 7, 59);
+/// Returns [bool] that [time] conflict the close time or not
+bool isClosedTime(DateTime time) {
+  final DateTime closedTime = DateTime(time.year, time.month, time.day, 22, 0);
+  final DateTime openedTime = DateTime(time.year, time.month, time.day, 8, 0);
 
-  return start.isAfter(closedTime) ||
-      start.isBefore(openedTime) ||
-      end.isAfter(closedTime) ||
-      end.isBefore(openedTime);
+  return time.isAfter(closedTime) || time.isBefore(openedTime);
 }
 
 /// Returns [bool] that [time] is before now or not

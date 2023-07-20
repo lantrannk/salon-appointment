@@ -275,7 +275,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                 message: l10n.breakTimeConflictError,
                                 isSuccess: false,
                               );
-                            } else if (isClosedTime(startTime, endTime)) {
+                            } else if (isClosedTime(startTime) ||
+                                isClosedTime(endTime)) {
                               SASnackBar.show(
                                 context: context,
                                 message: l10n.closedTimeError,
