@@ -47,10 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
     final l10n = S.of(context);
 
     return CommonLayout(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 32),
-        height: screenHeight - keyboardHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
               padding: const EdgeInsets.only(
