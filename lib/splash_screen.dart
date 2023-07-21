@@ -14,14 +14,12 @@ class SplashScreen extends StatelessWidget {
     return FutureBuilder(
       future: UserStorage.getUser(),
       builder: (_, snapshot) {
-        if (snapshot.hasData) {
-          final user = snapshot.data!;
-          Timer(const Duration(seconds: 2), () {
-            (user.isEmpty)
-                ? Navigator.pushNamed(context, '/login')
-                : Navigator.pushNamed(context, '/calendar');
-          });
-        }
+        Timer(const Duration(seconds: 2), () {
+          (snapshot.hasData)
+              ? Navigator.pushReplacementNamed(context, '/calendar')
+              : Navigator.pushReplacementNamed(context, '/login');
+        });
+
         return const CommonLayout(
           child: Logo(),
         );
