@@ -83,7 +83,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       final user = await UserStorage.getUser();
-      emit(UserLoaded(User.fromJson(user)));
+      emit(UserLoaded(user!));
     } on Exception catch (e) {
       emit(UserLoadError(error: e.toString()));
     }

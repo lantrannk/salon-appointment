@@ -61,12 +61,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final userMap = await UserStorage.getUser();
-      final user = User.fromJson(userMap);
+      final user = await UserStorage.getUser();
 
       emit(
         UserLoaded(
-          user.name,
+          user!.name,
           user.avatar,
         ),
       );
