@@ -1,8 +1,18 @@
+import 'dart:io' as io;
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  io.HttpOverrides.global = null;
+
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('test auth bloc -', () {
     blocTest<AuthBloc, AuthState>(
       'login successful',
