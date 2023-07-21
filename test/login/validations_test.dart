@@ -7,7 +7,7 @@ import 'package:salon_appointment/features/auth/model/user.dart';
 class MockUser extends Mock implements UserApi {}
 
 void main() {
-  group('test invalid user info -', () {
+  group('test form validations -', () {
     test('phone number is blank then return an error string', () {
       const String phoneNumber = '';
 
