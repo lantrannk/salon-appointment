@@ -1,17 +1,21 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
 import 'package:salon_appointment/features/auth/screens/login_screen.dart';
+
+class MockAuthBloc extends Mock implements AuthBloc {}
 
 void main() {
   late AuthBloc authBloc;
   late Widget loginScreen;
 
   setUpAll(() {
-    authBloc = AuthBloc();
+    authBloc = MockAuthBloc();
     loginScreen = MaterialApp(
       localizationsDelegates: const [
         S.delegate,
@@ -27,10 +31,6 @@ void main() {
     );
   });
 
-  tearDownAll(() {
-    authBloc.close();
-  });
-
   group('test login screen widgets -', () {
     testWidgets('Login Screen has one logo text', (tester) async {
       await tester.pumpWidget(loginScreen);
@@ -44,13 +44,24 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(TextFormField), findsNWidgets(2));
+      expect(
+        find.widgetWithText(TextFormField, 'Phone number'),
+        findsOneWidget,
+      );
+      expect(
+        find.widgetWithText(TextFormField, 'Password'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('Login Screen has one outlined button', (tester) async {
       await tester.pumpWidget(loginScreen);
       await tester.pumpAndSettle();
 
-      expect(find.byType(OutlinedButton), findsOneWidget);
+      expect(
+        find.widgetWithText(OutlinedButton, 'Log in'),
+        findsOneWidget,
+      );
     });
   });
 
@@ -146,13 +157,30 @@ void main() {
 
   group('test outlined button -', () {
     testWidgets('Press login button with invalid phone number', (tester) async {
-      await tester.pumpWidget(loginScreen);
-      await tester.enterText(find.byType(TextFormField).first, '');
-      await tester.enterText(find.byType(TextFormField).last, '');
-      await tester.tap(find.byType(OutlinedButton));
-      await tester.pumpAndSettle();
+      final expectedStates = [
+        LoginLoading(),
+        const LoginError('invalid-account'),
+      ];
 
-      expect(find.byType(SnackBar), findsOneWidget);
+      whenListen(
+        authBloc,
+        Stream.fromIterable(expectedStates),
+        initialState: LoginLoading(),
+      );
+
+      await tester.pumpWidget(loginScreen);
+      await tester.enterText(find.byType(TextFormField).first, 'test_phone');
+      await tester.enterText(find.byType(TextFormField).last, '');
+      await tester.tap(find.widgetWithText(OutlinedButton, 'Log in'));
+      await tester.pump();
+
+      expect(
+        find.widgetWithText(
+          SnackBar,
+          'Phone number or Password is invalid.',
+        ),
+        findsOneWidget,
+      );
     });
   });
 }
