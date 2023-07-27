@@ -9,10 +9,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/screens/calendar_screen.dart';
-import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
+import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart'
+    as auth_bloc;
+import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MockAuthBloc extends Mock implements AuthBloc {}
+class MockAuthBloc extends Mock implements auth_bloc.AuthBloc {}
 
 class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
@@ -23,8 +25,9 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
   });
+
   group('test floating action button -', () {
-    late AuthBloc authBloc;
+    late auth_bloc.AuthBloc authBloc;
     late AppointmentBloc appointmentBloc;
     late Widget calendarScreen;
     late List<AppointmentState> expectedStates;
@@ -52,19 +55,35 @@ void main() {
         ),
       );
 
+      final user = User.fromJson({
+        'phoneNumber': '0794542105',
+        'name': 'Lan Tran',
+        'avatar':
+            'https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg',
+        'password': '123456',
+        'isAdmin': true,
+        'id': '1'
+      });
+
       expectedStates = [
         AppointmentLoading(),
+        UserLoaded(user),
       ];
       whenListen(
         authBloc,
         Stream.fromIterable(expectedStates),
         initialState: AppointmentLoading(),
       );
+
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('user',
+          '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}');
     });
 
     testWidgets('Bottom navigation bar has one FAB', (tester) async {
       await tester.pumpWidget(calendarScreen);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(find.byType(FloatingActionButton), findsOneWidget);
     });
