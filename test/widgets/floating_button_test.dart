@@ -32,20 +32,23 @@ void main() {
     setUp(() async {
       authBloc = MockAuthBloc();
       appointmentBloc = MockAppointmentBloc();
-      calendarScreen = MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: authBloc),
-            BlocProvider.value(value: appointmentBloc),
+      calendarScreen = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
           ],
-          child: const CalendarScreen(),
+          supportedLocales: S.delegate.supportedLocales,
+          home: MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: authBloc),
+              BlocProvider.value(value: appointmentBloc),
+            ],
+            child: const CalendarScreen(),
+          ),
         ),
       );
 
