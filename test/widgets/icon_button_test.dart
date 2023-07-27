@@ -28,17 +28,20 @@ void main() {
 
     setUp(() async {
       authBloc = MockAuthBloc();
-      profileScreen = MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: BlocProvider.value(
-          value: authBloc,
-          child: const ProfileScreen(),
+      profileScreen = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          home: BlocProvider.value(
+            value: authBloc,
+            child: const ProfileScreen(),
+          ),
         ),
       );
 
@@ -68,7 +71,7 @@ void main() {
     testWidgets('Press logout button', (tester) async {
       await tester.pumpWidget(profileScreen);
       // await tester.tap(find.byType(IconButton));
-      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(find.byType(IconButton), findsOneWidget);
     });
