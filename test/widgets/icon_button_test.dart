@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart'
     as appointment;
@@ -76,11 +77,12 @@ void main() {
       await tester.pumpWidget(profileScreen);
       await tester.pump(const Duration(seconds: 1));
 
-      expect(find.byType(IconButton), findsOneWidget);
+      expect(
+          find.widgetWithIcon(IconButton, Assets.logoutIcon), findsOneWidget);
     });
   });
 
-  group('test close button -', () {
+  group('test close icon button -', () {
     late appointment.AppointmentBloc appointmentBloc;
     late Widget newAppointmentScreen;
     late List<appointment.AppointmentState> expectedStates;
@@ -136,15 +138,19 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
 
       // Customer name
-      expect(find.text('Lan Tran'), findsOneWidget);
-      // Date picker
-      expect(find.byType(TextButton), findsOneWidget);
-      // Start and End time picker
-      expect(find.byType(OutlinedButton), findsNWidgets(2));
-      // Services
-      expect(find.byType(DropdownButton<String>), findsOneWidget);
+      final customerNameFinder = find.text('Lan Tran');
       // Close button
-      expect(find.byType(IconButton), findsOneWidget);
+      final closeButtonFinder =
+          find.widgetWithIcon(IconButton, Assets.closeIcon);
+
+      expect(customerNameFinder, findsOneWidget);
+      expect(closeButtonFinder, findsOneWidget);
+
+      await tester.tap(closeButtonFinder);
+      await tester.pumpAndSettle();
+
+      expect(customerNameFinder, findsNothing);
+      expect(closeButtonFinder, findsNothing);
     });
   });
 }
