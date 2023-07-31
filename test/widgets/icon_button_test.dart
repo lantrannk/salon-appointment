@@ -74,11 +74,22 @@ void main() {
     });
 
     testWidgets('Profile Screen has one icon button', (tester) async {
-      await tester.pumpWidget(profileScreen);
-      await tester.pump(const Duration(seconds: 1));
+      await tester.runAsync(() async {
+        await tester.pumpWidget(profileScreen);
+        await tester.pumpAndSettle();
 
-      expect(
-          find.widgetWithIcon(IconButton, Assets.logoutIcon), findsOneWidget);
+        // Logout icon button
+        expect(
+          find.widgetWithIcon(IconButton, Assets.logoutIcon),
+          findsOneWidget,
+        );
+
+        await tester.tap(find.widgetWithIcon(IconButton, Assets.logoutIcon));
+        await tester.pumpAndSettle();
+
+        // Show confirm dialog when pressing logout button
+        expect(find.byType(Dialog), findsOneWidget);
+      });
     });
   });
 
