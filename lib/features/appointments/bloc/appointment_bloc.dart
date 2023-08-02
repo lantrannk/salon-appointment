@@ -18,6 +18,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<UserLoad>(_getUser);
   }
 
+  final AppointmentApi appointmentApi = AppointmentApi();
+
   Future<void> _getAppointmentList(
     AppointmentLoad event,
     Emitter<AppointmentState> emit,
@@ -44,7 +46,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAdding());
-      await AppointmentApi.addAppointment(event.appointment);
+
+      await appointmentApi.addAppointment(event.appointment);
       emit(AppointmentAdded());
     } on Exception catch (e) {
       emit(AppointmentAddError(error: e.toString()));
@@ -57,7 +60,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAdding());
-      await AppointmentApi.updateAppointment(event.appointment);
+      await appointmentApi.updateAppointment(event.appointment);
       emit(AppointmentEdited());
     } on Exception catch (e) {
       emit(AppointmentAddError(error: e.toString()));
@@ -70,7 +73,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentRemoving());
-      await AppointmentApi.deleteAppointment(event.appointmentId);
+      await appointmentApi.deleteAppointment(event.appointmentId);
       emit(AppointmentRemoved());
     } on Exception catch (e) {
       emit(AppointmentRemoveError(error: e.toString()));

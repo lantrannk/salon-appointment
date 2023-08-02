@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/appointments/api/appointment_api.dart';
@@ -8,7 +9,10 @@ import '../../features/appointments/model/appointment.dart';
 class AppointmentStorage {
   /// Save a [List] of [String] appointment encode
   static Future<void> setAppointments() async {
-    final String appointments = await AppointmentApi.getAppointments();
+    final AppointmentApi appointmentApi = AppointmentApi();
+    final String appointments = await appointmentApi.getAppointments(
+      http.Client(),
+    );
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('appointments', appointments);
