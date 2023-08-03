@@ -103,46 +103,6 @@ void main() {
       'id': '32'
     },
     {
-      'date': '2023-06-30T00:00:00.000',
-      'startTime': '2023-06-30T16:00:00.000',
-      'endTime': '2023-06-30T16:30:00.000',
-      'userId': '1',
-      'services': 'Non-Invasive Body Contouring',
-      'description': 'abcdefghiklmnopqrstuvwxyz',
-      'isCompleted': false,
-      'id': '47'
-    },
-    {
-      'date': '2023-06-30T00:00:00.000',
-      'startTime': '2023-06-30T09:00:00.000',
-      'endTime': '2023-06-30T09:30:00.000',
-      'userId': '2',
-      'services': 'Neck & Shoulders',
-      'description': 'b jcxbvjbks',
-      'isCompleted': false,
-      'id': '50'
-    },
-    {
-      'date': '2023-07-02T00:00:00.000',
-      'startTime': '2023-07-02T11:00:00.000',
-      'endTime': '2023-07-02T11:30:00.000',
-      'userId': '1',
-      'services': 'Neck & Shoulders',
-      'description': 'afbsajlfbsigdslbh',
-      'isCompleted': false,
-      'id': '52'
-    },
-    {
-      'date': '2023-06-29T00:00:00.000',
-      'startTime': '2023-06-29T08:00:00.000',
-      'endTime': '2023-06-29T08:30:00.000',
-      'userId': '2',
-      'services': 'Back',
-      'description': 'b jcxbvjbks',
-      'isCompleted': false,
-      'id': '53'
-    },
-    {
       'date': '2023-07-01T00:00:00.000',
       'startTime': '2023-07-01T09:45:00.000',
       'endTime': '2023-07-01T10:15:00.000',
@@ -152,26 +112,6 @@ void main() {
           'There is a distinction between a beauty salon and a hair salon and although many small businesses do offer both sets of treatments; beauty salons provide extended services related to skin health, facial aesthetic, foot care, nail manicures, aromatherapy — even meditation, oxygen therapy, mud baths and many other services.',
       'isCompleted': false,
       'id': '57'
-    },
-    {
-      'date': '2023-07-01T00:00:00.000',
-      'startTime': '2023-07-01T17:00:00.000',
-      'endTime': '2023-07-01T17:30:00.000',
-      'userId': '2',
-      'services': 'Non-Invasive Body Contouring',
-      'description': 'asfasgdsehbxvsgs',
-      'isCompleted': false,
-      'id': '58'
-    },
-    {
-      'date': '2023-07-03T00:00:00.000',
-      'startTime': '2023-07-03T10:00:00.000',
-      'endTime': '2023-07-03T10:30:00.000',
-      'userId': '1',
-      'services': 'Non-Invasive Body Contouring',
-      'description': 'abfsahjsiluhgioahfiks',
-      'isCompleted': false,
-      'id': '59'
     },
     {
       'date': '2023-07-02T00:00:00.000',
@@ -296,17 +236,6 @@ void main() {
       'id': '76'
     },
     {
-      'date': '2023-07-13T19:12:00.000',
-      'startTime': '2023-07-13T09:00:00.000',
-      'endTime': '2023-07-13T09:30:00.000',
-      'userId': '1',
-      'services': 'Non-Invasive Body Contouring',
-      'description':
-          '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567980123456798012345678901236546464',
-      'isCompleted': false,
-      'id': '77'
-    },
-    {
       'date': '2023-07-21T10:55:00.000',
       'startTime': '2023-07-21T18:00:00.000',
       'endTime': '2023-07-21T18:30:00.000',
@@ -335,6 +264,26 @@ void main() {
       'description': 'Nothing to write.',
       'isCompleted': false,
       'id': '80'
+    },
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T19:00:00.000',
+      'endTime': '2023-08-15T19:30:00.000',
+      'userId': '1',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '82'
+    },
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T19:00:00.000',
+      'endTime': '2023-08-15T19:30:00.000',
+      'userId': '1',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '83'
     }
   ].map((e) => Appointment.fromJson(e)).toList();
 
@@ -348,36 +297,6 @@ void main() {
       'description': 'Nothing to write.',
       'isCompleted': false,
       'id': '7'
-    },
-    {
-      'date': '2023-06-30T00:00:00.000',
-      'startTime': '2023-06-30T09:00:00.000',
-      'endTime': '2023-06-30T09:30:00.000',
-      'userId': '2',
-      'services': 'Neck & Shoulders',
-      'description': 'b jcxbvjbks',
-      'isCompleted': false,
-      'id': '50'
-    },
-    {
-      'date': '2023-06-29T00:00:00.000',
-      'startTime': '2023-06-29T08:00:00.000',
-      'endTime': '2023-06-29T08:30:00.000',
-      'userId': '2',
-      'services': 'Back',
-      'description': 'b jcxbvjbks',
-      'isCompleted': false,
-      'id': '53'
-    },
-    {
-      'date': '2023-07-01T00:00:00.000',
-      'startTime': '2023-07-01T17:00:00.000',
-      'endTime': '2023-07-01T17:30:00.000',
-      'userId': '2',
-      'services': 'Non-Invasive Body Contouring',
-      'description': 'asfasgdsehbxvsgs',
-      'isCompleted': false,
-      'id': '58'
     },
     {
       'date': '2023-07-03T00:00:00.000',
