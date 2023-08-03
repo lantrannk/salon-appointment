@@ -42,8 +42,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (context) =>
-          AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
+      create: (context) => AppointmentBloc()..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 1,
         selectedDay: _selectedDay!,

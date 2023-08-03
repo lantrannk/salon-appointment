@@ -26,8 +26,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentLoading());
-      final List<Appointment> appointments =
-          await AppointmentRepository.load(event.date);
+      final List<Appointment> appointments = await AppointmentRepository.load();
       final List<User> users = await UserStorage.getUsers();
       emit(
         AppointmentLoadSuccess(
@@ -46,7 +45,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAdding());
-
       await appointmentApi.addAppointment(event.appointment);
       emit(AppointmentAdded());
     } on Exception catch (e) {

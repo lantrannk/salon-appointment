@@ -44,7 +44,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc()..add(AppointmentLoad(_selectedDay!)),
+      create: (_) => AppointmentBloc()..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 0,
         selectedDay: _selectedDay!,
@@ -148,7 +148,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       isSuccess: true,
                     );
                     ctx.read<AppointmentBloc>().add(
-                          AppointmentLoad(_selectedDay!),
+                          AppointmentLoad(),
                         );
                     break;
                   case AppointmentRemoveError:
