@@ -180,6 +180,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (ctx, index) => AppointmentCard(
+                              key: Key('appointment_${events[index].id!}'),
                               name: findUser(events[index].userId).name,
                               avatar: findUser(events[index].userId).avatar,
                               appointment: events[index],
