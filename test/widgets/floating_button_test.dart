@@ -10,12 +10,8 @@ import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/screens/calendar_screen.dart';
-import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart'
-    as auth_bloc;
 import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-class MockAuthBloc extends Mock implements auth_bloc.AuthBloc {}
 
 class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
@@ -28,13 +24,11 @@ void main() {
   });
 
   group('test floating action button -', () {
-    late auth_bloc.AuthBloc authBloc;
     late AppointmentBloc appointmentBloc;
     late Widget calendarScreen;
     late List<AppointmentState> expectedStates;
 
     setUp(() async {
-      authBloc = MockAuthBloc();
       appointmentBloc = MockAppointmentBloc();
       calendarScreen = MediaQuery(
         data: const MediaQueryData(),
@@ -46,11 +40,8 @@ void main() {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
-          home: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: authBloc),
-              BlocProvider.value(value: appointmentBloc),
-            ],
+          home: BlocProvider.value(
+            value: appointmentBloc,
             child: const CalendarScreen(),
           ),
         ),
@@ -71,13 +62,12 @@ void main() {
         UserLoaded(user),
       ];
       whenListen(
-        authBloc,
+        appointmentBloc,
         Stream.fromIterable(expectedStates),
         initialState: AppointmentLoading(),
       );
 
       final prefs = await SharedPreferences.getInstance();
-
       await prefs.setString('user',
           '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}');
     });
