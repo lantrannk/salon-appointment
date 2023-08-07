@@ -7,13 +7,14 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
-import 'package:salon_appointment/features/auth/screens/login_screen.dart';
+import 'package:salon_appointment/features/appointments/model/appointment.dart';
+import 'package:salon_appointment/features/appointments/screens/appointments_screen.dart';
+import 'package:salon_appointment/features/appointments/screens/calendar_screen.dart';
+import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MockAuthBloc extends Mock implements AuthBloc {}
+import '../expect_data/expect_data.dart';
 
 class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
@@ -21,18 +22,23 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
+  late AppointmentBloc appointmentBloc;
+  late Widget calendarScreen;
+  late Widget appointmentScreen;
+  late List<AppointmentState> expectedStates;
+  late List<User> users;
+  late List<Appointment> appointments;
+
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-  });
 
-  group('test indicator when login success', () {
-    late AuthBloc authBloc;
-    late Widget loginScreen;
-    late List<AuthState> expectedStates;
+    users = ExpectData.allUsers;
+    appointments = ExpectData.allAppointments;
 
-    setUp(() async {
-      authBloc = MockAuthBloc();
-      loginScreen = MaterialApp(
+    appointmentBloc = MockAppointmentBloc();
+    calendarScreen = MediaQuery(
+      data: const MediaQueryData(),
+      child: MaterialApp(
         localizationsDelegates: const [
           S.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -41,33 +47,69 @@ void main() {
         ],
         supportedLocales: S.delegate.supportedLocales,
         home: BlocProvider.value(
-          value: authBloc,
-          child: const LoginScreen(),
+          value: appointmentBloc,
+          child: const CalendarScreen(),
         ),
-      );
+      ),
+    );
 
-      expectedStates = [
-        LoginLoading(),
-        const LoginError('incorrect-account'),
-      ];
-      whenListen(
-        authBloc,
-        Stream.fromIterable(expectedStates),
-        initialState: LoginLoading(),
-      );
-    });
+    appointmentScreen = MediaQuery(
+      data: const MediaQueryData(),
+      child: MaterialApp(
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: S.delegate.supportedLocales,
+        home: BlocProvider.value(
+          value: appointmentBloc,
+          child: AppointmentScreen(
+            focusedDay: DateTime(2023, 08, 15),
+          ),
+        ),
+      ),
+    );
 
-    testWidgets('', (tester) async {
-      await tester.pumpWidget(loginScreen);
-      await tester.enterText(find.byType(TextFormField).first, '0905123456');
-      await tester.enterText(find.byType(TextFormField).last, '123456');
-      await tester.tap(find.widgetWithText(OutlinedButton, 'Log in'));
-      await tester.pump();
+    expectedStates = [
+      AppointmentLoading(),
+      AppointmentLoadSuccess(
+        users: users,
+        appointments: appointments,
+      ),
+    ];
+    whenListen(
+      appointmentBloc,
+      Stream.fromIterable(expectedStates),
+      initialState: AppointmentLoading(),
+    );
 
-      expect(
-        find.byType(SAIndicator),
-        findsOneWidget,
-      );
-    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('user', ExpectData.adminUserStr);
   });
+
+  testWidgets(
+    'Show indicator when loading appointments in calendar screen',
+    (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpWidget(calendarScreen);
+        await tester.pump();
+
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      });
+    },
+  );
+
+  testWidgets(
+    'Show indicator when loading appointments in appointment screen',
+    (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpWidget(appointmentScreen);
+        await tester.pump();
+
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      });
+    },
+  );
 }
