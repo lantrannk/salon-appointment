@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../core/storage/user_storage.dart';
 import '../../auth/model/user.dart';
@@ -10,7 +11,7 @@ part 'appointment_event.dart';
 part 'appointment_state.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
-  AppointmentBloc() : super(AppointmentInitial()) {
+  AppointmentBloc(this.client) : super(AppointmentInitial()) {
     on<AppointmentLoad>(_getAppointmentList);
     on<AppointmentRemovePressed>(_removeAppointment);
     on<AppointmentAdd>(_addAppointment);
@@ -18,13 +19,16 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<UserLoad>(_getUser);
   }
 
-  final AppointmentApi appointmentApi = AppointmentApi();
+  final http.Client client;
+
+  late AppointmentApi appointmentApi;
 
   Future<void> _getAppointmentList(
     AppointmentLoad event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
+      appointmentApi = AppointmentApi(client);
       emit(AppointmentLoading());
       final List<Appointment> appointments = await AppointmentRepository.load();
       final List<User> users = await UserStorage.getUsers();
@@ -44,6 +48,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
+      appointmentApi = AppointmentApi(client);
       emit(AppointmentAdding());
       await appointmentApi.addAppointment(event.appointment);
       emit(AppointmentAdded());
@@ -56,6 +61,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     AppointmentEdit event,
     Emitter<AppointmentState> emit,
   ) async {
+    appointmentApi = AppointmentApi(client);
     try {
       emit(AppointmentAdding());
       await appointmentApi.updateAppointment(event.appointment);
@@ -70,6 +76,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
+      appointmentApi = AppointmentApi(client);
       emit(AppointmentRemoving());
       await appointmentApi.deleteAppointment(event.appointmentId);
       emit(AppointmentRemoved());

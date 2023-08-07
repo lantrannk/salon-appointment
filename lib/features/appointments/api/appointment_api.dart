@@ -6,9 +6,13 @@ import '../../../core/constants/constants.dart';
 import '../model/appointment.dart';
 
 class AppointmentApi {
-  final String baseUrl = '$apiUrl/appointments';
+  const AppointmentApi(this.client);
 
-  Future<String> getAppointments(http.Client client) async {
+  final http.Client client;
+
+  static const String baseUrl = '$apiUrl/appointments';
+
+  Future<String> getAppointments() async {
     final url = Uri.parse(baseUrl);
 
     final response = await client.get(url);
@@ -26,7 +30,7 @@ class AppointmentApi {
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    await http.post(url, body: body, headers: headers).then((response) {});
+    await client.post(url, body: body, headers: headers).then((response) {});
   }
 
   Future<void> updateAppointment(Appointment appointment) async {
@@ -35,12 +39,12 @@ class AppointmentApi {
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    await http.put(url, body: body, headers: headers);
+    await client.put(url, body: body, headers: headers);
   }
 
   Future<void> deleteAppointment(String appointmentId) async {
     final url = Uri.parse('$baseUrl/$appointmentId');
 
-    await http.delete(url);
+    await client.delete(url);
   }
 }

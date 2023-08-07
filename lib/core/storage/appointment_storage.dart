@@ -9,10 +9,8 @@ import '../../features/appointments/model/appointment.dart';
 class AppointmentStorage {
   /// Save a [List] of [String] appointment encode
   static Future<void> setAppointments() async {
-    final AppointmentApi appointmentApi = AppointmentApi();
-    final String appointments = await appointmentApi.getAppointments(
-      http.Client(),
-    );
+    final AppointmentApi appointmentApi = AppointmentApi(http.Client());
+    final String appointments = await appointmentApi.getAppointments();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('appointments', appointments);

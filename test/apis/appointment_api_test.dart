@@ -11,30 +11,37 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
   group('test appointment api -', () {
+    final headers = {
+      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+    };
+    final url = Uri.parse(
+      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
+    );
+
+    late http.Client client;
+    late AppointmentApi appointmentApi;
+
+    setUp(() {
+      client = MockClient();
+      appointmentApi = AppointmentApi(client);
+    });
+
     test(
       'get appointments then return a encoded string of appointments list',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
-        final client = MockClient();
-        final appointmentApi = AppointmentApi();
-
         when(
-          () => client.get(
-            Uri.parse(
-                'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments'),
-          ),
+          () => client.get(url),
         ).thenAnswer(
           (_) async => http.Response(
             ExpectData.appointmentsStr,
             200,
-            headers: {
-              HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-            },
+            headers: headers,
           ),
         );
 
         expect(
-          await appointmentApi.getAppointments(client),
+          await appointmentApi.getAppointments(),
           ExpectData.appointmentsStr,
         );
       },
@@ -44,25 +51,17 @@ void main() {
       'get appointments error',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
-        final client = MockClient();
-        final appointmentApi = AppointmentApi();
-
         when(
-          () => client.get(
-            Uri.parse(
-                'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments'),
-          ),
+          () => client.get(url),
         ).thenAnswer(
           (_) async => http.Response(
             'Not Found',
             404,
-            headers: {
-              HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-            },
+            headers: headers,
           ),
         );
 
-        expect(await appointmentApi.getAppointments(client), '');
+        expect(await appointmentApi.getAppointments(), '');
       },
     );
   });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../core/constants/date_format.dart';
@@ -44,7 +45,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc()..add(AppointmentLoad()),
+      create: (_) => AppointmentBloc(http.Client())..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 0,
         selectedDay: _selectedDay!,

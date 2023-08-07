@@ -10,6 +10,9 @@ class ExpectData {
   static const String adminUserStr =
       '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}';
 
+  static const String appointmentStr =
+      '{"date":"2023-08-15T10:55:00.000","startTime":"2023-08-15T10:00:00.000","endTime":"2023-08-15T10:30:00.000","userId":"1","services":"Non-Invasive Body Contouring","description":"Nothing to write.","isCompleted":false,"id":"84"}';
+
   static final User adminUser = User.fromJson({
     'phoneNumber': '0794542105',
     'name': 'Lan Tran',
@@ -18,6 +21,17 @@ class ExpectData {
     'password': '123456',
     'isAdmin': true,
     'id': '1'
+  });
+
+  static final appointment = Appointment.fromJson({
+    'date': '2023-08-15T10:55:00.000',
+    'startTime': '2023-08-15T10:00:00.000',
+    'endTime': '2023-08-15T10:30:00.000',
+    'userId': '1',
+    'services': 'Non-Invasive Body Contouring',
+    'description': 'Nothing to write.',
+    'isCompleted': false,
+    'id': '84'
   });
 
   static final List<User> allUsers = [

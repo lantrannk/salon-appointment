@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
@@ -68,7 +69,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc()..add(UserLoad()),
+      create: (_) => AppointmentBloc(http.Client())..add(UserLoad()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
