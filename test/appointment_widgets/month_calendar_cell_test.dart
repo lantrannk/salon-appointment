@@ -368,19 +368,49 @@ void main() {
         '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}');
   });
 
-  testWidgets('Current day has different background color', (tester) async {
-    await tester.pumpWidget(calendarScreen);
-    await tester.pump();
-
-    await Future.delayed(const Duration(seconds: 2));
-    await tester.pumpAndSettle();
-
-    expect(
-      find.widgetWithText(
+  testWidgets(
+    'Selected day cell has gradient color',
+    (tester) async {
+      final nowFinder = find.widgetWithText(
         MonthCalendarCell,
-        '4',
-      ),
-      findsOneWidget,
-    );
-  });
+        DateTime.now().day.toString(),
+      );
+
+      await tester.runAsync(() async {
+        await tester.pumpWidget(calendarScreen);
+        await tester.pump();
+
+        expect(
+          (tester.widget(nowFinder) as MonthCalendarCell).gradient,
+          isA<LinearGradient>(),
+        );
+      });
+    },
+  );
+
+  testWidgets(
+    'Change selected day when tapping another day',
+    (tester) async {
+      final tappedFinder = find
+          .widgetWithText(
+            MonthCalendarCell,
+            '1',
+          )
+          .first;
+
+      await tester.runAsync(() async {
+        await tester.pumpWidget(calendarScreen);
+        await tester.pump();
+
+        await Future.delayed(const Duration(seconds: 3));
+        await tester.tap(tappedFinder);
+        await tester.pumpAndSettle();
+
+        expect(
+          (tester.widget(tappedFinder) as MonthCalendarCell).gradient,
+          isA<LinearGradient>(),
+        );
+      });
+    },
+  );
 }
