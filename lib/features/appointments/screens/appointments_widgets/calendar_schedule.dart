@@ -46,38 +46,50 @@ class CalendarSchedule extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(height: 22),
-                SAText.calendarSchedule(
-                  text: monthCharFormat.format(appointment.date),
-                  style: textTheme.labelLarge!,
+                Expanded(
+                  flex: 0,
+                  child: SAText.calendarSchedule(
+                    text: monthCharFormat.format(appointment.date),
+                    style: textTheme.labelLarge!,
+                  ),
                 ),
                 const SizedBox(height: 7),
-                SAText.calendarSchedule(
-                  text:
-                      '${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}',
-                  style: textTheme.bodyLarge!.copyWith(
-                    height: 24 / 14,
+                Expanded(
+                  flex: 0,
+                  child: SAText.calendarSchedule(
+                    text:
+                        '${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}',
+                    style: textTheme.bodyLarge!.copyWith(
+                      height: 24 / 14,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                SAText.calendarSchedule(
-                  text: appointment.description,
-                  style: textTheme.bodySmall!,
-                  maxLines: 5,
-                ),
-                const Spacer(),
-                SAButton.text(
-                  onPressed: onPressed,
-                  style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
+                Expanded(
+                  flex: 0,
+                  child: SAText.calendarSchedule(
+                    text: appointment.description,
+                    style: textTheme.bodySmall!,
+                    maxLines: 5,
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.zero,
-                    child: SAText.calendarSchedule(
-                      text: 'Show appointments ($countOfAppointments)',
-                      style: textTheme.bodySmall!.copyWith(
-                        fontWeight: FontWeight.bold,
+                ),
+                Expanded(
+                  flex: 0,
+                  child: SAButton.text(
+                    onPressed: onPressed,
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.zero,
+                      child: SAText.calendarSchedule(
+                        text: 'Show appointments ($countOfAppointments)',
+                        style: textTheme.bodySmall!.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

@@ -72,15 +72,19 @@ class MonthCalendarCell extends StatelessWidget {
           const SizedBox(
             height: 2,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              for (int i = 0; i < events.length && i < 2; i++)
-                SAText.timeCell(
-                  text: timeFormat.format(events[i].startTime),
-                  color: timeColor ?? colorScheme.onSecondary,
-                ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                for (int i = 0; i < events.length && i < 2; i++)
+                  Expanded(
+                    child: SAText.timeCell(
+                      text: timeFormat.format(events[i].startTime),
+                      color: timeColor ?? colorScheme.onSecondary,
+                    ),
+                  ),
+              ],
+            ),
           )
         ],
       ),

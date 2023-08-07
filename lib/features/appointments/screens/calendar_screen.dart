@@ -182,53 +182,57 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   case AppointmentLoadSuccess:
                     final List<Appointment> events =
                         groupByDate(state.appointments!, _selectedDay!);
-                    return (events.isNotEmpty)
-                        ? Container(
-                            margin: const EdgeInsets.only(top: 8),
-                            alignment: Alignment.centerLeft,
-                            width: double.infinity,
-                            height: 228,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  colorScheme.primary,
-                                  colorScheme.onSurface,
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                            ),
-                            child: CalendarSchedule(
-                              appointment: events.first,
-                              countOfAppointments: events.length,
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => AppointmentScreen(
-                                      focusedDay: _selectedDay,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : SizedBox(
-                            height: indicatorHeight,
-                            child: Center(
-                              child: Text(
-                                l10n.emptyAppointments,
-                                style: textTheme.bodyLarge!.copyWith(
-                                  color: colorScheme.secondary,
+                    if (events.isNotEmpty) {
+                      return Expanded(
+                        child: ListView(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              alignment: Alignment.topLeft,
+                              width: double.infinity,
+                              height: 228,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    colorScheme.primary,
+                                    colorScheme.onSurface,
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
                                 ),
                               ),
+                              child: CalendarSchedule(
+                                appointment: events.first,
+                                countOfAppointments: events.length,
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => AppointmentScreen(
+                                        focusedDay: _selectedDay,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
-                          );
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            l10n.emptyAppointments,
+                            style: textTheme.bodyLarge!.copyWith(
+                              color: colorScheme.secondary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
                   case AppointmentLoadError:
-                    return ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: indicatorHeight,
-                      ),
+                    return Expanded(
                       child: Center(
                         child: Text(
                           state.error!,
