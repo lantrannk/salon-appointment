@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         currentIndex: 3,
         selectedDay: DateTime.now(),
         child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 100),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
@@ -64,61 +65,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final String userAvatar = state.avatar;
                 if (state is UserLoaded) {
                   return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.onPrimary,
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: NetworkImage(userAvatar),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SAText(
-                        text: userName,
-                        style: textTheme.displaySmall!.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 200,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.primary.withOpacity(0.1),
-                        ),
-                        child: SAButton.icon(
-                          child: Icon(
-                            Assets.logoutIcon,
+                      Expanded(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                             color: colorScheme.onPrimary,
-                            size: 24,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(userAvatar),
+                            ),
                           ),
-                          onPressed: () {
-                            AlertConfirmDialog.show(
-                              context: context,
-                              title: l10n.logoutConfirmTitle,
-                              message: l10n.logoutConfirmMessage,
-                              onPressedRight: () {
-                                context.read<AuthBloc>().add(
-                                      const LogoutEvent(),
-                                    );
-                              },
-                              onPressedLeft: () {
-                                Navigator.pop(context, false);
-                              },
-                            );
-                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      SizedBox(
+                        child: SAText(
+                          text: userName,
+                          style: textTheme.displaySmall!.copyWith(
+                            color: colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colorScheme.primary.withOpacity(0.1),
+                          ),
+                          child: SAButton.icon(
+                            child: Icon(
+                              Assets.logoutIcon,
+                              color: colorScheme.onPrimary,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              AlertConfirmDialog.show(
+                                context: context,
+                                title: l10n.logoutConfirmTitle,
+                                message: l10n.logoutConfirmMessage,
+                                onPressedRight: () {
+                                  context.read<AuthBloc>().add(
+                                        const LogoutEvent(),
+                                      );
+                                },
+                                onPressedLeft: () {
+                                  Navigator.pop(context, false);
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],

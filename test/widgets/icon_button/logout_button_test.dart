@@ -12,6 +12,8 @@ import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
 import 'package:salon_appointment/features/auth/screens/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../expect_data/expect_data.dart';
+
 class MockAuthBloc extends Mock implements AuthBloc {}
 
 void main() {
@@ -45,9 +47,7 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString('user',
-        '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}');
+    await prefs.setString('user', ExpectData.adminUserStr);
 
     expectedStates = [
       const UserLoaded(
@@ -65,6 +65,7 @@ void main() {
     );
 
     logoutButtonFinder = find.widgetWithIcon(IconButton, Assets.logoutIcon);
+    // logoutButtonFinder = find.byKey(const ValueKey('logout-button'));
   });
 
   testWidgets(
@@ -85,13 +86,13 @@ void main() {
     (tester) async {
       await tester.runAsync(() async {
         await tester.pumpWidget(profileScreen);
-        await tester.pumpAndSettle();
+        await tester.pump();
 
         await tester.tap(logoutButtonFinder);
         await tester.pumpAndSettle();
 
         // Show confirm dialog when pressing logout button
-        expect(find.byType(Dialog), findsOneWidget);
+        expect(find.text('Logout'), findsOneWidget);
       });
     },
   );

@@ -10,8 +10,9 @@ import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart'
     as appointment;
 import 'package:salon_appointment/features/appointments/screens/new_appointment_screen.dart';
-import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../expect_data/expect_data.dart';
 
 class MockAppointmentBloc extends Mock implements appointment.AppointmentBloc {}
 
@@ -49,28 +50,17 @@ void main() {
       ),
     );
 
-    final user = User.fromJson({
-      'phoneNumber': '0794542105',
-      'name': 'Lan Tran',
-      'avatar':
-          'https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg',
-      'password': '123456',
-      'isAdmin': true,
-      'id': '1'
-    });
-
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setString('user',
-        '{"phoneNumber":"0794542105","name":"Lan Tran","avatar":"https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg","password":"123456","isAdmin":true,"id":"1"}');
+    await prefs.setString('user', ExpectData.adminUserStr);
 
     expectedStates = [
-      appointment.UserLoaded(user),
+      appointment.UserLoaded(ExpectData.adminUser),
     ];
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: appointment.UserLoaded(user),
+      initialState: appointment.UserLoaded(ExpectData.adminUser),
     );
 
     initialDropDownFinder = find.widgetWithText(
