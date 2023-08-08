@@ -17,196 +17,194 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  final headers = {
-    HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-  };
+  final headers = {'Content-Type': 'application/json'};
   final url = Uri.parse(
     'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
   );
 
   late Appointment appointment;
   late http.Client client;
+  late SharedPreferences prefs;
 
-  setUp(() async {
+  setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
+    prefs = await SharedPreferences.getInstance();
     appointment = ExpectData.appointment;
-
     client = MockHTTPClient();
   });
 
-  group('test appointment bloc -', () {
-    blocTest<AppointmentBloc, AppointmentState>(
-      'load appointments successful by admin',
-      build: () {
-        when(
-          () => client.get(url),
-        ).thenAnswer(
-          (_) async => http.Response(
-            ExpectData.appointmentsStr,
-            200,
-            headers: headers,
-          ),
-        );
-        return AppointmentBloc(client);
-      },
-      seed: () => AppointmentLoading(),
-      act: (bloc) => bloc.add(
-        AppointmentLoad(),
-      ),
-      wait: const Duration(seconds: 3),
-      setUp: () async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-          'user',
-          ExpectData.adminUserStr,
-        );
-      },
-      expect: () => <AppointmentState>[
-        AppointmentLoadSuccess(
-          users: ExpectData.allUsers,
-          appointments: ExpectData.allAppointments,
+  blocTest<AppointmentBloc, AppointmentState>(
+    'load appointments successful by admin',
+    build: () {
+      when(
+        () => client.get(url),
+      ).thenAnswer(
+        (_) async => http.Response(
+          ExpectData.appointmentsStr,
+          200,
+          headers: headers,
         ),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'load appointments successful by customer',
-      build: () {
-        when(
-          () => client.get(url),
-        ).thenAnswer(
-          (_) async => http.Response(
-            ExpectData.appointmentsStr,
-            200,
-            headers: headers,
-          ),
-        );
-        return AppointmentBloc(client);
-      },
-      act: (bloc) => bloc.add(
-        AppointmentLoad(),
+      );
+      return AppointmentBloc(client);
+    },
+    seed: () => AppointmentLoading(),
+    act: (bloc) => bloc.add(
+      AppointmentLoad(),
+    ),
+    wait: const Duration(seconds: 3),
+    setUp: () async {
+      await prefs.setString(
+        'user',
+        ExpectData.adminUserStr,
+      );
+    },
+    tearDown: () async {
+      await prefs.clear();
+    },
+    expect: () => <AppointmentState>[
+      AppointmentLoadSuccess(
+        users: ExpectData.allUsers,
+        appointments: ExpectData.allAppointments,
       ),
-      seed: () => AppointmentLoading(),
-      wait: const Duration(seconds: 3),
-      setUp: () async {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(
-          'user',
-          ExpectData.customerUserStr,
-        );
-      },
-      expect: () => <AppointmentState>[
-        AppointmentLoadSuccess(
-          users: ExpectData.allUsers,
-          appointments: ExpectData.appointmentsOfUser,
+    ],
+  );
+
+  blocTest<AppointmentBloc, AppointmentState>(
+    'load appointments successful by customer',
+    build: () {
+      when(
+        () => client.get(url),
+      ).thenAnswer(
+        (_) async => http.Response(
+          ExpectData.appointmentsStr,
+          200,
+          headers: headers,
         ),
-      ],
-    );
+      );
+      return AppointmentBloc(client);
+    },
+    act: (bloc) => bloc.add(
+      AppointmentLoad(),
+    ),
+    seed: () => AppointmentLoading(),
+    wait: const Duration(seconds: 3),
+    setUp: () async {
+      await prefs.setString(
+        'user',
+        ExpectData.customerUserStr,
+      );
+    },
+    tearDown: () async {
+      await prefs.clear();
+    },
+    expect: () => <AppointmentState>[
+      AppointmentLoadSuccess(
+        users: ExpectData.allUsers,
+        appointments: ExpectData.appointmentsOfUser,
+      ),
+    ],
+  );
 
-    // blocTest<AppointmentBloc, AppointmentState>(
-    //   'add appointment successful',
-    //   build: () {
-    //     when(
-    //       () => client.post(
-    //         url,
-    //         body: appointment,
-    //         headers: headers,
-    //       ),
-    //     ).thenAnswer(
-    //       (_) async => http.Response(
-    //         ExpectData.appointmentStr,
-    //         200,
-    //         headers: headers,
-    //       ),
-    //     );
-    //     return AppointmentBloc(client);
-    //   },
-    //   act: (bloc) => bloc.add(
-    //     AppointmentAdd(appointment: appointment),
-    //   ),
-    //   seed: () => AppointmentAdding(),
-    //   wait: const Duration(seconds: 3),
-    //   setUp: () async {
-    //     final prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString(
-    //       'user',
-    //       ExpectData.adminUserStr,
-    //     );
-    //   },
-    //   expect: () => <AppointmentState>[
-    //     AppointmentAdded(),
-    //   ],
-    // );
+  // blocTest<AppointmentBloc, AppointmentState>(
+  //   'add appointment successful',
+  //   build: () {
+  //     when(
+  //       () => client.post(
+  //         url,
+  //         body: appointment,
+  //         headers: headers,
+  //       ),
+  //     ).thenAnswer(
+  //       (_) async => http.Response(
+  //         ExpectData.appointmentStr,
+  //         200,
+  //         headers: headers,
+  //       ),
+  //     );
+  //     return AppointmentBloc(client);
+  //   },
+  //   act: (bloc) => bloc.add(
+  //     AppointmentAdd(appointment: appointment),
+  //   ),
+  //   seed: () => AppointmentAdding(),
+  //   wait: const Duration(seconds: 3),
+  //   setUp: () async {
+  //     await prefs.setString(
+  //       'user',
+  //       ExpectData.adminUserStr,
+  //     );
+  //   },
+  //   expect: () => <AppointmentState>[
+  //     AppointmentAdded(),
+  //   ],
+  // );
 
-    // blocTest<AppointmentBloc, AppointmentState>(
-    //   'update appointment successful',
-    //   build: () {
-    //     when(
-    //       () => client.put(
-    //         url,
-    //         body: appointment,
-    //         headers: headers,
-    //       ),
-    //     ).thenAnswer(
-    //       (_) async => http.Response(
-    //         ExpectData.appointmentStr,
-    //         200,
-    //         headers: headers,
-    //       ),
-    //     );
-    //     return AppointmentBloc(client);
-    //   },
-    //   act: (bloc) => bloc.add(
-    //     AppointmentEdit(appointment: appointment),
-    //   ),
-    //   seed: () => AppointmentAdding(),
-    //   wait: const Duration(seconds: 3),
-    //   setUp: () async {
-    //     final prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString(
-    //       'user',
-    //       ExpectData.adminUserStr,
-    //     );
-    //   },
-    //   expect: () => <AppointmentState>[
-    //     AppointmentEdited(),
-    //   ],
-    // );
+  // blocTest<AppointmentBloc, AppointmentState>(
+  //   'update appointment successful',
+  //   build: () {
+  //     when(
+  //       () => client.put(
+  //         url,
+  //         body: appointment,
+  //         headers: headers,
+  //       ),
+  //     ).thenAnswer(
+  //       (_) async => http.Response(
+  //         ExpectData.appointmentStr,
+  //         200,
+  //         headers: headers,
+  //       ),
+  //     );
+  //     return AppointmentBloc(client);
+  //   },
+  //   act: (bloc) => bloc.add(
+  //     AppointmentEdit(appointment: appointment),
+  //   ),
+  //   seed: () => AppointmentAdding(),
+  //   wait: const Duration(seconds: 3),
+  //   setUp: () async {
+  //     await prefs.setString(
+  //       'user',
+  //       ExpectData.adminUserStr,
+  //     );
+  //   },
+  //   expect: () => <AppointmentState>[
+  //     AppointmentEdited(),
+  //   ],
+  // );
 
-    // blocTest<AppointmentBloc, AppointmentState>(
-    //   'remove appointment successful',
-    //   build: () {
-    //     when(
-    //       () => client.delete(
-    //         url,
-    //         body: appointment,
-    //         headers: headers,
-    //       ),
-    //     ).thenAnswer(
-    //       (_) async => http.Response(
-    //         ExpectData.appointmentStr,
-    //         200,
-    //         headers: headers,
-    //       ),
-    //     );
-    //     return AppointmentBloc(client);
-    //   },
-    //   act: (bloc) => bloc.add(
-    //     AppointmentRemovePressed(appointmentId: appointment.id!),
-    //   ),
-    //   seed: () => AppointmentAdding(),
-    //   wait: const Duration(seconds: 3),
-    //   setUp: () async {
-    //     final prefs = await SharedPreferences.getInstance();
-    //     await prefs.setString(
-    //       'user',
-    //       ExpectData.adminUserStr,
-    //     );
-    //   },
-    //   expect: () => <AppointmentState>[
-    //     AppointmentRemoved(),
-    //   ],
-    // );
-  });
+  // blocTest<AppointmentBloc, AppointmentState>(
+  //   'remove appointment successful',
+  //   build: () {
+  //     when(
+  //       () => client.delete(
+  //         url,
+  //         body: appointment,
+  //         headers: headers,
+  //       ),
+  //     ).thenAnswer(
+  //       (_) async => http.Response(
+  //         ExpectData.appointmentStr,
+  //         200,
+  //         headers: headers,
+  //       ),
+  //     );
+  //     return AppointmentBloc(client);
+  //   },
+  //   act: (bloc) => bloc.add(
+  //     AppointmentRemovePressed(appointmentId: appointment.id!),
+  //   ),
+  //   seed: () => AppointmentAdding(),
+  //   wait: const Duration(seconds: 3),
+  //   setUp: () async {
+  //     await prefs.setString(
+  //       'user',
+  //       ExpectData.adminUserStr,
+  //     );
+  //   },
+  //   expect: () => <AppointmentState>[
+  //     AppointmentRemoved(),
+  //   ],
+  // );
 }
