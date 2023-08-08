@@ -37,7 +37,6 @@ class Appointment extends Equatable {
       };
 
   Appointment copyWith({
-    String? userId,
     DateTime? date,
     DateTime? startTime,
     DateTime? endTime,
@@ -47,7 +46,7 @@ class Appointment extends Equatable {
   }) =>
       Appointment(
         id: id,
-        userId: userId ?? this.userId,
+        userId: userId,
         date: date ?? this.date,
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
