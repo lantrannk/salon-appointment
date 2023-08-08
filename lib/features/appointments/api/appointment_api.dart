@@ -24,27 +24,47 @@ class AppointmentApi {
     }
   }
 
-  Future<void> addAppointment(Appointment appointment) async {
+  Future<String> addAppointment(Appointment appointment) async {
     final url = Uri.parse(baseUrl);
     final headers = {'Content-Type': 'application/json'};
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    await client.post(url, body: body, headers: headers).then((response) {});
+    final response = await client
+        .post(url, body: body, headers: headers)
+        .then((response) {});
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      return '';
+    }
   }
 
-  Future<void> updateAppointment(Appointment appointment) async {
+  Future<String> updateAppointment(Appointment appointment) async {
     final url = Uri.parse('$baseUrl/${appointment.id}');
     final headers = {'Content-Type': 'application/json'};
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    await client.put(url, body: body, headers: headers);
+    final response = await client.put(url, body: body, headers: headers);
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      return '';
+    }
   }
 
-  Future<void> deleteAppointment(String appointmentId) async {
+  Future<String> deleteAppointment(String appointmentId) async {
     final url = Uri.parse('$baseUrl/$appointmentId');
 
-    await client.delete(url);
+    final response = await client.delete(url);
+
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      return '';
+    }
   }
 }
