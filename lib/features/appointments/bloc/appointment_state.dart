@@ -1,6 +1,6 @@
 part of 'appointment_bloc.dart';
 
-abstract class AppointmentState {
+abstract class AppointmentState extends Equatable {
   const AppointmentState();
 
   List<Appointment>? get appointments => [];
@@ -14,6 +14,9 @@ class UserLoaded extends AppointmentState {
   const UserLoaded(this.user);
 
   final User user;
+
+  @override
+  List<Object?> get props => [user];
 }
 
 class UserLoadError extends AppointmentState {
@@ -21,11 +24,20 @@ class UserLoadError extends AppointmentState {
 
   @override
   final String? error;
+
+  @override
+  List<Object?> get props => [error];
 }
 
-class AppointmentInitial extends AppointmentState {}
+class AppointmentInitial extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
-class AppointmentLoading extends AppointmentState {}
+class AppointmentLoading extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
 class AppointmentLoadSuccess extends AppointmentState {
   const AppointmentLoadSuccess({
@@ -38,6 +50,9 @@ class AppointmentLoadSuccess extends AppointmentState {
 
   @override
   final List<User> users;
+
+  @override
+  List<Object?> get props => [users, appointments];
 }
 
 class AppointmentLoadError extends AppointmentState {
@@ -45,28 +60,52 @@ class AppointmentLoadError extends AppointmentState {
 
   @override
   final String? error;
+
+  @override
+  List<Object?> get props => [error];
 }
 
-class AppointmentAdding extends AppointmentState {}
+class AppointmentAdding extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
-class AppointmentAdded extends AppointmentState {}
+class AppointmentAdded extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
-class AppointmentEdited extends AppointmentState {}
+class AppointmentEdited extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
 class AppointmentAddError extends AppointmentState {
   const AppointmentAddError({this.error});
 
   @override
   final String? error;
+
+  @override
+  List<Object?> get props => [error];
 }
 
-class AppointmentRemoving extends AppointmentState {}
+class AppointmentRemoving extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
-class AppointmentRemoved extends AppointmentState {}
+class AppointmentRemoved extends AppointmentState {
+  @override
+  List<Object?> get props => [];
+}
 
 class AppointmentRemoveError extends AppointmentState {
   const AppointmentRemoveError({this.error});
 
   @override
   final String? error;
+
+  @override
+  List<Object?> get props => [error];
 }

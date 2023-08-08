@@ -1,5 +1,7 @@
-class Appointment {
-  Appointment({
+import 'package:equatable/equatable.dart';
+
+class Appointment extends Equatable {
+  const Appointment({
     required this.userId,
     required this.date,
     required this.startTime,
@@ -55,11 +57,23 @@ class Appointment {
       );
 
   final String? id;
-  late String services;
-  late DateTime date;
-  late DateTime startTime;
-  late DateTime endTime;
+  final String services;
+  final DateTime date;
+  final DateTime startTime;
+  final DateTime endTime;
   final String userId;
-  late String description;
-  late bool isCompleted;
+  final String description;
+  final bool isCompleted;
+
+  @override
+  List<Object?> get props => [
+        id,
+        date,
+        startTime,
+        endTime,
+        userId,
+        services,
+        description,
+        isCompleted,
+      ];
 }

@@ -91,7 +91,7 @@ void main() {
 
     setUpAll(() {
       users = [
-        User(
+        const User(
           id: '1',
           name: 'Lan Tran',
           phoneNumber: '0794542105',
@@ -100,7 +100,7 @@ void main() {
           password: '123456',
           isAdmin: true,
         ),
-        User(
+        const User(
           id: '2',
           name: 'Carol Williams',
           phoneNumber: '0905999222',
