@@ -84,14 +84,14 @@ samples, guidance on mobile development, and a full API reference.
 - [flutter_bloc](https://pub.dev/packages/flutter_bloc)
 - [intl](https://pub.dev/packages/intl)
 - [equatable](https://pub.dev/packages/equatable)
-- [flutter_test]
+- flutter_test
 - [bloc_test](https://pub.dev/packages/bloc_test)
 - [mocktail](https://pub.dev/packages/mocktail)
 
 ## How to run tests
 
 - Open terminal:
-  - input <kbd>**flutter test --coverage**</kbd> to run test
+  - input <kbd>**flutter test --coverage**</kbd> to run test coverage
   - input <kbd>**perl /c/ProgramData/chocolatey/lib/lcov/tools/bin/genhtml coverage/lcov.info -o coverage/html**</kbd> to generate coverage html file
   - input <kbd>**coverage/html/index.html**</kbd> to open html file
 - Run html file with browser
