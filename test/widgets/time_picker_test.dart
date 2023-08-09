@@ -28,7 +28,7 @@ void main() {
   late Finder startTimeFinder;
   late Finder endTimeFinder;
 
-  final appointment = Appointment.fromJson({
+  final appointment = Appointment.fromJson(const {
     'date': '2023-08-15T10:55:00.000',
     'startTime': '2023-08-15T20:00:00.000',
     'endTime': '2023-08-15T20:30:00.000',
@@ -64,15 +64,15 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', ExpectData.adminUserStr);
+    await prefs.setString('user', UserExpect.adminUserEncoded);
 
     expectedStates = [
-      UserLoaded(ExpectData.adminUser),
+      UserLoaded(UserExpect.adminUser),
     ];
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: UserLoaded(ExpectData.adminUser),
+      initialState: UserLoaded(UserExpect.adminUser),
     );
 
     fromTextFinder = find.text('From:');

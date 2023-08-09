@@ -47,7 +47,7 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', ExpectData.adminUserStr);
+    await prefs.setString('user', UserExpect.adminUserEncoded);
 
     expectedStates = [
       const UserLoaded(

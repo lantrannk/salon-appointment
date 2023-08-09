@@ -50,7 +50,7 @@ void main() {
 
       expectedStates = [
         AppointmentLoading(),
-        UserLoaded(ExpectData.adminUser),
+        UserLoaded(UserExpect.adminUser),
       ];
       whenListen(
         appointmentBloc,
@@ -59,7 +59,7 @@ void main() {
       );
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user', ExpectData.adminUserStr);
+      await prefs.setString('user', UserExpect.adminUserEncoded);
     });
 
     testWidgets('Bottom navigation bar has one FAB', (tester) async {

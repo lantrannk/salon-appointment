@@ -1,12 +1,10 @@
 import 'dart:io' as io;
-import 'dart:io';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../expect_data/expect_data.dart';
@@ -22,7 +20,6 @@ void main() {
     'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
   );
 
-  late Appointment appointment;
   late http.Client client;
   late SharedPreferences prefs;
 
@@ -30,7 +27,6 @@ void main() {
     SharedPreferences.setMockInitialValues({});
 
     prefs = await SharedPreferences.getInstance();
-    appointment = ExpectData.appointment;
     client = MockHTTPClient();
   });
 
@@ -41,14 +37,15 @@ void main() {
         () => client.get(url),
       ).thenAnswer(
         (_) async => http.Response(
-          ExpectData.appointmentsStr,
+          AppointmentExpect.allAppointmentsEncoded,
           200,
           headers: headers,
         ),
       );
       return AppointmentBloc(client);
     },
-    seed: () => AppointmentLoading(),
+    // why need seed
+    // seed: () => AppointmentLoading(),
     act: (bloc) => bloc.add(
       AppointmentLoad(),
     ),
@@ -56,16 +53,17 @@ void main() {
     setUp: () async {
       await prefs.setString(
         'user',
-        ExpectData.adminUserStr,
+        UserExpect.adminUserEncoded,
       );
     },
     tearDown: () async {
       await prefs.clear();
     },
     expect: () => <AppointmentState>[
+      AppointmentLoading(),
       AppointmentLoadSuccess(
-        users: ExpectData.allUsers,
-        appointments: ExpectData.allAppointments,
+        users: UserExpect.allUsers,
+        appointments: AppointmentExpect.allAppointments,
       ),
     ],
   );
@@ -77,7 +75,7 @@ void main() {
         () => client.get(url),
       ).thenAnswer(
         (_) async => http.Response(
-          ExpectData.appointmentsStr,
+          AppointmentExpect.allAppointmentsEncoded,
           200,
           headers: headers,
         ),
@@ -92,7 +90,7 @@ void main() {
     setUp: () async {
       await prefs.setString(
         'user',
-        ExpectData.customerUserStr,
+        UserExpect.customerUserEncoded,
       );
     },
     tearDown: () async {
@@ -100,8 +98,8 @@ void main() {
     },
     expect: () => <AppointmentState>[
       AppointmentLoadSuccess(
-        users: ExpectData.allUsers,
-        appointments: ExpectData.appointmentsOfUser,
+        users: UserExpect.allUsers,
+        appointments: AppointmentExpect.appointmentsOfUser,
       ),
     ],
   );

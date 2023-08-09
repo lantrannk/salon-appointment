@@ -30,9 +30,11 @@ class AppointmentApi {
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    final response = await client
-        .post(url, body: body, headers: headers)
-        .then((response) {});
+    final response = await client.post(
+      url,
+      body: body,
+      headers: headers,
+    );
 
     if (response.statusCode == 200) {
       return response.body;
@@ -47,7 +49,11 @@ class AppointmentApi {
     final map = appointment.toJson();
     final body = json.encode(map);
 
-    final response = await client.put(url, body: body, headers: headers);
+    final response = await client.put(
+      url,
+      body: body,
+      headers: headers,
+    );
 
     if (response.statusCode == 200) {
       return response.body;

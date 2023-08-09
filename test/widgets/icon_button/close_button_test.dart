@@ -49,15 +49,15 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', ExpectData.adminUserStr);
+    await prefs.setString('user', UserExpect.adminUserEncoded);
 
     expectedStates = [
-      UserLoaded(ExpectData.adminUser),
+      UserLoaded(UserExpect.adminUser),
     ];
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: UserLoaded(ExpectData.adminUser),
+      initialState: UserLoaded(UserExpect.adminUser),
     );
 
     closeButtonFinder = find.widgetWithIcon(

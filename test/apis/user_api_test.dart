@@ -22,12 +22,12 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            ExpectData.usersStr,
+            UserExpect.allUsersEncoded,
             200,
           ),
         );
 
-        expect(await userApi.getUsers(client), ExpectData.usersStr);
+        expect(await userApi.getUsers(client), UserExpect.allUsersEncoded);
       },
     );
   });

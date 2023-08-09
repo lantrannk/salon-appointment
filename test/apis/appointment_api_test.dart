@@ -34,7 +34,7 @@ void main() {
           () => client.get(url),
         ).thenAnswer(
           (_) async => http.Response(
-            ExpectData.appointmentsStr,
+            AppointmentExpect.allAppointmentsEncoded,
             200,
             headers: headers,
           ),
@@ -42,7 +42,7 @@ void main() {
 
         expect(
           await appointmentApi.getAppointments(),
-          ExpectData.appointmentsStr,
+          AppointmentExpect.allAppointmentsEncoded,
         );
       },
     );

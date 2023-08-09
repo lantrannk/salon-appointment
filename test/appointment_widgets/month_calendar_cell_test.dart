@@ -32,8 +32,8 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
 
-    users = ExpectData.allUsers;
-    appointments = ExpectData.allAppointments;
+    users = UserExpect.allUsers;
+    appointments = AppointmentExpect.allAppointments;
 
     appointmentBloc = MockAppointmentBloc();
     calendarScreen = MediaQuery(
@@ -67,7 +67,7 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', ExpectData.adminUserStr);
+    await prefs.setString('user', UserExpect.adminUserEncoded);
   });
 
   testWidgets(

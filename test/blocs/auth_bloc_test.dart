@@ -184,12 +184,12 @@ void main() {
       ),
       setUp: () async {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user', ExpectData.adminUserStr);
+        await prefs.setString('user', UserExpect.adminUserEncoded);
       },
       expect: () => <AuthState>[
         UserLoaded(
-          ExpectData.adminUser.name,
-          ExpectData.adminUser.avatar,
+          UserExpect.adminUser.name,
+          UserExpect.adminUser.avatar,
         ),
       ],
     );
