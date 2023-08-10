@@ -1,127 +1,77 @@
 import 'dart:io' as io;
 
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart'
-    as appointment;
-import 'package:salon_appointment/features/appointments/screens/new_appointment_screen.dart';
+import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../mock_data/mock_data.dart';
-
-class MockAppointmentBloc extends Mock implements appointment.AppointmentBloc {}
+import '../pump_widgets/common_widget.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late appointment.AppointmentBloc appointmentBloc;
-  late Widget newAppointmentScreen;
-  late List<appointment.AppointmentState> expectedStates;
-  late Finder initialDropDownFinder;
-  late Finder backDropDownFinder;
-  late Finder servicesFinder;
+  late Widget dropdownWidget;
+  late Finder dropdownFinder;
+  late Finder valueItemFinder;
+  late String? selectedValue;
+  late List<String> log;
+  late Function(String?)? onChanged;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
-    appointmentBloc = MockAppointmentBloc();
-    newAppointmentScreen = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: BlocProvider.value(
-          value: appointmentBloc,
-          child: NewAppointmentScreen(
-            selectedDay: DateTime.now(),
-          ),
-        ),
-      ),
-    );
-
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString('user', MockDataUser.adminUserJson);
-
-    expectedStates = [
-      appointment.UserLoaded(MockDataUser.adminUser),
-    ];
-    whenListen(
-      appointmentBloc,
-      Stream.fromIterable(expectedStates),
-      initialState: appointment.UserLoaded(MockDataUser.adminUser),
-    );
-
-    initialDropDownFinder = find.widgetWithText(
+    dropdownFinder = find.widgetWithText(
       DropdownButton<String>,
       'Select Services',
     );
-    backDropDownFinder = find.widgetWithText(
-      DropdownButton<String>,
-      'Back',
+    valueItemFinder = find.byType(DropdownMenuItem<String>);
+    selectedValue = null;
+
+    log = [];
+    onChanged = (value) => log.add(value!);
+
+    dropdownWidget = TestWidget(
+      body: Dropdown(
+        items: const ['1', '2', '3'],
+        selectedValue: selectedValue,
+        onChanged: onChanged,
+      ),
     );
-    servicesFinder = find.byType(DropdownMenuItem<String>);
   });
 
-  testWidgets(
-    'New Appointment Screen has one drop down button',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(newAppointmentScreen);
-        await tester.pump(const Duration(seconds: 1));
+  group('test dropdown widget has', () {
+    testWidgets('a dropdown with hint text', (tester) async {
+      await tester.pumpWidget(dropdownWidget);
+      await tester.pump();
 
-        // Drop down button
-        expect(initialDropDownFinder, findsOneWidget);
-      });
-    },
-  );
+      expect(dropdownFinder, findsOneWidget);
+    });
+  });
 
-  testWidgets(
-    'Show list of 3 items when pressing drop down button',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(newAppointmentScreen);
-        await tester.pumpAndSettle();
+  group('test dropdown widget pressed then', () {
+    testWidgets('show items list', (tester) async {
+      await tester.pumpWidget(dropdownWidget);
+      await tester.pump();
 
-        // Press drop down button
-        await tester.tap(initialDropDownFinder);
-        await tester.pumpAndSettle();
+      await tester.tap(dropdownFinder);
+      await tester.pumpAndSettle();
 
-        // Drop down has 3 items
-        expect(servicesFinder, findsNWidgets(3));
-      });
-    },
-  );
+      expect(valueItemFinder, findsNWidgets(3));
+    });
 
-  testWidgets(
-    'Show drop down with selected item when pressing item on list',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(newAppointmentScreen);
-        await tester.pumpAndSettle();
+    testWidgets('select the first item then call onPressed function 1 time',
+        (tester) async {
+      await tester.pumpWidget(dropdownWidget);
+      await tester.pump();
 
-        // Press drop down button
-        await tester.tap(initialDropDownFinder);
-        await tester.pumpAndSettle();
+      await tester.tap(dropdownFinder);
+      await tester.pumpAndSettle();
 
-        // Press first item of list
-        await tester.tap(servicesFinder.first, warnIfMissed: false);
-        await tester.pumpAndSettle();
+      await tester.tapAt(tester.getCenter(valueItemFinder.first));
+      await tester.pumpAndSettle();
 
-        // Show drop down with the first item: 'Back'
-        expect(backDropDownFinder, findsOneWidget);
-      });
-    },
-  );
+      expect(log.first, '1');
+    });
+  });
 }
