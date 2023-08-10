@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               AlertConfirmDialog.show(
                                 context: context,
                                 title: l10n.logoutConfirmTitle,
-                                message: l10n.logoutConfirmMessage,
+                                content: l10n.logoutConfirmMessage,
                                 onPressedRight: () {
                                   context.read<AuthBloc>().add(
                                         const LogoutEvent(),

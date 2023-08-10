@@ -53,74 +53,72 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
         child: Column(
           children: [
             BlocBuilder<AppointmentBloc, AppointmentState>(
-                builder: (ctx, state) {
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, 8),
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                      color: colorScheme.primary.withOpacity(0.3219),
+              builder: (ctx, state) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        offset: const Offset(0, 8),
+                        blurRadius: 12,
+                        spreadRadius: 0,
+                        color: colorScheme.primary.withOpacity(0.3219),
+                      ),
+                    ],
+                    shape: BoxShape.rectangle,
+                  ),
+                  child: TableCalendar<Appointment>(
+                    headerVisible: false,
+                    daysOfWeekVisible: false,
+                    firstDay: firstDay,
+                    lastDay: lastDay,
+                    focusedDay: _focusedDay!,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    calendarFormat: CalendarFormat.week,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    calendarBuilders: CalendarBuilders(
+                      selectedBuilder: (context, day, focusedDay) {
+                        return CalendarCell(
+                          day: day,
+                          gradient: LinearGradient(
+                            colors: [
+                              colorScheme.onSurface,
+                              colorScheme.primary,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        );
+                      },
+                      defaultBuilder: (context, day, focusedDay) =>
+                          CalendarCell(day: day),
+                      todayBuilder: (context, day, focusedDay) =>
+                          CalendarCell(day: day),
+                      outsideBuilder: (context, day, focusedDay) =>
+                          CalendarCell(day: day),
                     ),
-                  ],
-                  shape: BoxShape.rectangle,
-                ),
-                child: TableCalendar<Appointment>(
-                  headerVisible: false,
-                  daysOfWeekVisible: false,
-                  firstDay: firstDay,
-                  lastDay: lastDay,
-                  focusedDay: _focusedDay!,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  calendarFormat: CalendarFormat.week,
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                  calendarBuilders: CalendarBuilders(
-                    selectedBuilder: (context, day, focusedDay) {
-                      return CalendarCell(
-                        day: day,
-                        gradient: LinearGradient(
-                          colors: [
-                            colorScheme.onSurface,
-                            colorScheme.primary,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                      );
+                    calendarStyle: const CalendarStyle(
+                      outsideDaysVisible: true,
+                    ),
+                    rowHeight: 44,
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
+                      }
                     },
-                    defaultBuilder: (context, day, focusedDay) => CalendarCell(
-                      day: day,
-                    ),
-                    todayBuilder: (context, day, focusedDay) => CalendarCell(
-                      day: day,
-                    ),
-                    outsideBuilder: (context, day, focusedDay) => CalendarCell(
-                      day: day,
-                    ),
-                  ),
-                  calendarStyle: const CalendarStyle(
-                    outsideDaysVisible: true,
-                  ),
-                  rowHeight: 44,
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(_selectedDay, selectedDay)) {
+                    onPageChanged: (focusedDay) {
                       setState(() {
-                        _selectedDay = selectedDay;
                         _focusedDay = focusedDay;
+                        _selectedDay = focusedDay;
                       });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    setState(() {
-                      _focusedDay = focusedDay;
-                      _selectedDay = focusedDay;
-                    });
-                  },
-                ),
-              );
-            }),
+                    },
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 10),
             Text(
               monthCharFormat.format(_selectedDay!),
@@ -212,7 +210,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                 AlertConfirmDialog.show(
                                   context: ctx,
                                   title: l10n.removeConfirmTitle,
-                                  message: l10n.removeConfirmMessage,
+                                  content: l10n.removeConfirmMessage,
                                   onPressedRight: () {
                                     ctx.read<AppointmentBloc>().add(
                                           AppointmentRemovePressed(

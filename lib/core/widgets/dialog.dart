@@ -5,7 +5,7 @@ import 'package:salon_appointment/core/widgets/widgets.dart';
 class AlertConfirmDialog extends StatelessWidget {
   const AlertConfirmDialog({
     required this.title,
-    required this.message,
+    required this.content,
     required this.onPressedRight,
     required this.onPressedLeft,
     this.textButtonRight,
@@ -14,7 +14,7 @@ class AlertConfirmDialog extends StatelessWidget {
   });
 
   final String title;
-  final String message;
+  final String content;
   final String? textButtonRight;
   final String? textButtonLeft;
   final VoidCallback onPressedRight;
@@ -40,7 +40,7 @@ class AlertConfirmDialog extends StatelessWidget {
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Text(
-          message,
+          content,
           style: textTheme.labelMedium!.copyWith(
             color: colorScheme.secondary,
             fontWeight: FontWeight.w100,
@@ -75,7 +75,7 @@ class AlertConfirmDialog extends StatelessWidget {
   static void show({
     required BuildContext context,
     required String title,
-    required String message,
+    required String content,
     required VoidCallback onPressedLeft,
     required VoidCallback onPressedRight,
     String? textButtonRight,
@@ -85,7 +85,7 @@ class AlertConfirmDialog extends StatelessWidget {
       context: context,
       builder: (context) => AlertConfirmDialog(
         title: title,
-        message: message,
+        content: content,
         textButtonLeft: textButtonLeft ?? S.of(context).noConfirm,
         textButtonRight: textButtonRight ?? S.of(context).yesConfirm,
         onPressedLeft: onPressedLeft,
