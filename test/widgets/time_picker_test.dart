@@ -1,11 +1,11 @@
 import 'dart:io' as io;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../pump_widgets/common_widget.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,26 +34,12 @@ void main() {
     onStartTimePressed = () => startTimeLog.add(0);
     onEndTimePressed = () => endTimeLog.add(0);
 
-    timePickerWidget = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: Scaffold(
-          body: SizedBox(
-            child: TimePicker(
-              startTime: DateTime(2023, 08, 25, 10, 0),
-              endTime: DateTime(2023, 08, 25, 10, 30),
-              onStartTimePressed: onStartTimePressed,
-              onEndTimePressed: onEndTimePressed,
-            ),
-          ),
-        ),
+    timePickerWidget = TestWidget(
+      body: TimePicker(
+        startTime: DateTime(2023, 08, 25, 10, 0),
+        endTime: DateTime(2023, 08, 25, 10, 30),
+        onStartTimePressed: onStartTimePressed,
+        onEndTimePressed: onEndTimePressed,
       ),
     );
   });
@@ -101,7 +87,7 @@ void main() {
   });
 
   group('test end time pressed then', () {
-    testWidgets('call onTimePressed function 1 time', (tester) async {
+    testWidgets('call onEndTimePressed function 1 time', (tester) async {
       await tester.pumpWidget(timePickerWidget);
       await tester.pump();
 

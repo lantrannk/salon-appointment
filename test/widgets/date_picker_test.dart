@@ -6,6 +6,8 @@ import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../pump_widgets/common_widget.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
@@ -27,17 +29,10 @@ void main() {
     log = [];
     onPressed = () => log.add(0);
 
-    datePickerWidget = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        home: Scaffold(
-          body: SizedBox(
-            child: DatePicker(
-              dateTime: DateTime(2023, 08, 15),
-              onPressed: onPressed,
-            ),
-          ),
-        ),
+    datePickerWidget = TestWidget(
+      body: DatePicker(
+        dateTime: DateTime(2023, 08, 15),
+        onPressed: onPressed,
       ),
     );
   });
