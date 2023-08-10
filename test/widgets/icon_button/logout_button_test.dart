@@ -12,7 +12,7 @@ import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
 import 'package:salon_appointment/features/auth/screens/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../expect_data/expect_data.dart';
+import '../../mock_data/mock_data.dart';
 
 class MockAuthBloc extends Mock implements AuthBloc {}
 
@@ -47,7 +47,7 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', UserExpect.adminUserEncoded);
+    await prefs.setString('user', MockDataUser.adminUserJson);
 
     expectedStates = [
       const UserLoaded(

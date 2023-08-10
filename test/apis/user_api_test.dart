@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 
-import '../expect_data/expect_data.dart';
+import '../mock_data/mock_data.dart';
 
 class MockClient extends Mock implements http.Client {}
 
@@ -22,12 +22,12 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            UserExpect.allUsersEncoded,
+            MockDataUser.allUsersJson,
             200,
           ),
         );
 
-        expect(await userApi.getUsers(client), UserExpect.allUsersEncoded);
+        expect(await userApi.getUsers(client), MockDataUser.allUsersJson);
       },
     );
   });

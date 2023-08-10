@@ -15,7 +15,7 @@ import 'package:salon_appointment/features/auth/model/user.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../expect_data/expect_data.dart';
+import '../../mock_data/mock_data.dart';
 
 class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
@@ -33,8 +33,8 @@ void main() {
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
 
-    users = UserExpect.allUsers;
-    appointments = AppointmentExpect.allAppointments;
+    users = MockDataUser.allUsers;
+    appointments = MockDataAppointment.allAppointments;
 
     appointmentBloc = MockAppointmentBloc();
     appointmentScreen = MediaQuery(
@@ -57,7 +57,7 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', UserExpect.adminUserEncoded);
+    await prefs.setString('user', MockDataUser.adminUserJson);
 
     expectedStates = [
       AppointmentLoading(),

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../expect_data/expect_data.dart';
+import '../mock_data/mock_data.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -184,12 +184,12 @@ void main() {
       ),
       setUp: () async {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user', UserExpect.adminUserEncoded);
+        await prefs.setString('user', MockDataUser.adminUserJson);
       },
       expect: () => <AuthState>[
         UserLoaded(
-          UserExpect.adminUser.name,
-          UserExpect.adminUser.avatar,
+          MockDataUser.adminUser.name,
+          MockDataUser.adminUser.avatar,
         ),
       ],
     );

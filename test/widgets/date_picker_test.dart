@@ -12,7 +12,7 @@ import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.da
 import 'package:salon_appointment/features/appointments/screens/new_appointment_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../expect_data/expect_data.dart';
+import '../mock_data/mock_data.dart';
 
 class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
@@ -51,15 +51,15 @@ void main() {
     );
 
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', UserExpect.adminUserEncoded);
+    await prefs.setString('user', MockDataUser.adminUserJson);
 
     expectedStates = [
-      UserLoaded(UserExpect.adminUser),
+      UserLoaded(MockDataUser.adminUser),
     ];
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: UserLoaded(UserExpect.adminUser),
+      initialState: UserLoaded(MockDataUser.adminUser),
     );
 
     datePickerFinder = find.widgetWithText(TextButton, '15/08/2023');

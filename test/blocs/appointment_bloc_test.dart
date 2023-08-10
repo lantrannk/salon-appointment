@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../expect_data/expect_data.dart';
+import '../mock_data/mock_data.dart';
 
 class MockHTTPClient extends Mock implements http.Client {}
 
@@ -37,7 +37,7 @@ void main() {
         () => client.get(url),
       ).thenAnswer(
         (_) async => http.Response(
-          AppointmentExpect.allAppointmentsEncoded,
+          MockDataAppointment.allAppointmentsJson,
           200,
           headers: headers,
         ),
@@ -53,7 +53,7 @@ void main() {
     setUp: () async {
       await prefs.setString(
         'user',
-        UserExpect.adminUserEncoded,
+        MockDataUser.adminUserJson,
       );
     },
     tearDown: () async {
@@ -62,8 +62,8 @@ void main() {
     expect: () => <AppointmentState>[
       AppointmentLoading(),
       AppointmentLoadSuccess(
-        users: UserExpect.allUsers,
-        appointments: AppointmentExpect.allAppointments,
+        users: MockDataUser.allUsers,
+        appointments: MockDataAppointment.allAppointments,
       ),
     ],
   );
@@ -75,7 +75,7 @@ void main() {
         () => client.get(url),
       ).thenAnswer(
         (_) async => http.Response(
-          AppointmentExpect.allAppointmentsEncoded,
+          MockDataAppointment.allAppointmentsJson,
           200,
           headers: headers,
         ),
@@ -90,7 +90,7 @@ void main() {
     setUp: () async {
       await prefs.setString(
         'user',
-        UserExpect.customerUserEncoded,
+        MockDataUser.customerUserJson,
       );
     },
     tearDown: () async {
@@ -98,8 +98,8 @@ void main() {
     },
     expect: () => <AppointmentState>[
       AppointmentLoadSuccess(
-        users: UserExpect.allUsers,
-        appointments: AppointmentExpect.appointmentsOfUser,
+        users: MockDataUser.allUsers,
+        appointments: MockDataAppointment.appointmentsOfUser,
       ),
     ],
   );
