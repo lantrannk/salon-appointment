@@ -267,7 +267,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       SizedBox(
                         height: 44,
                         width: double.infinity,
-                        child: SAButton.elevation(
+                        child: SAButton.elevated(
                           onPressed: () {
                             if (isBreakTime(startTime) ||
                                 isBreakTime(endTime)) {

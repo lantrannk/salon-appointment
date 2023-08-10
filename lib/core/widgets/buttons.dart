@@ -14,7 +14,7 @@ class SAButton extends StatelessWidget {
     double width,
     Color bgColor,
     double elevation,
-  }) = _SAFloatingButton;
+  }) = _SAFloatingActionButton;
 
   const factory SAButton.text({
     required Widget child,
@@ -34,13 +34,13 @@ class SAButton extends StatelessWidget {
     double width,
   }) = _SAOutlinedButton;
 
-  const factory SAButton.elevation({
+  const factory SAButton.elevated({
     required Widget child,
     VoidCallback? onPressed,
     double height,
     double width,
     Color bgColor,
-  }) = _SAElevationButton;
+  }) = _SAElevatedButton;
 
   final Widget child;
   final VoidCallback? onPressed;
@@ -119,14 +119,15 @@ class _SAIconButton extends SAButton {
   Widget build(BuildContext context) {
     return IconButton(
       padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(),
       onPressed: onPressed,
       icon: child,
     );
   }
 }
 
-class _SAElevationButton extends SAButton {
-  const _SAElevationButton({
+class _SAElevatedButton extends SAButton {
+  const _SAElevatedButton({
     required super.child,
     this.bgColor,
     this.height,
@@ -154,8 +155,8 @@ class _SAElevationButton extends SAButton {
   }
 }
 
-class _SAFloatingButton extends SAButton {
-  const _SAFloatingButton({
+class _SAFloatingActionButton extends SAButton {
+  const _SAFloatingActionButton({
     required super.child,
     super.onPressed,
     this.height = 56,
