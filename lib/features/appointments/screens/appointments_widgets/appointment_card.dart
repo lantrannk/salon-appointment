@@ -53,6 +53,7 @@ class AppointmentCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Time(
                 startTime: appointment.startTime,
@@ -66,6 +67,9 @@ class AppointmentCard extends StatelessWidget {
                     child: const SAIcons(
                       icon: Assets.editIcon,
                     ),
+                  ),
+                  const SizedBox(
+                    width: 12,
                   ),
                   SAButton.icon(
                     onPressed: onRemovePressed,
