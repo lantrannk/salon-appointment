@@ -336,4 +336,47 @@ class MockDataAppointment {
       'id': '79'
     },
   ].map((e) => Appointment.fromJson(e)).toList();
+
+  static final List<Appointment> sortedAppointmentsOfDay = [
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T18:00:00.000',
+      'endTime': '2023-08-15T18:30:00.000',
+      'userId': '2',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '79'
+    },
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T19:00:00.000',
+      'endTime': '2023-08-15T19:30:00.000',
+      'userId': '1',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '82'
+    },
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T19:00:00.000',
+      'endTime': '2023-08-15T19:30:00.000',
+      'userId': '1',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '83'
+    },
+    {
+      'date': '2023-08-15T10:55:00.000',
+      'startTime': '2023-08-15T20:00:00.000',
+      'endTime': '2023-08-15T20:30:00.000',
+      'userId': '1',
+      'services': 'Non-Invasive Body Contouring',
+      'description': 'Nothing to write.',
+      'isCompleted': false,
+      'id': '80'
+    },
+  ].map((e) => Appointment.fromJson(e)).toList();
 }
