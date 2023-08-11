@@ -1,179 +1,171 @@
 import 'dart:io' as io;
 
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/appointments/model/appointment.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_screen.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
-import 'package:salon_appointment/features/auth/model/user.dart';
-
+import 'package:salon_appointment/core/constants/assets.dart';
+import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart'
+    as widget;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helpers/pump_app.dart';
 import '../mock_data/mock_data.dart';
-
-class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late AppointmentBloc appointmentBloc;
-  late Widget appointmentScreen;
-  late List<AppointmentState> expectedStates;
-  late List<User> users;
-  late List<Appointment> appointments;
+  late Widget appointmentCardWidget;
 
-  setUp(() async {
+  late Finder timeFinder;
+  late Finder customerNameFinder;
+  late Finder serviceFinder;
+  late Finder descriptionFinder;
+  late Finder editButtonFinder;
+  late Finder removeButtonFinder;
+
+  late VoidCallback onEditPressed;
+  late VoidCallback onRemovePressed;
+  late List<int> editLog;
+  late List<int> removeLog;
+
+  setUp(() {
+    editLog = [];
+    removeLog = [];
+  });
+
+  setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
-    users = MockDataUser.allUsers;
-    appointments = MockDataAppointment.allAppointments;
+    onEditPressed = () => editLog.add(0);
+    onRemovePressed = () => removeLog.add(0);
 
-    appointmentBloc = MockAppointmentBloc();
-    appointmentScreen = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: BlocProvider.value(
-          value: appointmentBloc,
-          child: AppointmentScreen(
-            focusedDay: DateTime(2023, 08, 15),
-          ),
+    timeFinder = find.widgetWithText(
+      widget.Time,
+      '10:00 - 10:30',
+    );
+
+    customerNameFinder = find.widgetWithText(
+      widget.Customer,
+      'Lan Tran',
+    );
+
+    serviceFinder = find.widgetWithText(
+      widget.Service,
+      'Non-Invasive Body Contouring',
+    );
+
+    descriptionFinder = find.widgetWithText(
+      widget.Description,
+      'Nothing to write.',
+    );
+
+    editButtonFinder = find.widgetWithIcon(
+      IconButton,
+      Assets.editIcon,
+    );
+
+    removeButtonFinder = find.widgetWithIcon(
+      IconButton,
+      Assets.removeIcon,
+    );
+
+    appointmentCardWidget = Scaffold(
+      body: Scaffold(
+        body: widget.AppointmentCard(
+          appointment: MockDataAppointment.appointment,
+          name: 'Lan Tran',
+          avatar:
+              'https://www.google.com/imgres?imgurl=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F03%2F14%2F36%2F24%2F360_F_314362441_Tx4djxQlxSSRutWEbaWP40jFvbvW0P3J.jpg&tbnid=fxJ8HNBgf3StGM&vet=12ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg..i&imgrefurl=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3Dbeauty&docid=sLPERW_WHMMG4M&w=540&h=360&q=beauty%20image&ved=2ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg',
+          onEditPressed: onEditPressed,
+          onRemovePressed: onRemovePressed,
         ),
       ),
     );
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-      'user',
-      MockDataUser.adminUserJson,
-    );
-
-    expectedStates = [
-      AppointmentLoading(),
-      AppointmentLoadSuccess(
-        users: users,
-        appointments: appointments,
-      ),
-    ];
-    whenListen(
-      appointmentBloc,
-      Stream.fromIterable(expectedStates),
-      initialState: AppointmentLoading(),
-    );
   });
 
-  testWidgets(
-    'Appointment Card has one appointment time widget',
-    (tester) async {
+  group('test appointment card has', () {
+    testWidgets('a time widget', (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
+        await tester.pumpApp(appointmentCardWidget);
         await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
-
-        expect(
-          find.widgetWithText(
-            AppointmentCard,
-            '18:00 - 18:30',
-          ),
-          findsOneWidget,
-        );
-
-        expect(
-          find.widgetWithText(
-            AppointmentCard,
-            '19:00 - 19:30',
-          ),
-          findsOneWidget,
-        );
-
-        expect(
-          find.widgetWithText(
-            AppointmentCard,
-            'Beauty Salon',
-          ),
-          findsNWidgets(2),
-        );
+        expect(timeFinder, findsOneWidget);
       });
-    },
-  );
+    });
 
-  testWidgets(
-    'Appointment Card has one customer\'s name widget',
-    (tester) async {
+    testWidgets('a customer name widget', (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
+        await tester.pumpApp(appointmentCardWidget);
         await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
-
-        expect(
-          find.widgetWithText(AppointmentCard, 'Carol Williams'),
-          findsOneWidget,
-        );
-
-        expect(
-          find.widgetWithText(AppointmentCard, 'Lan Tran'),
-          findsOneWidget,
-        );
+        expect(customerNameFinder, findsOneWidget);
       });
-    },
-  );
+    });
 
-  testWidgets(
-    'Appointment Card has one appointment service widget',
-    (tester) async {
+    testWidgets('a service widget', (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
+        await tester.pumpApp(appointmentCardWidget);
         await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
-
-        expect(
-          find.widgetWithText(
-            AppointmentCard,
-            'Non-Invasive Body Contouring',
-          ),
-          findsNWidgets(2),
-        );
+        expect(serviceFinder, findsOneWidget);
       });
-    },
-  );
+    });
 
-  testWidgets(
-    'Appointment Card has one appointment description widget',
-    (tester) async {
+    testWidgets('a description widget', (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
+        await tester.pumpApp(appointmentCardWidget);
         await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
+        expect(descriptionFinder, findsOneWidget);
+      });
+    });
+
+    testWidgets('a edit icon button widget', (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpApp(appointmentCardWidget);
+        await tester.pump();
+
+        expect(editButtonFinder, findsOneWidget);
+      });
+    });
+
+    testWidgets('a remove icon button widget', (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpApp(appointmentCardWidget);
+        await tester.pump();
+
+        expect(removeButtonFinder, findsOneWidget);
+      });
+    });
+  });
+
+  group('test edit icon button pressed', () {
+    testWidgets('then call onEditPressed function 1 time', (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpApp(appointmentCardWidget);
+        await tester.pump();
+
+        await tester.tap(editButtonFinder);
         await tester.pumpAndSettle();
 
-        expect(
-          find.widgetWithText(
-            AppointmentCard,
-            'Nothing to write.',
-          ),
-          findsNWidgets(2),
-        );
+        expect(editLog.length, 1);
+        expect(removeLog.length, 0);
       });
-    },
-  );
+    });
+  });
+
+  group('test remove icon button pressed', () {
+    testWidgets('then call onRemovePressed function 1 time', (tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpApp(appointmentCardWidget);
+        await tester.pump();
+
+        await tester.tap(removeButtonFinder);
+        await tester.pumpAndSettle();
+
+        expect(editLog.length, 0);
+        expect(removeLog.length, 1);
+      });
+    });
+  });
 }
