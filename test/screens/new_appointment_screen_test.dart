@@ -27,10 +27,17 @@ void main() {
   late Finder datePickerFinder;
   late Finder scheduleIconFinder;
   late Finder calendarIconFinder;
+
   late Finder fromTextFinder;
   late Finder toTextFinder;
   late Finder startTimeFinder;
   late Finder endTimeFinder;
+
+  late Finder initialDropDownFinder;
+  late Finder backDropDownFinder;
+  late Finder servicesFinder;
+
+  late Finder closeButtonFinder;
 
   final appointment = Appointment.fromJson(const {
     'date': '2023-08-15T10:55:00.000',
@@ -235,6 +242,175 @@ void main() {
           // Show another start time outlined button after selecting
           expect(find.widgetWithText(OutlinedButton, '08:00'), findsOneWidget);
         });
+      },
+    );
+  });
+
+  group('test drop down widget -', () {
+    setUpAll(() async {
+      SharedPreferences.setMockInitialValues({});
+
+      appointmentBloc = MockAppointmentBloc();
+      newAppointmentScreen = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          home: BlocProvider.value(
+            value: appointmentBloc,
+            child: NewAppointmentScreen(
+              selectedDay: DateTime.now(),
+            ),
+          ),
+        ),
+      );
+
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('user', MockDataUser.adminUserJson);
+
+      expectedStates = [
+        UserLoaded(MockDataUser.adminUser),
+      ];
+      whenListen(
+        appointmentBloc,
+        Stream.fromIterable(expectedStates),
+        initialState: UserLoaded(MockDataUser.adminUser),
+      );
+
+      initialDropDownFinder = find.widgetWithText(
+        DropdownButton<String>,
+        'Select Services',
+      );
+      backDropDownFinder = find.widgetWithText(
+        DropdownButton<String>,
+        'Back',
+      );
+      servicesFinder = find.byType(DropdownMenuItem<String>);
+    });
+
+    testWidgets(
+      'New Appointment Screen has one drop down button',
+      (tester) async {
+        await tester.runAsync(() async {
+          await tester.pumpWidget(newAppointmentScreen);
+          await tester.pump(const Duration(seconds: 1));
+
+          // Drop down button
+          expect(initialDropDownFinder, findsOneWidget);
+        });
+      },
+    );
+
+    testWidgets(
+      'Show list of 3 items when pressing drop down button',
+      (tester) async {
+        await tester.runAsync(() async {
+          await tester.pumpWidget(newAppointmentScreen);
+          await tester.pumpAndSettle();
+
+          // Press drop down button
+          await tester.tap(initialDropDownFinder);
+          await tester.pumpAndSettle();
+
+          // Drop down has 3 items
+          expect(servicesFinder, findsNWidgets(3));
+        });
+      },
+    );
+
+    testWidgets(
+      'Show drop down with selected item when pressing item on list',
+      (tester) async {
+        await tester.runAsync(() async {
+          await tester.pumpWidget(newAppointmentScreen);
+          await tester.pumpAndSettle();
+
+          // Press drop down button
+          await tester.tap(initialDropDownFinder);
+          await tester.pumpAndSettle();
+
+          // Press first item of list
+          await tester.tap(servicesFinder.first, warnIfMissed: false);
+          await tester.pumpAndSettle();
+
+          // Show drop down with the first item: 'Back'
+          expect(backDropDownFinder, findsOneWidget);
+        });
+      },
+    );
+  });
+
+  group('test close button -', () {
+    setUpAll(() async {
+      SharedPreferences.setMockInitialValues({});
+
+      appointmentBloc = MockAppointmentBloc();
+      newAppointmentScreen = MediaQuery(
+        data: const MediaQueryData(),
+        child: MaterialApp(
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          home: BlocProvider.value(
+            value: appointmentBloc,
+            child: NewAppointmentScreen(
+              selectedDay: DateTime.now(),
+            ),
+          ),
+        ),
+      );
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user', MockDataUser.adminUserJson);
+
+      expectedStates = [
+        UserLoaded(MockDataUser.adminUser),
+      ];
+      whenListen(
+        appointmentBloc,
+        Stream.fromIterable(expectedStates),
+        initialState: UserLoaded(MockDataUser.adminUser),
+      );
+
+      closeButtonFinder = find.widgetWithIcon(
+        IconButton,
+        Assets.closeIcon,
+      );
+    });
+
+    testWidgets(
+      'New Appointment Screen has one close icon button',
+      (tester) async {
+        await tester.pumpWidget(newAppointmentScreen);
+        await tester.pump(const Duration(seconds: 1));
+
+        // Close icon button
+        expect(closeButtonFinder, findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Pop new appointment screen when pressing close icon button',
+      (tester) async {
+        await tester.pumpWidget(newAppointmentScreen);
+        await tester.pump(const Duration(seconds: 1));
+
+        // Press close icon button
+        await tester.tap(closeButtonFinder);
+        await tester.pumpAndSettle();
+
+        // Pop new appointment screen when pressing close icon button
+        expect(closeButtonFinder, findsNothing);
       },
     );
   });
