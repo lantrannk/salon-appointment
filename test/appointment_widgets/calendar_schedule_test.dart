@@ -1,153 +1,113 @@
 import 'dart:io' as io;
 
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/appointments/model/appointment.dart';
+import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
-import 'package:salon_appointment/features/appointments/screens/calendar_screen.dart';
-
-import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../helpers/pump_app.dart';
 import '../mock_data/mock_data.dart';
-
-class MockAppointmentBloc extends Mock implements AppointmentBloc {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late AppointmentBloc appointmentBloc;
-  late Widget calendarScreen;
-  late List<AppointmentState> expectedStates;
-  late Finder tappedFinder;
-  late Finder scheduleFinder;
-  late Finder textButtonFinder;
-  late List<User> users;
-  late List<Appointment> appointments;
+  late Widget calendarScheduleWidget;
 
-  setUp(() async {
+  late Finder scheduleIconFinder;
+  late Finder dateTextFinder;
+  late Finder timeTextFinder;
+  late Finder descriptionTextFinder;
+  late Finder textButtonFinder;
+
+  late List<int> log;
+  late VoidCallback onPressed;
+
+  setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
-    users = MockDataUser.allUsers;
-    appointments = MockDataAppointment.allAppointments;
+    log = [];
+    onPressed = () => log.add(0);
 
-    appointmentBloc = MockAppointmentBloc();
-    calendarScreen = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: BlocProvider.value(
-          value: appointmentBloc,
-          child: const CalendarScreen(),
+    scheduleIconFinder = find.byIcon(
+      Assets.scheduleIcon,
+    );
+
+    dateTextFinder = find.text(
+      '15 August, Tuesday',
+    );
+
+    timeTextFinder = find.text(
+      '10:00 - 10:30',
+    );
+
+    descriptionTextFinder = find.text(
+      'Nothing to write.',
+    );
+
+    textButtonFinder = find.widgetWithText(
+      TextButton,
+      'Show appointments (4)',
+    );
+
+    calendarScheduleWidget = Scaffold(
+      body: Scaffold(
+        body: CalendarSchedule(
+          appointment: MockDataAppointment.appointment,
+          countOfAppointments: 4,
+          onPressed: onPressed,
         ),
       ),
     );
-
-    expectedStates = [
-      AppointmentLoading(),
-      AppointmentLoadSuccess(
-        users: users,
-        appointments: appointments,
-      ),
-    ];
-    whenListen(
-      appointmentBloc,
-      Stream.fromIterable([expectedStates, expectedStates]),
-      initialState: AppointmentLoading(),
-    );
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user', MockDataUser.adminUserJson);
-
-    tappedFinder = find.widgetWithText(MonthCalendarCell, '15').first;
-    scheduleFinder = find.byType(CalendarSchedule);
-    textButtonFinder = find.widgetWithText(TextButton, 'Show appointments (4)');
   });
 
-  testWidgets(
-    'Current day has no appointments then show an empty notification',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(calendarScreen);
-        await tester.pump();
+  group('test calendar cell has', () {
+    testWidgets('a schedule icon', (tester) async {
+      await tester.pumpApp(calendarScheduleWidget);
+      await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
+      expect(scheduleIconFinder, findsOneWidget);
+    });
 
-        expect(
-          find.text('There are no appointments.'),
-          findsOneWidget,
-        );
-      });
-    },
-  );
+    testWidgets('a day text', (tester) async {
+      await tester.pumpApp(calendarScheduleWidget);
+      await tester.pump();
 
-  testWidgets(
-    'Select a day that has appointments then show calendar schedule',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(calendarScreen);
-        await tester.pump();
+      expect(dateTextFinder, findsOneWidget);
+    });
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.tap(tappedFinder);
-        await tester.pumpAndSettle();
+    testWidgets('a time text', (tester) async {
+      await tester.pumpApp(calendarScheduleWidget);
+      await tester.pump();
 
-        expect(scheduleFinder, findsOneWidget);
-      });
-    },
-  );
+      expect(timeTextFinder, findsOneWidget);
+    });
 
-  testWidgets(
-    'Select a day that has appointments then show calendar schedule with text button',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(calendarScreen);
-        await tester.pump();
+    testWidgets('a description text', (tester) async {
+      await tester.pumpApp(calendarScheduleWidget);
+      await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.tap(tappedFinder);
-        await tester.pumpAndSettle();
+      expect(descriptionTextFinder, findsOneWidget);
+    });
+  });
 
-        expect(textButtonFinder, findsOneWidget);
-      });
-    },
-  );
+  testWidgets('a text button', (tester) async {
+    await tester.pumpApp(calendarScheduleWidget);
+    await tester.pump();
 
-  testWidgets(
-    'Tap on text button then navigate to Appointment Screen',
-    timeout: Timeout.none,
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(calendarScreen);
-        await tester.pump();
+    expect(textButtonFinder, findsOneWidget);
+  });
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.tap(tappedFinder);
-        await tester.pumpAndSettle();
+  group('test text button pressed', () {
+    testWidgets('then call onPressed function 1 time', (tester) async {
+      await tester.pumpApp(calendarScheduleWidget);
+      await tester.pump();
 
-        await tester.tap(
-          textButtonFinder,
-          warnIfMissed: false,
-        );
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
+      await tester.tap(textButtonFinder);
+      await tester.pumpAndSettle();
 
-        expect(find.text('Appointments'), findsOneWidget);
-      });
-    },
-  );
+      expect(log.length, 1);
+    });
+  });
 }
