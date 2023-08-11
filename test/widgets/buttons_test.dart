@@ -6,7 +6,7 @@ import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -55,35 +55,35 @@ void main() {
 
     onPressed = () => log.add(0);
 
-    floatingActionButtonWidget = TestWidget(
+    floatingActionButtonWidget = Scaffold(
       body: SAButton.floating(
         onPressed: onPressed,
         child: const Icon(Assets.addIcon),
       ),
     );
 
-    iconButtonWidget = TestWidget(
+    iconButtonWidget = Scaffold(
       body: SAButton.icon(
         onPressed: onPressed,
         child: const Icon(Assets.closeIcon),
       ),
     );
 
-    textButtonWidget = TestWidget(
+    textButtonWidget = Scaffold(
       body: SAButton.text(
         onPressed: onPressed,
         child: const Text('Text Button'),
       ),
     );
 
-    outlinedButtonWidget = TestWidget(
+    outlinedButtonWidget = Scaffold(
       body: SAButton.outlined(
         onPressed: onPressed,
         child: const Text('Outlined Button'),
       ),
     );
 
-    elevatedButtonWidget = TestWidget(
+    elevatedButtonWidget = Scaffold(
       body: SAButton.elevated(
         onPressed: onPressed,
         child: const Text('Elevated Button'),
@@ -93,14 +93,14 @@ void main() {
 
   group('test floating action button', () {
     testWidgets('has an icon child', (tester) async {
-      await tester.pumpWidget(floatingActionButtonWidget);
+      await tester.pumpApp(floatingActionButtonWidget);
       await tester.pump();
 
       expect(floatingActionButtonFinder, findsOneWidget);
     });
 
     testWidgets('pressed then call onPressed function 1 time', (tester) async {
-      await tester.pumpWidget(floatingActionButtonWidget);
+      await tester.pumpApp(floatingActionButtonWidget);
       await tester.pump();
 
       await tester.tap(floatingActionButtonFinder);
@@ -112,14 +112,14 @@ void main() {
 
   group('test icon button', () {
     testWidgets('has an icon child', (tester) async {
-      await tester.pumpWidget(iconButtonWidget);
+      await tester.pumpApp(iconButtonWidget);
       await tester.pump();
 
       expect(iconButtonFinder, findsOneWidget);
     });
 
     testWidgets('pressed then call onPressed function 1 time', (tester) async {
-      await tester.pumpWidget(iconButtonWidget);
+      await tester.pumpApp(iconButtonWidget);
       await tester.pump();
 
       await tester.tap(iconButtonFinder);
@@ -131,14 +131,14 @@ void main() {
 
   group('test text button', () {
     testWidgets('has an text child', (tester) async {
-      await tester.pumpWidget(textButtonWidget);
+      await tester.pumpApp(textButtonWidget);
       await tester.pump();
 
       expect(textButtonFinder, findsOneWidget);
     });
 
     testWidgets('pressed then call onPressed function 1 time', (tester) async {
-      await tester.pumpWidget(textButtonWidget);
+      await tester.pumpApp(textButtonWidget);
       await tester.pump();
 
       await tester.tap(textButtonFinder);
@@ -150,14 +150,14 @@ void main() {
 
   group('test outlined button', () {
     testWidgets('has an text child', (tester) async {
-      await tester.pumpWidget(outlinedButtonWidget);
+      await tester.pumpApp(outlinedButtonWidget);
       await tester.pump();
 
       expect(outlinedButtonFinder, findsOneWidget);
     });
 
     testWidgets('pressed then call onPressed function 1 time', (tester) async {
-      await tester.pumpWidget(outlinedButtonWidget);
+      await tester.pumpApp(outlinedButtonWidget);
       await tester.pump();
 
       await tester.tap(outlinedButtonFinder);
@@ -169,14 +169,14 @@ void main() {
 
   group('test elevated button', () {
     testWidgets('has an text child', (tester) async {
-      await tester.pumpWidget(elevatedButtonWidget);
+      await tester.pumpApp(elevatedButtonWidget);
       await tester.pump();
 
       expect(elevatedButtonFinder, findsOneWidget);
     });
 
     testWidgets('pressed then call onPressed function 1 time', (tester) async {
-      await tester.pumpWidget(elevatedButtonWidget);
+      await tester.pumpApp(elevatedButtonWidget);
       await tester.pump();
 
       await tester.tap(elevatedButtonFinder);

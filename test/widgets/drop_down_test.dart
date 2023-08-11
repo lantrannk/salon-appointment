@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ void main() {
     log = [];
     onChanged = (value) => log.add(value!);
 
-    dropdownWidget = TestWidget(
+    dropdownWidget = Scaffold(
       body: Dropdown(
         items: const ['1', '2', '3'],
         selectedValue: selectedValue,
@@ -42,7 +42,7 @@ void main() {
 
   group('test dropdown widget has', () {
     testWidgets('a dropdown with hint text', (tester) async {
-      await tester.pumpWidget(dropdownWidget);
+      await tester.pumpApp(dropdownWidget);
       await tester.pump();
 
       expect(dropdownFinder, findsOneWidget);
@@ -51,7 +51,7 @@ void main() {
 
   group('test dropdown widget pressed then', () {
     testWidgets('show items list', (tester) async {
-      await tester.pumpWidget(dropdownWidget);
+      await tester.pumpApp(dropdownWidget);
       await tester.pump();
 
       await tester.tap(dropdownFinder);
@@ -62,7 +62,7 @@ void main() {
 
     testWidgets('select the first item then call onPressed function 1 time',
         (tester) async {
-      await tester.pumpWidget(dropdownWidget);
+      await tester.pumpApp(dropdownWidget);
       await tester.pump();
 
       await tester.tap(dropdownFinder);

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,7 @@ void main() {
     onStartTimePressed = () => startTimeLog.add(0);
     onEndTimePressed = () => endTimeLog.add(0);
 
-    timePickerWidget = TestWidget(
+    timePickerWidget = Scaffold(
       body: TimePicker(
         startTime: DateTime(2023, 08, 25, 10, 0),
         endTime: DateTime(2023, 08, 25, 10, 30),
@@ -46,28 +46,28 @@ void main() {
 
   group('test time picker widget has', () {
     testWidgets('a from text', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       expect(fromTextFinder, findsOneWidget);
     });
 
     testWidgets('a to text', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       expect(toTextFinder, findsOneWidget);
     });
 
     testWidgets('a start time outlined button', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       expect(startTimeFinder, findsOneWidget);
     });
 
     testWidgets('a end time outlined button', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       expect(endTimeFinder, findsOneWidget);
@@ -76,7 +76,7 @@ void main() {
 
   group('test start time pressed then', () {
     testWidgets('call onStartTimePressed function 1 time', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       await tester.tap(startTimeFinder);
@@ -88,7 +88,7 @@ void main() {
 
   group('test end time pressed then', () {
     testWidgets('call onEndTimePressed function 1 time', (tester) async {
-      await tester.pumpWidget(timePickerWidget);
+      await tester.pumpApp(timePickerWidget);
       await tester.pump();
 
       await tester.tap(endTimeFinder);

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ void main() {
       'Success',
     );
 
-    showSnackBarButtonWidget = const TestWidget(
+    showSnackBarButtonWidget = const Scaffold(
       body: ShowSnackBarButton(),
     );
   });
@@ -38,7 +38,7 @@ void main() {
     'test snack bar show in 3 seconds then hiding',
     (tester) async {
       await tester.runAsync(() async {
-        await tester.pumpWidget(showSnackBarButtonWidget);
+        await tester.pumpApp(showSnackBarButtonWidget);
         await tester.pump();
 
         // tap button to show snack bar

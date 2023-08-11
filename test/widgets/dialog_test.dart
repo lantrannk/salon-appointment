@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +51,7 @@ void main() {
     onPressedRight = () => rightLog.add(0);
     onPressedLeft = () => leftLog.add(0);
 
-    dialogWidget = TestWidget(
+    dialogWidget = Scaffold(
       body: AlertConfirmDialog(
         title: 'Dialog Title',
         content: 'Dialog Content',
@@ -65,28 +65,28 @@ void main() {
 
   group('test dialog widget has', () {
     testWidgets('a title text', (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       expect(dialogTitleFinder, findsOneWidget);
     });
 
     testWidgets('a content text', (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       expect(dialogContentFinder, findsOneWidget);
     });
 
     testWidgets('a left text button', (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       expect(dialogLeftButtonFinder, findsOneWidget);
     });
 
     testWidgets('a right text button', (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       expect(dialogRightButtonFinder, findsOneWidget);
@@ -96,7 +96,7 @@ void main() {
   group('test left text button pressed', () {
     testWidgets('pressed then call onPressedLeft function 1 time',
         (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       await tester.tap(dialogLeftButtonFinder);
@@ -110,7 +110,7 @@ void main() {
   group('test right text button pressed', () {
     testWidgets('pressed then call onPressedRight function 1 time',
         (tester) async {
-      await tester.pumpWidget(dialogWidget);
+      await tester.pumpApp(dialogWidget);
       await tester.pump();
 
       await tester.tap(dialogRightButtonFinder);

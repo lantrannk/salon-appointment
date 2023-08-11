@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../pump_widgets/common_widget.dart';
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,7 @@ void main() {
       'Lan Tran',
     );
 
-    inputWidget = TestWidget(
+    inputWidget = Scaffold(
       body: Input(
         text: 'Name',
         controller: textEditingController,
@@ -51,7 +51,7 @@ void main() {
 
   group('test input widget', () {
     testWidgets('has a hint text', (tester) async {
-      await tester.pumpWidget(inputWidget);
+      await tester.pumpApp(inputWidget);
       await tester.pump();
 
       // find a text form field with hint text
@@ -59,7 +59,7 @@ void main() {
     });
 
     testWidgets('shows the text that was entered', (tester) async {
-      await tester.pumpWidget(inputWidget);
+      await tester.pumpApp(inputWidget);
       await tester.pump();
 
       await tester.enterText(hintTextInputFinder, 'Lan Tran');
@@ -72,7 +72,7 @@ void main() {
     testWidgets(
       'pressed ENTER then call onEditCompleted function 1 time',
       (tester) async {
-        await tester.pumpWidget(inputWidget);
+        await tester.pumpApp(inputWidget);
         await tester.pump();
 
         await tester.enterText(hintTextInputFinder, 'Lan Tran');
