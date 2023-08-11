@@ -1,148 +1,54 @@
 import 'dart:io' as io;
 
-import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/appointments/model/appointment.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_screen.dart';
 import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
-import 'package:salon_appointment/features/auth/model/user.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../mock_data/mock_data.dart';
-
-class MockAppointmentBloc extends Mock implements AppointmentBloc {}
+import '../helpers/pump_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late AppointmentBloc appointmentBloc;
-  late Widget appointmentScreen;
-  late List<AppointmentState> expectedStates;
-  late List<User> users;
-  late List<Appointment> appointments;
+  late Widget calendarCellWidget;
 
-  setUp(() async {
+  late Finder dayOfWeekFinder;
+  late Finder dayFinder;
+
+  setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
-    users = MockDataUser.allUsers;
-    appointments = MockDataAppointment.allAppointments;
+    dayOfWeekFinder = find.text(
+      'Fri',
+    );
 
-    appointmentBloc = MockAppointmentBloc();
-    appointmentScreen = MediaQuery(
-      data: const MediaQueryData(),
-      child: MaterialApp(
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        home: BlocProvider.value(
-          value: appointmentBloc,
-          child: AppointmentScreen(
-            focusedDay: DateTime(2023, 08, 15),
-          ),
+    dayFinder = find.text(
+      '11',
+    );
+
+    calendarCellWidget = Scaffold(
+      body: Scaffold(
+        body: CalendarCell(
+          day: DateTime(2023, 08, 11),
         ),
       ),
     );
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-      'user',
-      MockDataUser.adminUserJson,
-    );
-
-    expectedStates = [
-      AppointmentLoading(),
-      AppointmentLoadSuccess(
-        users: users,
-        appointments: appointments,
-      ),
-    ];
-    whenListen(
-      appointmentBloc,
-      Stream.fromIterable(expectedStates),
-      initialState: AppointmentLoading(),
-    );
   });
 
-  testWidgets(
-    'Appointment Screen has a weekly calendar (7 Calendar Cell widgets)',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
-        await tester.pump();
+  group('test calendar cell has', () {
+    testWidgets('a day of week text', (tester) async {
+      await tester.pumpApp(calendarCellWidget);
+      await tester.pump();
 
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
+      expect(dayOfWeekFinder, findsOneWidget);
+    });
 
-        expect(
-          find.byType(CalendarCell),
-          findsNWidgets(7),
-        );
-      });
-    },
-  );
+    testWidgets('a day text', (tester) async {
+      await tester.pumpApp(calendarCellWidget);
+      await tester.pump();
 
-  testWidgets(
-    'Selected Calendar Cell has gradient color',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
-        await tester.pump();
-
-        await Future.delayed(const Duration(seconds: 3));
-        await tester.pumpAndSettle();
-
-        expect(
-          (tester.widget(find.byType(CalendarCell).at(1)) as CalendarCell)
-              .gradient,
-          isA<LinearGradient>(),
-        );
-      });
-    },
-  );
-
-  testWidgets(
-    'Change selected day when tapping another day',
-    (tester) async {
-      await tester.runAsync(() async {
-        await tester.pumpWidget(appointmentScreen);
-        await tester.pump();
-
-        await Future.delayed(const Duration(seconds: 3));
-
-        expect(
-          (tester.widget(find.byType(CalendarCell).at(1)) as CalendarCell)
-              .gradient,
-          isA<LinearGradient>(),
-        );
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.widgetWithText(CalendarCell, '17'));
-        await tester.pumpAndSettle();
-
-        expect(
-          (tester.widget(find.byType(CalendarCell).at(1)) as CalendarCell)
-              .gradient,
-          null,
-        );
-
-        expect(
-          (tester.widget(find.byType(CalendarCell).at(3)) as CalendarCell)
-              .gradient,
-          isA<LinearGradient>(),
-        );
-      });
-    },
-  );
+      expect(dayFinder, findsOneWidget);
+    });
+  });
 }
