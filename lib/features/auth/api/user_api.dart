@@ -8,10 +8,6 @@ class UserApi {
 
     final response = await client.get(url);
 
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '';
-    }
+    return response.body;
   }
 }
