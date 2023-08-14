@@ -17,11 +17,7 @@ class AppointmentApi {
 
     final response = await client.get(url);
 
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '';
-    }
+    return response.body;
   }
 
   Future<String> addAppointment(Appointment appointment) async {
@@ -36,11 +32,7 @@ class AppointmentApi {
       headers: headers,
     );
 
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '';
-    }
+    return response.body;
   }
 
   Future<String> updateAppointment(Appointment appointment) async {
@@ -55,11 +47,7 @@ class AppointmentApi {
       headers: headers,
     );
 
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '';
-    }
+    return response.body;
   }
 
   Future<String> deleteAppointment(String appointmentId) async {
@@ -67,10 +55,6 @@ class AppointmentApi {
 
     final response = await client.delete(url);
 
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '';
-    }
+    return response.body;
   }
 }
