@@ -10,22 +10,20 @@ import '../mock_data/mock_data.dart';
 class MockClient extends Mock implements http.Client {}
 
 void main() {
-  group('test appointment api -', () {
-    final headers = {
-      HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-    };
-    final url = Uri.parse(
-      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
-    );
+  final headers = {'Content-Type': 'application/json'};
+  final url = Uri.parse(
+    'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
+  );
 
-    late http.Client client;
-    late AppointmentApi appointmentApi;
+  late http.Client client;
+  late AppointmentApi appointmentApi;
 
-    setUp(() {
-      client = MockClient();
-      appointmentApi = AppointmentApi(client);
-    });
+  setUp(() {
+    client = MockClient();
+    appointmentApi = AppointmentApi(client);
+  });
 
+  group('test appointment api get request -', () {
     test(
       'get appointments then return a encoded string of appointments list',
       timeout: const Timeout(Duration(seconds: 5)),
@@ -48,7 +46,49 @@ void main() {
     );
 
     test(
-      'get appointments error',
+      'get appointments error 304',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.get(url),
+        ).thenAnswer(
+          (_) async => http.Response(
+            'Not Modified',
+            304,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.getAppointments(),
+          'Not Modified',
+        );
+      },
+    );
+
+    test(
+      'get appointments error 400',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.get(url),
+        ).thenAnswer(
+          (_) async => http.Response(
+            'Bad Request',
+            400,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.getAppointments(),
+          'Bad Request',
+        );
+      },
+    );
+
+    test(
+      'get appointments error 404',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -61,8 +101,59 @@ void main() {
           ),
         );
 
-        expect(await appointmentApi.getAppointments(), '');
+        expect(
+          await appointmentApi.getAppointments(),
+          'Not Found',
+        );
+      },
+    );
+
+    test(
+      'get appointments error 504',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.get(url),
+        ).thenAnswer(
+          (_) async => http.Response(
+            'Gateway Timeout',
+            504,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.getAppointments(),
+          'Gateway Timeout',
+        );
       },
     );
   });
+
+  // group('test appointment api post request -', () {
+  //   test(
+  //     'add appointments success',
+  //     timeout: const Timeout(Duration(seconds: 5)),
+  //     () async {
+  //       when(
+  //         () => client.post(
+  //           url,
+  //           body: MockDataAppointment.appointmentJson,
+  //           headers: headers,
+  //         ),
+  //       ).thenAnswer(
+  //         (_) async => http.Response(
+  //           MockDataAppointment.appointmentJson,
+  //           200,
+  //           headers: headers,
+  //         ),
+  //       );
+
+  //       expect(
+  //         await appointmentApi.addAppointment(MockDataAppointment.appointment),
+  //         MockDataAppointment.appointmentJson,
+  //       );
+  //     },
+  //   );
+  // });
 }
