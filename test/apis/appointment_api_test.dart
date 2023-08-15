@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -12,9 +12,10 @@ class MockClient extends Mock implements http.Client {}
 
 void main() {
   final headers = {'Content-Type': 'application/json'};
-  final url = Uri.parse(
-    'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
-  );
+  const String baseUrl =
+      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments';
+  final url = Uri.parse(baseUrl);
+  final appointmentUrl = Uri.parse('$baseUrl/84');
 
   late http.Client client;
   late AppointmentApi appointmentApi;
@@ -150,6 +151,116 @@ void main() {
     );
   });
 
+  group('test appointment api post request -', () {
+    test(
+      'add appointments success',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.addAppointment(MockDataAppointment.appointment),
+          MockDataAppointment.appointmentJson,
+        );
+      },
+    );
+
+    test(
+      'add appointment with error code 304',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => notModifiedError,
+        );
+
+        expect(
+          await appointmentApi.addAppointment(MockDataAppointment.appointment),
+          ApiErrorMessage.notModified,
+        );
+      },
+    );
+
+    test(
+      'add appointment with error code 400',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => badRequestError,
+        );
+
+        expect(
+          await appointmentApi.addAppointment(MockDataAppointment.appointment),
+          ApiErrorMessage.badRequest,
+        );
+      },
+    );
+
+    test(
+      'add appointment with error code 404',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => notFoundError,
+        );
+
+        expect(
+          await appointmentApi.addAppointment(MockDataAppointment.appointment),
+          ApiErrorMessage.notFound,
+        );
+      },
+    );
+
+    test(
+      'add appointment with error code 504',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => gatewayTimeoutError,
+        );
+
+        expect(
+          await appointmentApi.addAppointment(MockDataAppointment.appointment),
+          ApiErrorMessage.gatewayTimeout,
+        );
+      },
+    );
+  });
   // group('test appointment api post request -', () {
   //   test(
   //     'add appointments success',
