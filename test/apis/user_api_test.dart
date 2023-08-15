@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 
+import '../constants/api_error_message.dart';
 import '../mock_data/mock_data.dart';
 
 class MockClient extends Mock implements http.Client {}
@@ -46,14 +47,14 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            'Not Modified',
+            ApiErrorMessage.notModified,
             304,
           ),
         );
 
         expect(
           await userApi.getUsers(client),
-          'Not Modified',
+          ApiErrorMessage.notModified,
         );
       },
     );
@@ -68,14 +69,14 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            'Bad Request',
+            ApiErrorMessage.badRequest,
             400,
           ),
         );
 
         expect(
           await userApi.getUsers(client),
-          'Bad Request',
+          ApiErrorMessage.badRequest,
         );
       },
     );
@@ -90,14 +91,14 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            'Not Found',
+            ApiErrorMessage.notFound,
             404,
           ),
         );
 
         expect(
           await userApi.getUsers(client),
-          'Not Found',
+          ApiErrorMessage.notFound,
         );
       },
     );
@@ -112,14 +113,14 @@ void main() {
           ),
         ).thenAnswer(
           (_) async => http.Response(
-            'Gateway Timeout',
+            ApiErrorMessage.gatewayTimeout,
             504,
           ),
         );
 
         expect(
           await userApi.getUsers(client),
-          'Gateway Timeout',
+          ApiErrorMessage.gatewayTimeout,
         );
       },
     );
