@@ -261,24 +261,127 @@ void main() {
       },
     );
   });
-  // group('test appointment api post request -', () {
-  //   test(
-  //     'add appointments success',
-  //     timeout: const Timeout(Duration(seconds: 5)),
-  //     () async {
-  //       when(
-  //         () => client.post(
-  //           url,
-  //           body: MockDataAppointment.appointmentJson,
-  //           headers: headers,
-  //         ),
-  //       ).thenAnswer(
-  //         (_) async => http.Response(
-  //           MockDataAppointment.appointmentJson,
-  //           200,
-  //           headers: headers,
-  //         ),
-  //       );
+
+  group('test appointment api put request -', () {
+    test(
+      'update appointments success',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.updateAppointment(
+            MockDataAppointment.appointment,
+          ),
+          MockDataAppointment.appointmentJson,
+        );
+      },
+    );
+
+    test(
+      'update appointment with error code 304',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => notModifiedError,
+        );
+
+        expect(
+          await appointmentApi.updateAppointment(
+            MockDataAppointment.appointment,
+          ),
+          ApiErrorMessage.notModified,
+        );
+      },
+    );
+
+    test(
+      'update appointment with error code 400',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => badRequestError,
+        );
+
+        expect(
+          await appointmentApi.updateAppointment(
+            MockDataAppointment.appointment,
+          ),
+          ApiErrorMessage.badRequest,
+        );
+      },
+    );
+
+    test(
+      'update appointment with error code 404',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => notFoundError,
+        );
+
+        expect(
+          await appointmentApi.updateAppointment(
+            MockDataAppointment.appointment,
+          ),
+          ApiErrorMessage.notFound,
+        );
+      },
+    );
+
+    test(
+      'update appointment with error code 504',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => gatewayTimeoutError,
+        );
+
+        expect(
+          await appointmentApi.updateAppointment(
+            MockDataAppointment.appointment,
+          ),
+          ApiErrorMessage.gatewayTimeout,
+        );
+      },
+    );
+  });
 
   //       expect(
   //         await appointmentApi.addAppointment(MockDataAppointment.appointment),
