@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 
+import '../constants/api_error_message.dart';
 import '../mock_data/mock_data.dart';
 
 class MockClient extends Mock implements http.Client {}
@@ -18,9 +19,44 @@ void main() {
   late http.Client client;
   late AppointmentApi appointmentApi;
 
+  late String appointmentEncoded;
+
+  late http.Response notModifiedError;
+  late http.Response badRequestError;
+  late http.Response notFoundError;
+  late http.Response gatewayTimeoutError;
+
   setUp(() {
     client = MockClient();
     appointmentApi = AppointmentApi(client);
+  });
+
+  setUpAll(() {
+    appointmentEncoded = json.encode(MockDataAppointment.appointment);
+
+    notModifiedError = http.Response(
+      ApiErrorMessage.notModified,
+      304,
+      headers: headers,
+    );
+
+    badRequestError = http.Response(
+      ApiErrorMessage.badRequest,
+      400,
+      headers: headers,
+    );
+
+    notFoundError = http.Response(
+      ApiErrorMessage.notFound,
+      404,
+      headers: headers,
+    );
+
+    gatewayTimeoutError = http.Response(
+      ApiErrorMessage.gatewayTimeout,
+      504,
+      headers: headers,
+    );
   });
 
   group('test appointment api get request -', () {
@@ -52,16 +88,12 @@ void main() {
         when(
           () => client.get(url),
         ).thenAnswer(
-          (_) async => http.Response(
-            'Not Modified',
-            304,
-            headers: headers,
-          ),
+          (_) async => notModifiedError,
         );
 
         expect(
           await appointmentApi.getAppointments(),
-          'Not Modified',
+          ApiErrorMessage.notModified,
         );
       },
     );
@@ -73,16 +105,12 @@ void main() {
         when(
           () => client.get(url),
         ).thenAnswer(
-          (_) async => http.Response(
-            'Bad Request',
-            400,
-            headers: headers,
-          ),
+          (_) async => badRequestError,
         );
 
         expect(
           await appointmentApi.getAppointments(),
-          'Bad Request',
+          ApiErrorMessage.badRequest,
         );
       },
     );
@@ -94,16 +122,12 @@ void main() {
         when(
           () => client.get(url),
         ).thenAnswer(
-          (_) async => http.Response(
-            'Not Found',
-            404,
-            headers: headers,
-          ),
+          (_) async => notFoundError,
         );
 
         expect(
           await appointmentApi.getAppointments(),
-          'Not Found',
+          ApiErrorMessage.notFound,
         );
       },
     );
@@ -115,16 +139,12 @@ void main() {
         when(
           () => client.get(url),
         ).thenAnswer(
-          (_) async => http.Response(
-            'Gateway Timeout',
-            504,
-            headers: headers,
-          ),
+          (_) async => gatewayTimeoutError,
         );
 
         expect(
           await appointmentApi.getAppointments(),
-          'Gateway Timeout',
+          ApiErrorMessage.gatewayTimeout,
         );
       },
     );
