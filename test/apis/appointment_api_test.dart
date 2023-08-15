@@ -383,11 +383,94 @@ void main() {
     );
   });
 
-  //       expect(
-  //         await appointmentApi.addAppointment(MockDataAppointment.appointment),
-  //         MockDataAppointment.appointmentJson,
-  //       );
-  //     },
-  //   );
-  // });
+  group('test appointment api delete request -', () {
+    test(
+      'remove appointments success',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+
+        expect(
+          await appointmentApi.deleteAppointment('84'),
+          MockDataAppointment.appointmentJson,
+        );
+      },
+    );
+
+    test(
+      'remove appointment with error code 304',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => notModifiedError,
+        );
+
+        expect(
+          await appointmentApi.deleteAppointment('84'),
+          ApiErrorMessage.notModified,
+        );
+      },
+    );
+
+    test(
+      'remove appointment with error code 400',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => badRequestError,
+        );
+
+        expect(
+          await appointmentApi.deleteAppointment('84'),
+          ApiErrorMessage.badRequest,
+        );
+      },
+    );
+
+    test(
+      'remove appointment with error code 404',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => notFoundError,
+        );
+
+        expect(
+          await appointmentApi.deleteAppointment('84'),
+          ApiErrorMessage.notFound,
+        );
+      },
+    );
+
+    test(
+      'remove appointment with error code 504',
+      timeout: const Timeout(Duration(seconds: 5)),
+      () async {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => gatewayTimeoutError,
+        );
+
+        expect(
+          await appointmentApi.deleteAppointment('84'),
+          ApiErrorMessage.gatewayTimeout,
+        );
+      },
+    );
+  });
 }
