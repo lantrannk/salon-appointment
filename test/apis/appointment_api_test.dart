@@ -385,7 +385,7 @@ void main() {
 
   group('test appointment api delete request -', () {
     test(
-      'remove appointments success',
+      'delete appointments success',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -406,7 +406,7 @@ void main() {
     );
 
     test(
-      'remove appointment with error code 304',
+      'delete appointment with error code 304',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -423,7 +423,7 @@ void main() {
     );
 
     test(
-      'remove appointment with error code 400',
+      'delete appointment with error code 400',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -440,7 +440,7 @@ void main() {
     );
 
     test(
-      'remove appointment with error code 404',
+      'delete appointment with error code 404',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -457,7 +457,7 @@ void main() {
     );
 
     test(
-      'remove appointment with error code 504',
+      'delete appointment with error code 504',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
