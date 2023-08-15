@@ -46,7 +46,7 @@ void main() {
     );
 
     test(
-      'get appointments error 304',
+      'get appointments with error code 304',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -67,7 +67,7 @@ void main() {
     );
 
     test(
-      'get appointments error 400',
+      'get appointments with error code 400',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -88,7 +88,7 @@ void main() {
     );
 
     test(
-      'get appointments error 404',
+      'get appointments with error code 404',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -109,7 +109,7 @@ void main() {
     );
 
     test(
-      'get appointments error 504',
+      'get appointments with error code 504',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
