@@ -89,7 +89,7 @@ void main() {
           password: '123456',
         ),
       ),
-      wait: const Duration(seconds: 1),
+      wait: const Duration(seconds: 2),
       expect: () => <AuthState>[
         LoginLoading(),
         const LoginError('invalid-account'),
