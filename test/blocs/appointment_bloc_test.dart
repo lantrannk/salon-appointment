@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:bloc_test/bloc_test.dart';
@@ -16,9 +17,12 @@ void main() {
   io.HttpOverrides.global = null;
 
   final headers = {'Content-Type': 'application/json'};
-  final url = Uri.parse(
-    'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments',
-  );
+  const String baseUrl =
+      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments';
+  final url = Uri.parse(baseUrl);
+  final appointmentUrl = Uri.parse('$baseUrl/84');
+
+  late String appointmentEncoded;
 
   late http.Client client;
   late SharedPreferences prefs;
@@ -28,6 +32,8 @@ void main() {
 
     prefs = await SharedPreferences.getInstance();
     client = MockHTTPClient();
+
+    appointmentEncoded = json.encode(MockDataAppointment.appointment);
   });
 
   blocTest<AppointmentBloc, AppointmentState>(
@@ -44,8 +50,6 @@ void main() {
       );
       return AppointmentBloc(client);
     },
-    // why need seed
-    // seed: () => AppointmentLoading(),
     act: (bloc) => bloc.add(
       AppointmentLoad(),
     ),
@@ -56,9 +60,6 @@ void main() {
         MockDataUser.adminUserJson,
       );
     },
-    tearDown: () async {
-      await prefs.clear();
-    },
     expect: () => <AppointmentState>[
       AppointmentLoading(),
       AppointmentLoadSuccess(
@@ -66,6 +67,9 @@ void main() {
         appointments: MockDataAppointment.allAppointments,
       ),
     ],
+    tearDown: () async {
+      await prefs.clear();
+    },
   );
 
   blocTest<AppointmentBloc, AppointmentState>(
@@ -85,7 +89,6 @@ void main() {
     act: (bloc) => bloc.add(
       AppointmentLoad(),
     ),
-    seed: () => AppointmentLoading(),
     wait: const Duration(seconds: 3),
     setUp: () async {
       await prefs.setString(
@@ -93,116 +96,115 @@ void main() {
         MockDataUser.customerUserJson,
       );
     },
-    tearDown: () async {
-      await prefs.clear();
-    },
     expect: () => <AppointmentState>[
+      AppointmentLoading(),
       AppointmentLoadSuccess(
         users: MockDataUser.allUsers,
         appointments: MockDataAppointment.appointmentsOfUser,
       ),
     ],
+    tearDown: () async {
+      await prefs.clear();
+    },
   );
 
-  // blocTest<AppointmentBloc, AppointmentState>(
-  //   'add appointment successful',
-  //   build: () {
-  //     when(
-  //       () => client.post(
-  //         url,
-  //         body: appointment,
-  //         headers: headers,
-  //       ),
-  //     ).thenAnswer(
-  //       (_) async => http.Response(
-  //         ExpectData.appointmentStr,
-  //         200,
-  //         headers: headers,
-  //       ),
-  //     );
-  //     return AppointmentBloc(client);
-  //   },
-  //   act: (bloc) => bloc.add(
-  //     AppointmentAdd(appointment: appointment),
-  //   ),
-  //   seed: () => AppointmentAdding(),
-  //   wait: const Duration(seconds: 3),
-  //   setUp: () async {
-  //     await prefs.setString(
-  //       'user',
-  //       ExpectData.adminUserStr,
-  //     );
-  //   },
-  //   expect: () => <AppointmentState>[
-  //     AppointmentAdded(),
-  //   ],
-  // );
+  blocTest<AppointmentBloc, AppointmentState>(
+    'add appointment successful',
+    build: () {
+      when(
+        () => client.post(
+          url,
+          body: appointmentEncoded,
+          headers: headers,
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(
+          MockDataAppointment.appointmentJson,
+          200,
+          headers: headers,
+        ),
+      );
+      return AppointmentBloc(client);
+    },
+    act: (bloc) => bloc.add(
+      AppointmentAdd(appointment: MockDataAppointment.appointment),
+    ),
+    wait: const Duration(seconds: 1),
+    setUp: () async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    },
+    expect: () => <AppointmentState>[
+      AppointmentAdding(),
+      AppointmentAdded(),
+    ],
+  );
 
-  // blocTest<AppointmentBloc, AppointmentState>(
-  //   'update appointment successful',
-  //   build: () {
-  //     when(
-  //       () => client.put(
-  //         url,
-  //         body: appointment,
-  //         headers: headers,
-  //       ),
-  //     ).thenAnswer(
-  //       (_) async => http.Response(
-  //         ExpectData.appointmentStr,
-  //         200,
-  //         headers: headers,
-  //       ),
-  //     );
-  //     return AppointmentBloc(client);
-  //   },
-  //   act: (bloc) => bloc.add(
-  //     AppointmentEdit(appointment: appointment),
-  //   ),
-  //   seed: () => AppointmentAdding(),
-  //   wait: const Duration(seconds: 3),
-  //   setUp: () async {
-  //     await prefs.setString(
-  //       'user',
-  //       ExpectData.adminUserStr,
-  //     );
-  //   },
-  //   expect: () => <AppointmentState>[
-  //     AppointmentEdited(),
-  //   ],
-  // );
+  blocTest<AppointmentBloc, AppointmentState>(
+    'update appointment successful',
+    build: () {
+      when(
+        () => client.put(
+          appointmentUrl,
+          body: appointmentEncoded,
+          headers: headers,
+        ),
+      ).thenAnswer(
+        (_) async => http.Response(
+          MockDataAppointment.appointmentJson,
+          200,
+          headers: headers,
+        ),
+      );
+      return AppointmentBloc(client);
+    },
+    act: (bloc) => bloc.add(
+      AppointmentEdit(appointment: MockDataAppointment.appointment),
+    ),
+    wait: const Duration(seconds: 1),
+    setUp: () async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    },
+    expect: () => <AppointmentState>[
+      AppointmentAdding(),
+      AppointmentEdited(),
+    ],
+  );
 
-  // blocTest<AppointmentBloc, AppointmentState>(
-  //   'remove appointment successful',
-  //   build: () {
-  //     when(
-  //       () => client.delete(
-  //         url,
-  //         body: appointment,
-  //         headers: headers,
-  //       ),
-  //     ).thenAnswer(
-  //       (_) async => http.Response(
-  //         ExpectData.appointmentStr,
-  //         200,
-  //         headers: headers,
-  //       ),
-  //     );
-  //     return AppointmentBloc(client);
-  //   },
-  //   act: (bloc) => bloc.add(
-  //     AppointmentRemovePressed(appointmentId: appointment.id!),
-  //   ),
-  //   seed: () => AppointmentAdding(),
-  //   wait: const Duration(seconds: 3),
-  //   setUp: () async {
-  //     await prefs.setString(
-  //       'user',
-  //       ExpectData.adminUserStr,
-  //     );
-  //   },
-  //   expect: () => <AppointmentState>[
-  //     AppointmentRemoved(),
-  //   ],
-  // );
+  blocTest<AppointmentBloc, AppointmentState>(
+    'remove appointment successful',
+    build: () {
+      when(
+        () => client.delete(appointmentUrl),
+      ).thenAnswer(
+        (_) async => http.Response(
+          MockDataAppointment.appointmentJson,
+          200,
+          headers: headers,
+        ),
+      );
+      return AppointmentBloc(client);
+    },
+    act: (bloc) => bloc.add(
+      AppointmentRemovePressed(
+        appointmentId: MockDataAppointment.appointment.id!,
+      ),
+    ),
+    wait: const Duration(seconds: 1),
+    setUp: () async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    },
+    expect: () => <AppointmentState>[
+      AppointmentRemoving(),
+      AppointmentRemoved(),
+    ],
+  );
 }
