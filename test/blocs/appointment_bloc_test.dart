@@ -400,4 +400,94 @@ void main() {
       AppointmentRemoved(),
     ],
   );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'remove appointment with not modified error',
+      build: () {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.notModified),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentRemovePressed(
+          appointmentId: MockDataAppointment.appointment.id!,
+        ),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentRemoving(),
+        const AppointmentRemoveError(
+          error: ApiErrorMessage.notModified,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'remove appointment with bad request error',
+      build: () {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.badRequest),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentRemovePressed(
+          appointmentId: MockDataAppointment.appointment.id!,
+        ),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentRemoving(),
+        const AppointmentRemoveError(
+          error: ApiErrorMessage.badRequest,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'remove appointment with not found error',
+      build: () {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.notFound),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentRemovePressed(
+          appointmentId: MockDataAppointment.appointment.id!,
+        ),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentRemoving(),
+        const AppointmentRemoveError(
+          error: ApiErrorMessage.notFound,
+        ),
+      ],
+    );
 }
