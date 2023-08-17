@@ -8,6 +8,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants/api_error_message.dart';
 import '../mock_data/mock_data.dart';
 
 class MockHTTPClient extends Mock implements http.Client {}
@@ -141,6 +142,102 @@ void main() {
       AppointmentAdded(),
     ],
   );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'add appointment with not modified error',
+      build: () {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.notModified),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentAdd(appointment: MockDataAppointment.appointment),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentAdding(),
+        const AppointmentAddError(
+          error: ApiErrorMessage.notModified,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'add appointment with bad request error',
+      build: () {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.badRequest),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentAdd(appointment: MockDataAppointment.appointment),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentAdding(),
+        const AppointmentAddError(
+          error: ApiErrorMessage.badRequest,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'add appointment with not found error',
+      build: () {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenThrow(
+          http.ClientException(ApiErrorMessage.notFound),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentAdd(appointment: MockDataAppointment.appointment),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentAdding(),
+        const AppointmentAddError(
+          error: ApiErrorMessage.notFound,
+        ),
+      ],
+    );
 
   blocTest<AppointmentBloc, AppointmentState>(
     'update appointment successful',
