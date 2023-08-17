@@ -37,111 +37,114 @@ void main() {
     appointmentEncoded = json.encode(MockDataAppointment.appointment);
   });
 
-  blocTest<AppointmentBloc, AppointmentState>(
-    'load appointments successful by admin',
-    build: () {
-      when(
-        () => client.get(url),
-      ).thenAnswer(
-        (_) async => http.Response(
-          MockDataAppointment.allAppointmentsJson,
-          200,
-          headers: headers,
-        ),
-      );
-      return AppointmentBloc(client);
-    },
-    act: (bloc) => bloc.add(
-      AppointmentLoad(),
-    ),
-    wait: const Duration(seconds: 3),
-    setUp: () async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    },
-    expect: () => <AppointmentState>[
-      AppointmentLoading(),
-      AppointmentLoadSuccess(
-        users: MockDataUser.allUsers,
-        appointments: MockDataAppointment.allAppointments,
+  group('test load appointments bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'load appointments successful by admin',
+      build: () {
+        when(
+          () => client.get(url),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.allAppointmentsJson,
+            200,
+            headers: headers,
+          ),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentLoad(),
       ),
-    ],
-    tearDown: () async {
-      await prefs.clear();
-    },
-  );
-
-  blocTest<AppointmentBloc, AppointmentState>(
-    'load appointments successful by customer',
-    build: () {
-      when(
-        () => client.get(url),
-      ).thenAnswer(
-        (_) async => http.Response(
-          MockDataAppointment.allAppointmentsJson,
-          200,
-          headers: headers,
+      wait: const Duration(seconds: 3),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentLoading(),
+        AppointmentLoadSuccess(
+          users: MockDataUser.allUsers,
+          appointments: MockDataAppointment.allAppointments,
         ),
-      );
-      return AppointmentBloc(client);
-    },
-    act: (bloc) => bloc.add(
-      AppointmentLoad(),
-    ),
-    wait: const Duration(seconds: 3),
-    setUp: () async {
-      await prefs.setString(
-        'user',
-        MockDataUser.customerUserJson,
-      );
-    },
-    expect: () => <AppointmentState>[
-      AppointmentLoading(),
-      AppointmentLoadSuccess(
-        users: MockDataUser.allUsers,
-        appointments: MockDataAppointment.appointmentsOfUser,
+      ],
+      tearDown: () async {
+        await prefs.clear();
+      },
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'load appointments successful by customer',
+      build: () {
+        when(
+          () => client.get(url),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.allAppointmentsJson,
+            200,
+            headers: headers,
+          ),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentLoad(),
       ),
-    ],
-    tearDown: () async {
-      await prefs.clear();
-    },
-  );
+      wait: const Duration(seconds: 3),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.customerUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentLoading(),
+        AppointmentLoadSuccess(
+          users: MockDataUser.allUsers,
+          appointments: MockDataAppointment.appointmentsOfUser,
+        ),
+      ],
+      tearDown: () async {
+        await prefs.clear();
+      },
+    );
+  });
 
-  blocTest<AppointmentBloc, AppointmentState>(
-    'add appointment successful',
-    build: () {
-      when(
-        () => client.post(
-          url,
-          body: appointmentEncoded,
-          headers: headers,
-        ),
-      ).thenAnswer(
-        (_) async => http.Response(
-          MockDataAppointment.appointmentJson,
-          200,
-          headers: headers,
-        ),
-      );
-      return AppointmentBloc(client);
-    },
-    act: (bloc) => bloc.add(
-      AppointmentAdd(appointment: MockDataAppointment.appointment),
-    ),
-    wait: const Duration(seconds: 1),
-    setUp: () async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    },
-    expect: () => <AppointmentState>[
-      AppointmentAdding(),
-      AppointmentAdded(),
-    ],
-  );
+  group('test add appointment bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'add appointment successful',
+      build: () {
+        when(
+          () => client.post(
+            url,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentAdd(appointment: MockDataAppointment.appointment),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentAdding(),
+        AppointmentAdded(),
+      ],
+    );
 
     blocTest<AppointmentBloc, AppointmentState>(
       'add appointment with not modified error',
@@ -238,40 +241,42 @@ void main() {
         ),
       ],
     );
+  });
 
-  blocTest<AppointmentBloc, AppointmentState>(
-    'update appointment successful',
-    build: () {
-      when(
-        () => client.put(
-          appointmentUrl,
-          body: appointmentEncoded,
-          headers: headers,
-        ),
-      ).thenAnswer(
-        (_) async => http.Response(
-          MockDataAppointment.appointmentJson,
-          200,
-          headers: headers,
-        ),
-      );
-      return AppointmentBloc(client);
-    },
-    act: (bloc) => bloc.add(
-      AppointmentEdit(appointment: MockDataAppointment.appointment),
-    ),
-    wait: const Duration(seconds: 1),
-    setUp: () async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    },
-    expect: () => <AppointmentState>[
-      AppointmentAdding(),
-      AppointmentEdited(),
-    ],
-  );
+  group('test edit appointment bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'update appointment successful',
+      build: () {
+        when(
+          () => client.put(
+            appointmentUrl,
+            body: appointmentEncoded,
+            headers: headers,
+          ),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentEdit(appointment: MockDataAppointment.appointment),
+      ),
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentAdding(),
+        AppointmentEdited(),
+      ],
+    );
 
     blocTest<AppointmentBloc, AppointmentState>(
       'update appointment with not modified error',
@@ -368,38 +373,40 @@ void main() {
         ),
       ],
     );
+  });
 
-  blocTest<AppointmentBloc, AppointmentState>(
-    'remove appointment successful',
-    build: () {
-      when(
-        () => client.delete(appointmentUrl),
-      ).thenAnswer(
-        (_) async => http.Response(
-          MockDataAppointment.appointmentJson,
-          200,
-          headers: headers,
+  group('test remove appointment bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'remove appointment successful',
+      build: () {
+        when(
+          () => client.delete(appointmentUrl),
+        ).thenAnswer(
+          (_) async => http.Response(
+            MockDataAppointment.appointmentJson,
+            200,
+            headers: headers,
+          ),
+        );
+        return AppointmentBloc(client);
+      },
+      act: (bloc) => bloc.add(
+        AppointmentRemovePressed(
+          appointmentId: MockDataAppointment.appointment.id!,
         ),
-      );
-      return AppointmentBloc(client);
-    },
-    act: (bloc) => bloc.add(
-      AppointmentRemovePressed(
-        appointmentId: MockDataAppointment.appointment.id!,
       ),
-    ),
-    wait: const Duration(seconds: 1),
-    setUp: () async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    },
-    expect: () => <AppointmentState>[
-      AppointmentRemoving(),
-      AppointmentRemoved(),
-    ],
-  );
+      wait: const Duration(seconds: 1),
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
+      expect: () => <AppointmentState>[
+        AppointmentRemoving(),
+        AppointmentRemoved(),
+      ],
+    );
 
     blocTest<AppointmentBloc, AppointmentState>(
       'remove appointment with not modified error',
@@ -490,4 +497,5 @@ void main() {
         ),
       ],
     );
+  });
 }
