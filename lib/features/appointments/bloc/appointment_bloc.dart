@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/storage/user_storage.dart';
 import '../../auth/model/user.dart';
@@ -12,7 +11,7 @@ part 'appointment_event.dart';
 part 'appointment_state.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
-  AppointmentBloc(this.client) : super(AppointmentInitial()) {
+  AppointmentBloc(this.appointmentApi) : super(AppointmentInitial()) {
     on<AppointmentLoad>(_getAppointmentList);
     on<AppointmentRemoved>(_removeAppointment);
     on<AppointmentAdded>(_addAppointment);
@@ -20,9 +19,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<UserLoad>(_getUser);
   }
 
-  final http.Client client;
-
-  late AppointmentApi appointmentApi;
+  final AppointmentApi appointmentApi;
 
   Future<void> _getAppointmentList(
     AppointmentLoad event,
@@ -48,7 +45,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      appointmentApi = AppointmentApi(client);
       emit(AppointmentAddInProgress());
       await appointmentApi.addAppointment(event.appointment);
       emit(AppointmentAddSuccess());
@@ -62,7 +58,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      appointmentApi = AppointmentApi(client);
       emit(AppointmentAddInProgress());
       await appointmentApi.updateAppointment(event.appointment);
       emit(AppointmentEditSuccess());
@@ -76,7 +71,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      appointmentApi = AppointmentApi(client);
       emit(AppointmentRemoveInProgress());
       await appointmentApi.deleteAppointment(event.appointmentId);
       emit(AppointmentRemoveSuccess());
