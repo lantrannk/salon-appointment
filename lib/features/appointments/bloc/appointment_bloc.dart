@@ -11,7 +11,11 @@ part 'appointment_event.dart';
 part 'appointment_state.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
-  AppointmentBloc(this.appointmentApi) : super(AppointmentInitial()) {
+  AppointmentBloc(
+    this.appointmentApi,
+    this.appointmentRepository,
+    this.userStorage,
+  ) : super(AppointmentInitial()) {
     on<AppointmentLoad>(_getAppointmentList);
     on<AppointmentRemoved>(_removeAppointment);
     on<AppointmentAdded>(_addAppointment);
@@ -20,6 +24,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   }
 
   final AppointmentApi appointmentApi;
+  final AppointmentRepository appointmentRepository;
+  final UserStorage userStorage;
 
   Future<void> _getAppointmentList(
     AppointmentLoad event,
@@ -27,8 +33,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentLoadInProgress());
-      final List<Appointment> appointments = await AppointmentRepository.load();
-      final List<User> users = await UserStorage.getUsers();
+      final List<Appointment> appointments = await appointmentRepository.load();
+      final List<User> users = await userStorage.getUsers();
+
       emit(
         AppointmentLoadSuccess(
           users: users,
@@ -84,7 +91,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      final user = await UserStorage.getUser();
+      final user = await userStorage.getUser();
       emit(UserLoadSuccess(user!));
     } on Exception catch (e) {
       emit(UserLoadFailure(error: e.toString()));
