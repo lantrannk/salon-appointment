@@ -10,10 +10,10 @@ abstract class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-class LoginLoading extends AuthState {}
+class LoginInProgress extends AuthState {}
 
-class LoginError extends AuthState {
-  const LoginError(this.error);
+class LoginFailure extends AuthState {
+  const LoginFailure(this.error);
 
   final String error;
 }
@@ -24,8 +24,8 @@ class LogoutInProgress extends AuthState {}
 
 class LogoutSuccess extends AuthState {}
 
-class UserLoaded extends AuthState {
-  const UserLoaded(this.name, this.avatar);
+class UserLoadSuccess extends AuthState {
+  const UserLoadSuccess(this.name, this.avatar);
 
   @override
   final String name;
@@ -34,8 +34,8 @@ class UserLoaded extends AuthState {
   final String avatar;
 }
 
-class UserLoadError extends AuthState {
-  const UserLoadError({this.error});
+class UserLoadFailure extends AuthState {
+  const UserLoadFailure({this.error});
 
   final String? error;
 }

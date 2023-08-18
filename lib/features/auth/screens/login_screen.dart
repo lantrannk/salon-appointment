@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(
               child: BlocListener<AuthBloc, AuthState>(
                 listener: (context, state) {
-                  if (state is LoginLoading) {
+                  if (state is LoginInProgress) {
                     loadingIndicator.show(
                       context: context,
                       height: indicatorHeight,
@@ -116,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state is LoginSuccess) {
                     Navigator.pushReplacementNamed(context, '/calendar');
                   }
-                  if (state is LoginError) {
+                  if (state is LoginFailure) {
                     loadingIndicator.hide(context);
                     switch (state.error) {
                       case 'invalid-account':

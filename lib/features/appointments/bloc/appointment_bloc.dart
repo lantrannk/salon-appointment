@@ -14,9 +14,9 @@ part 'appointment_state.dart';
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   AppointmentBloc(this.client) : super(AppointmentInitial()) {
     on<AppointmentLoad>(_getAppointmentList);
-    on<AppointmentRemovePressed>(_removeAppointment);
-    on<AppointmentAdd>(_addAppointment);
-    on<AppointmentEdit>(_editAppointment);
+    on<AppointmentRemoved>(_removeAppointment);
+    on<AppointmentAdded>(_addAppointment);
+    on<AppointmentEdited>(_editAppointment);
     on<UserLoad>(_getUser);
   }
 
@@ -29,7 +29,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     Emitter<AppointmentState> emit,
   ) async {
     try {
-      emit(AppointmentLoading());
+      emit(AppointmentLoadInProgress());
       final List<Appointment> appointments = await AppointmentRepository.load();
       final List<User> users = await UserStorage.getUsers();
       emit(
@@ -39,49 +39,49 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         ),
       );
     } on Exception catch (e) {
-      emit(AppointmentLoadError(error: e.toString()));
+      emit(AppointmentLoadFailure(error: e.toString()));
     }
   }
 
   Future<void> _addAppointment(
-    AppointmentAdd event,
+    AppointmentAdded event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
       appointmentApi = AppointmentApi(client);
-      emit(AppointmentAdding());
+      emit(AppointmentAddInProgress());
       await appointmentApi.addAppointment(event.appointment);
-      emit(AppointmentAdded());
+      emit(AppointmentAddSuccess());
     } on Exception catch (e) {
-      emit(AppointmentAddError(error: e.toString()));
+      emit(AppointmentAddFailure(error: e.toString()));
     }
   }
 
   Future<void> _editAppointment(
-    AppointmentEdit event,
+    AppointmentEdited event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
       appointmentApi = AppointmentApi(client);
-      emit(AppointmentAdding());
+      emit(AppointmentAddInProgress());
       await appointmentApi.updateAppointment(event.appointment);
-      emit(AppointmentEdited());
+      emit(AppointmentEditSuccess());
     } on Exception catch (e) {
-      emit(AppointmentAddError(error: e.toString()));
+      emit(AppointmentAddFailure(error: e.toString()));
     }
   }
 
   Future<void> _removeAppointment(
-    AppointmentRemovePressed event,
+    AppointmentRemoved event,
     Emitter<AppointmentState> emit,
   ) async {
     try {
       appointmentApi = AppointmentApi(client);
-      emit(AppointmentRemoving());
+      emit(AppointmentRemoveInProgress());
       await appointmentApi.deleteAppointment(event.appointmentId);
-      emit(AppointmentRemoved());
+      emit(AppointmentRemoveSuccess());
     } on Exception catch (e) {
-      emit(AppointmentRemoveError(error: e.toString()));
+      emit(AppointmentRemoveFailure(error: e.toString()));
     }
   }
 
@@ -91,9 +91,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       final user = await UserStorage.getUser();
-      emit(UserLoaded(user!));
+      emit(UserLoadSuccess(user!));
     } on Exception catch (e) {
-      emit(UserLoadError(error: e.toString()));
+      emit(UserLoadFailure(error: e.toString()));
     }
   }
 }

@@ -132,13 +132,13 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
                 switch (state.runtimeType) {
-                  case AppointmentRemoving:
+                  case AppointmentRemoveInProgress:
                     loadingIndicator.show(
                       context: ctx,
                       height: indicatorHeight,
                     );
                     break;
-                  case AppointmentRemoved:
+                  case AppointmentRemoveSuccess:
                     loadingIndicator.hide(ctx);
                     Navigator.of(ctx).pop(true);
                     SASnackBar.show(
@@ -150,7 +150,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           AppointmentLoad(),
                         );
                     break;
-                  case AppointmentRemoveError:
+                  case AppointmentRemoveFailure:
                     SASnackBar.show(
                       context: context,
                       message: state.error!,
@@ -161,7 +161,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               },
               builder: (ctx, state) {
                 switch (state.runtimeType) {
-                  case AppointmentLoading:
+                  case AppointmentLoadInProgress:
                     return SAIndicator(
                       height: indicatorHeight,
                     );
@@ -213,7 +213,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                   content: l10n.removeConfirmMessage,
                                   onPressedRight: () {
                                     ctx.read<AppointmentBloc>().add(
-                                          AppointmentRemovePressed(
+                                          AppointmentRemoved(
                                             appointmentId: events[index].id!,
                                           ),
                                         );
@@ -242,6 +242,18 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         ),
                       );
                     }
+                  case AppointmentLoadFailure:
+                    return Expanded(
+                      child: Center(
+                        child: Text(
+                          state.error!,
+                          style: textTheme.bodyLarge!.copyWith(
+                            color: colorScheme.secondary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
                 }
                 return Container();
               },

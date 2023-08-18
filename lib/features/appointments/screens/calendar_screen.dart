@@ -177,7 +177,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (context, state) {
                 switch (state.runtimeType) {
-                  case AppointmentLoading:
+                  case AppointmentLoadInProgress:
                     return SAIndicator(
                       height: indicatorHeight,
                     );
@@ -233,7 +233,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       );
                     }
-                  case AppointmentLoadError:
+                  case AppointmentLoadFailure:
                     return Expanded(
                       child: Center(
                         child: Text(

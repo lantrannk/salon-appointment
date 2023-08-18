@@ -27,7 +27,7 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
+        LoginInProgress(),
         LoginSuccess(),
       ],
     );
@@ -43,8 +43,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -59,8 +59,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -75,8 +75,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -91,8 +91,8 @@ void main() {
       ),
       wait: const Duration(seconds: 2),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -107,8 +107,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -123,8 +123,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('invalid-account'),
+        LoginInProgress(),
+        const LoginFailure('invalid-account'),
       ],
     );
 
@@ -139,8 +139,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('incorrect-account'),
+        LoginInProgress(),
+        const LoginFailure('incorrect-account'),
       ],
     );
 
@@ -155,8 +155,8 @@ void main() {
       ),
       wait: const Duration(seconds: 1),
       expect: () => <AuthState>[
-        LoginLoading(),
-        const LoginError('incorrect-account'),
+        LoginInProgress(),
+        const LoginFailure('incorrect-account'),
       ],
     );
   });
@@ -187,7 +187,7 @@ void main() {
         await prefs.setString('user', MockDataUser.adminUserJson);
       },
       expect: () => <AuthState>[
-        UserLoaded(
+        UserLoadSuccess(
           MockDataUser.adminUser.name,
           MockDataUser.adminUser.avatar,
         ),

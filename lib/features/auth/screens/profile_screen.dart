@@ -63,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               builder: (context, state) {
                 final String userName = state.name;
                 final String userAvatar = state.avatar;
-                if (state is UserLoaded) {
+                if (state is UserLoadSuccess) {
                   return Column(
                     children: [
                       Expanded(
