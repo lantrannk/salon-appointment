@@ -5,13 +5,17 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
+import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
 import '../mock_data/mock_data.dart';
 
 class MockHTTPClient extends Mock implements http.Client {}
+
+class MockAppointmentApi extends Mock implements AppointmentApi {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -21,11 +25,12 @@ void main() {
   const String baseUrl =
       'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments';
   final url = Uri.parse(baseUrl);
-  final appointmentUrl = Uri.parse('$baseUrl/84');
 
   late String appointmentEncoded;
+  late Appointment appointment;
 
   late http.Client client;
+  late AppointmentApi appointmentApi;
   late SharedPreferences prefs;
 
   setUpAll(() async {
@@ -33,8 +38,10 @@ void main() {
 
     prefs = await SharedPreferences.getInstance();
     client = MockHTTPClient();
+    appointmentApi = MockAppointmentApi();
 
     appointmentEncoded = json.encode(MockDataAppointment.appointment);
+    appointment = MockDataAppointment.appointment;
   });
 
   group('test load appointments bloc -', () {
@@ -60,7 +67,7 @@ void main() {
             headers: headers,
           ),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentLoad(),
@@ -93,7 +100,7 @@ void main() {
             headers: headers,
           ),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentLoad(),
@@ -121,19 +128,11 @@ void main() {
       'add appointment successful',
       build: () {
         when(
-          () => client.post(
-            url,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.addAppointment(appointment),
         ).thenAnswer(
-          (_) async => http.Response(
-            MockDataAppointment.appointmentJson,
-            200,
-            headers: headers,
-          ),
+          (_) async => appointmentEncoded,
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
@@ -149,15 +148,11 @@ void main() {
       'add appointment with not modified error',
       build: () {
         when(
-          () => client.post(
-            url,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
@@ -175,15 +170,11 @@ void main() {
       'add appointment with bad request error',
       build: () {
         when(
-          () => client.post(
-            url,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
@@ -201,15 +192,11 @@ void main() {
       'add appointment with not found error',
       build: () {
         when(
-          () => client.post(
-            url,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
@@ -236,19 +223,11 @@ void main() {
       'update appointment successful',
       build: () {
         when(
-          () => client.put(
-            appointmentUrl,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.updateAppointment(appointment),
         ).thenAnswer(
-          (_) async => http.Response(
-            MockDataAppointment.appointmentJson,
-            200,
-            headers: headers,
-          ),
+          (_) async => appointmentEncoded,
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
@@ -264,15 +243,11 @@ void main() {
       'update appointment with not modified error',
       build: () {
         when(
-          () => client.put(
-            appointmentUrl,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.updateAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
@@ -290,15 +265,11 @@ void main() {
       'update appointment with bad request error',
       build: () {
         when(
-          () => client.put(
-            appointmentUrl,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.updateAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
@@ -316,15 +287,11 @@ void main() {
       'update appointment with not found error',
       build: () {
         when(
-          () => client.put(
-            appointmentUrl,
-            body: appointmentEncoded,
-            headers: headers,
-          ),
+          () => appointmentApi.updateAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
@@ -351,15 +318,11 @@ void main() {
       'remove appointment successful',
       build: () {
         when(
-          () => client.delete(appointmentUrl),
+          () => appointmentApi.deleteAppointment(appointment.id!),
         ).thenAnswer(
-          (_) async => http.Response(
-            MockDataAppointment.appointmentJson,
-            200,
-            headers: headers,
-          ),
+          (_) async => appointmentEncoded,
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
@@ -377,11 +340,11 @@ void main() {
       'remove appointment with not modified error',
       build: () {
         when(
-          () => client.delete(appointmentUrl),
+          () => appointmentApi.deleteAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
@@ -401,11 +364,11 @@ void main() {
       'remove appointment with bad request error',
       build: () {
         when(
-          () => client.delete(appointmentUrl),
+          () => appointmentApi.deleteAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
@@ -425,11 +388,11 @@ void main() {
       'remove appointment with not found error',
       build: () {
         when(
-          () => client.delete(appointmentUrl),
+          () => appointmentApi.deleteAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
-        return AppointmentBloc(client);
+        return AppointmentBloc(appointmentApi);
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
