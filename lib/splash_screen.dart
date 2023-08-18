@@ -11,8 +11,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserStorage userStorage = UserStorage();
+
     return FutureBuilder(
-      future: UserStorage.getUser(),
+      future: userStorage.getUser(),
       builder: (_, snapshot) {
         Timer(const Duration(seconds: 2), () {
           (snapshot.hasData)

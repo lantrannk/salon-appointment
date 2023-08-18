@@ -6,12 +6,14 @@ import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/storage/appointment_storage.dart';
+import '../../../core/storage/user_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
+import '../repository/appointment_repository.dart';
 import '../screens/appointments_screen.dart';
 
 class NewAppointmentScreen extends StatefulWidget {
@@ -32,6 +34,9 @@ class NewAppointmentScreen extends StatefulWidget {
 
 class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   final descpController = TextEditingController();
+  final appointmentApi = AppointmentApi(http.Client());
+  final appointmentRepo = AppointmentRepository();
+  final userStorage = UserStorage();
 
   final nameFocusNode = FocusNode();
   final descpFocusNode = FocusNode();
@@ -71,7 +76,11 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc(appointmentApi)..add(UserLoad()),
+      create: (_) => AppointmentBloc(
+        appointmentApi,
+        appointmentRepo,
+        userStorage,
+      )..add(UserLoad()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
