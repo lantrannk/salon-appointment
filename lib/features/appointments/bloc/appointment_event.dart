@@ -8,24 +8,24 @@ class UserLoad extends AppointmentEvent {}
 
 class AppointmentLoad extends AppointmentEvent {}
 
-class AppointmentAdd extends AppointmentEvent {
-  const AppointmentAdd({
+class AppointmentAdded extends AppointmentEvent {
+  const AppointmentAdded({
     required this.appointment,
   });
 
   final Appointment appointment;
 }
 
-class AppointmentEdit extends AppointmentEvent {
-  const AppointmentEdit({
+class AppointmentEdited extends AppointmentEvent {
+  const AppointmentEdited({
     required this.appointment,
   });
 
   final Appointment appointment;
 }
 
-class AppointmentRemovePressed extends AppointmentEvent {
-  const AppointmentRemovePressed({
+class AppointmentRemoved extends AppointmentEvent {
+  const AppointmentRemoved({
     required this.appointmentId,
   });
 

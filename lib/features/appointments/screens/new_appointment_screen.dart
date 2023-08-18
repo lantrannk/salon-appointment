@@ -95,7 +95,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
             child: BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
                 switch (state.runtimeType) {
-                  case UserLoadError:
+                  case UserLoadFailure:
                     SASnackBar.show(
                       context: context,
                       message: l10n.addSuccess,
@@ -104,14 +104,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
                     Navigator.pop(context);
                     break;
-                  case AppointmentAdding:
+                  case AppointmentAddInProgress:
                     loadingIndicator.show(
                       context: ctx,
                       height: indicatorHeight,
                     );
                     break;
-                  case AppointmentAdded:
-                  case AppointmentEdited:
+                  case AppointmentAddSuccess:
+                  case AppointmentEditSuccess:
                     loadingIndicator.hide(ctx);
 
                     SASnackBar.show(
@@ -131,7 +131,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       ),
                     );
                     break;
-                  case AppointmentAddError:
+                  case AppointmentAddFailure:
                     SASnackBar.show(
                       context: context,
                       message: state.error!,
@@ -141,7 +141,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                 }
               },
               builder: (context, state) {
-                if (state is UserLoaded) {
+                if (state is UserLoadSuccess) {
                   final User user = widget.user ?? state.user;
                   return Column(
                     children: [
@@ -292,7 +292,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                             } else {
                               context.read<AppointmentBloc>().add(
                                     widget.appointment == null
-                                        ? AppointmentAdd(
+                                        ? AppointmentAdded(
                                             appointment: Appointment(
                                               userId: user.id,
                                               date: dateTime,
@@ -305,7 +305,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                                       : descpController.text,
                                             ),
                                           )
-                                        : AppointmentEdit(
+                                        : AppointmentEdited(
                                             appointment:
                                                 widget.appointment!.copyWith(
                                               date: dateTime,

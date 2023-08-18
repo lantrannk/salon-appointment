@@ -63,7 +63,7 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentLoading(),
+        AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
           users: MockDataUser.allUsers,
           appointments: MockDataAppointment.allAppointments,
@@ -99,7 +99,7 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentLoading(),
+        AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
           users: MockDataUser.allUsers,
           appointments: MockDataAppointment.appointmentsOfUser,
@@ -131,7 +131,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentAdd(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -141,8 +141,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        AppointmentAdded(),
+        AppointmentAddInProgress(),
+        AppointmentAddSuccess(),
       ],
     );
 
@@ -161,7 +161,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentAdd(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -171,8 +171,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.notModified,
         ),
       ],
@@ -193,7 +193,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentAdd(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -203,8 +203,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.badRequest,
         ),
       ],
@@ -225,7 +225,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentAdd(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -235,8 +235,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.notFound,
         ),
       ],
@@ -263,7 +263,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentEdit(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -273,8 +273,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        AppointmentEdited(),
+        AppointmentAddInProgress(),
+        AppointmentEditSuccess(),
       ],
     );
 
@@ -293,7 +293,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentEdit(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -303,8 +303,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.notModified,
         ),
       ],
@@ -325,7 +325,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentEdit(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -335,8 +335,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.badRequest,
         ),
       ],
@@ -357,7 +357,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentEdit(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
       setUp: () async {
@@ -367,8 +367,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentAdding(),
-        const AppointmentAddError(
+        AppointmentAddInProgress(),
+        const AppointmentAddFailure(
           error: ApiErrorMessage.notFound,
         ),
       ],
@@ -391,7 +391,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentRemovePressed(
+        AppointmentRemoved(
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
@@ -403,8 +403,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentRemoving(),
-        AppointmentRemoved(),
+        AppointmentRemoveInProgress(),
+        AppointmentRemoveSuccess(),
       ],
     );
 
@@ -419,7 +419,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentRemovePressed(
+        AppointmentRemoved(
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
@@ -431,8 +431,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentRemoving(),
-        const AppointmentRemoveError(
+        AppointmentRemoveInProgress(),
+        const AppointmentRemoveFailure(
           error: ApiErrorMessage.notModified,
         ),
       ],
@@ -449,7 +449,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentRemovePressed(
+        AppointmentRemoved(
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
@@ -461,8 +461,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentRemoving(),
-        const AppointmentRemoveError(
+        AppointmentRemoveInProgress(),
+        const AppointmentRemoveFailure(
           error: ApiErrorMessage.badRequest,
         ),
       ],
@@ -479,7 +479,7 @@ void main() {
         return AppointmentBloc(client);
       },
       act: (bloc) => bloc.add(
-        AppointmentRemovePressed(
+        AppointmentRemoved(
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
@@ -491,8 +491,8 @@ void main() {
         );
       },
       expect: () => <AppointmentState>[
-        AppointmentRemoving(),
-        const AppointmentRemoveError(
+        AppointmentRemoveInProgress(),
+        const AppointmentRemoveFailure(
           error: ApiErrorMessage.notFound,
         ),
       ],

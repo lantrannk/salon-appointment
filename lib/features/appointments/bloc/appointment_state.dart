@@ -10,8 +10,8 @@ abstract class AppointmentState extends Equatable {
   String? get error => '';
 }
 
-class UserLoaded extends AppointmentState {
-  const UserLoaded(this.user);
+class UserLoadSuccess extends AppointmentState {
+  const UserLoadSuccess(this.user);
 
   final User user;
 
@@ -19,8 +19,8 @@ class UserLoaded extends AppointmentState {
   List<Object?> get props => [user];
 }
 
-class UserLoadError extends AppointmentState {
-  const UserLoadError({this.error});
+class UserLoadFailure extends AppointmentState {
+  const UserLoadFailure({this.error});
 
   @override
   final String? error;
@@ -34,7 +34,7 @@ class AppointmentInitial extends AppointmentState {
   List<Object?> get props => [];
 }
 
-class AppointmentLoading extends AppointmentState {
+class AppointmentLoadInProgress extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
@@ -55,8 +55,8 @@ class AppointmentLoadSuccess extends AppointmentState {
   List<Object?> get props => [users, appointments];
 }
 
-class AppointmentLoadError extends AppointmentState {
-  const AppointmentLoadError({this.error});
+class AppointmentLoadFailure extends AppointmentState {
+  const AppointmentLoadFailure({this.error});
 
   @override
   final String? error;
@@ -65,23 +65,23 @@ class AppointmentLoadError extends AppointmentState {
   List<Object?> get props => [error];
 }
 
-class AppointmentAdding extends AppointmentState {
+class AppointmentAddInProgress extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
 
-class AppointmentAdded extends AppointmentState {
+class AppointmentAddSuccess extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
 
-class AppointmentEdited extends AppointmentState {
+class AppointmentEditSuccess extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
 
-class AppointmentAddError extends AppointmentState {
-  const AppointmentAddError({this.error});
+class AppointmentAddFailure extends AppointmentState {
+  const AppointmentAddFailure({this.error});
 
   @override
   final String? error;
@@ -90,18 +90,18 @@ class AppointmentAddError extends AppointmentState {
   List<Object?> get props => [error];
 }
 
-class AppointmentRemoving extends AppointmentState {
+class AppointmentRemoveInProgress extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
 
-class AppointmentRemoved extends AppointmentState {
+class AppointmentRemoveSuccess extends AppointmentState {
   @override
   List<Object?> get props => [];
 }
 
-class AppointmentRemoveError extends AppointmentState {
-  const AppointmentRemoveError({this.error});
+class AppointmentRemoveFailure extends AppointmentState {
+  const AppointmentRemoveFailure({this.error});
 
   @override
   final String? error;
