@@ -8,6 +8,7 @@ import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
+import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
@@ -41,10 +42,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 4;
     final l10n = S.of(context);
+    final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
       create: (context) =>
-          AppointmentBloc(http.Client())..add(AppointmentLoad()),
+          AppointmentBloc(appointmentApi)..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 1,
         selectedDay: _selectedDay!,

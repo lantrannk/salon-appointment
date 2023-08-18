@@ -9,6 +9,7 @@ import '../../../core/layouts/main_layout.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
+import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import 'appointments_widgets/appointments_widgets.dart';
@@ -43,9 +44,10 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
+    final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc(http.Client())..add(AppointmentLoad()),
+      create: (_) => AppointmentBloc(appointmentApi)..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 0,
         selectedDay: _selectedDay!,

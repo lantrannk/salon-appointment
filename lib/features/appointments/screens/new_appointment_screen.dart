@@ -9,6 +9,7 @@ import '../../../core/storage/appointment_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
+import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../screens/appointments_screen.dart';
@@ -67,9 +68,10 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
+    final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc(http.Client())..add(UserLoad()),
+      create: (_) => AppointmentBloc(appointmentApi)..add(UserLoad()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
