@@ -38,8 +38,18 @@ void main() {
   });
 
   group('test load appointments bloc -', () {
+    tearDown(() async {
+      await prefs.clear();
+    });
+
     blocTest<AppointmentBloc, AppointmentState>(
       'load appointments successful by admin',
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.adminUserJson,
+        );
+      },
       build: () {
         when(
           () => client.get(url),
@@ -56,12 +66,6 @@ void main() {
         AppointmentLoad(),
       ),
       wait: const Duration(seconds: 3),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
@@ -69,13 +73,16 @@ void main() {
           appointments: MockDataAppointment.allAppointments,
         ),
       ],
-      tearDown: () async {
-        await prefs.clear();
-      },
     );
 
     blocTest<AppointmentBloc, AppointmentState>(
       'load appointments successful by customer',
+      setUp: () async {
+        await prefs.setString(
+          'user',
+          MockDataUser.customerUserJson,
+        );
+      },
       build: () {
         when(
           () => client.get(url),
@@ -92,12 +99,6 @@ void main() {
         AppointmentLoad(),
       ),
       wait: const Duration(seconds: 3),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.customerUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
@@ -105,13 +106,17 @@ void main() {
           appointments: MockDataAppointment.appointmentsOfUser,
         ),
       ],
-      tearDown: () async {
-        await prefs.clear();
-      },
     );
   });
 
   group('test add appointment bloc -', () {
+    setUp(() async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    });
+
     blocTest<AppointmentBloc, AppointmentState>(
       'add appointment successful',
       build: () {
@@ -134,12 +139,6 @@ void main() {
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         AppointmentAddSuccess(),
@@ -164,12 +163,6 @@ void main() {
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -196,12 +189,6 @@ void main() {
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -228,12 +215,6 @@ void main() {
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -244,6 +225,13 @@ void main() {
   });
 
   group('test edit appointment bloc -', () {
+    setUp(() async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    });
+
     blocTest<AppointmentBloc, AppointmentState>(
       'update appointment successful',
       build: () {
@@ -266,12 +254,6 @@ void main() {
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         AppointmentEditSuccess(),
@@ -296,12 +278,6 @@ void main() {
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -328,12 +304,6 @@ void main() {
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -360,12 +330,6 @@ void main() {
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -376,6 +340,13 @@ void main() {
   });
 
   group('test remove appointment bloc -', () {
+    setUp(() async {
+      await prefs.setString(
+        'user',
+        MockDataUser.adminUserJson,
+      );
+    });
+
     blocTest<AppointmentBloc, AppointmentState>(
       'remove appointment successful',
       build: () {
@@ -396,12 +367,6 @@ void main() {
         ),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         AppointmentRemoveSuccess(),
@@ -424,12 +389,6 @@ void main() {
         ),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
@@ -454,12 +413,6 @@ void main() {
         ),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
@@ -484,12 +437,6 @@ void main() {
         ),
       ),
       wait: const Duration(seconds: 1),
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
-        );
-      },
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
