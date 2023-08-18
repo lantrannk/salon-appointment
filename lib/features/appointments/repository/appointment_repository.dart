@@ -3,8 +3,9 @@ import '../../../core/storage/user_storage.dart';
 import '../model/appointment.dart';
 
 class AppointmentRepository {
-  static Future<List<Appointment>> load() async {
-    final user = await UserStorage.getUser();
+  Future<List<Appointment>> load() async {
+    final userStorage = UserStorage();
+    final user = await userStorage.getUser();
 
     final appointments = (user!.isAdmin)
         ? await AppointmentStorage.getAppointments()
