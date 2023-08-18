@@ -6,16 +6,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 
 import '../constants/api_error_message.dart';
+import '../constants/api_url.dart';
 import '../mock_data/mock_data.dart';
 
 class MockClient extends Mock implements http.Client {}
 
 void main() {
   final headers = {'Content-Type': 'application/json'};
-  const String baseUrl =
-      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments';
-  final url = Uri.parse(baseUrl);
-  final appointmentUrl = Uri.parse('$baseUrl/84');
 
   late http.Client client;
   late AppointmentApi appointmentApi;
@@ -66,7 +63,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => http.Response(
             MockDataAppointment.allAppointmentsJson,
@@ -87,7 +84,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => notModifiedError,
         );
@@ -104,7 +101,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => badRequestError,
         );
@@ -121,7 +118,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => notFoundError,
         );
@@ -138,7 +135,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => gatewayTimeoutError,
         );
@@ -158,7 +155,7 @@ void main() {
       () async {
         when(
           () => client.post(
-            url,
+            allAppointmentsUrl,
             body: appointmentEncoded,
             headers: headers,
           ),
@@ -183,7 +180,7 @@ void main() {
       () async {
         when(
           () => client.post(
-            url,
+            allAppointmentsUrl,
             body: appointmentEncoded,
             headers: headers,
           ),
@@ -204,7 +201,7 @@ void main() {
       () async {
         when(
           () => client.post(
-            url,
+            allAppointmentsUrl,
             body: appointmentEncoded,
             headers: headers,
           ),
@@ -225,7 +222,7 @@ void main() {
       () async {
         when(
           () => client.post(
-            url,
+            allAppointmentsUrl,
             body: appointmentEncoded,
             headers: headers,
           ),
@@ -246,7 +243,7 @@ void main() {
       () async {
         when(
           () => client.post(
-            url,
+            allAppointmentsUrl,
             body: appointmentEncoded,
             headers: headers,
           ),

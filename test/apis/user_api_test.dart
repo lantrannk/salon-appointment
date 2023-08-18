@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 
 import '../constants/api_error_message.dart';
+import '../constants/api_url.dart';
 import '../mock_data/mock_data.dart';
 
 class MockClient extends Mock implements http.Client {}
@@ -23,9 +24,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(
-            Uri.parse('https://63ab8e97fdc006ba60609b9b.mockapi.io/users'),
-          ),
+          () => client.get(allUsersUrl),
         ).thenAnswer(
           (_) async => http.Response(
             MockDataUser.allUsersJson,
@@ -42,9 +41,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(
-            Uri.parse('https://63ab8e97fdc006ba60609b9b.mockapi.io/users'),
-          ),
+          () => client.get(allUsersUrl),
         ).thenAnswer(
           (_) async => http.Response(
             ApiErrorMessage.notModified,
@@ -64,9 +61,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(
-            Uri.parse('https://63ab8e97fdc006ba60609b9b.mockapi.io/users'),
-          ),
+          () => client.get(allUsersUrl),
         ).thenAnswer(
           (_) async => http.Response(
             ApiErrorMessage.badRequest,
@@ -86,9 +81,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(
-            Uri.parse('https://63ab8e97fdc006ba60609b9b.mockapi.io/users'),
-          ),
+          () => client.get(allUsersUrl),
         ).thenAnswer(
           (_) async => http.Response(
             ApiErrorMessage.notFound,
@@ -108,9 +101,7 @@ void main() {
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
-          () => client.get(
-            Uri.parse('https://63ab8e97fdc006ba60609b9b.mockapi.io/users'),
-          ),
+          () => client.get(allUsersUrl),
         ).thenAnswer(
           (_) async => http.Response(
             ApiErrorMessage.gatewayTimeout,

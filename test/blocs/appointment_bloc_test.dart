@@ -11,6 +11,7 @@ import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
+import '../constants/api_url.dart';
 import '../mock_data/mock_data.dart';
 
 class MockHTTPClient extends Mock implements http.Client {}
@@ -22,9 +23,6 @@ void main() {
   io.HttpOverrides.global = null;
 
   final headers = {'Content-Type': 'application/json'};
-  const String baseUrl =
-      'https://63ab8e97fdc006ba60609b9b.mockapi.io/appointments';
-  final url = Uri.parse(baseUrl);
 
   late String appointmentEncoded;
   late Appointment appointment;
@@ -59,7 +57,7 @@ void main() {
       },
       build: () {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => http.Response(
             MockDataAppointment.allAppointmentsJson,
@@ -92,7 +90,7 @@ void main() {
       },
       build: () {
         when(
-          () => client.get(url),
+          () => client.get(allAppointmentsUrl),
         ).thenAnswer(
           (_) async => http.Response(
             MockDataAppointment.allAppointmentsJson,
