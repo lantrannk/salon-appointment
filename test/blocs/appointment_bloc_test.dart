@@ -11,10 +11,7 @@ import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
-import '../constants/api_url.dart';
 import '../mock_data/mock_data.dart';
-
-class MockHTTPClient extends Mock implements http.Client {}
 
 class MockAppointmentApi extends Mock implements AppointmentApi {}
 
@@ -22,12 +19,9 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  final headers = {'Content-Type': 'application/json'};
-
   late String appointmentEncoded;
   late Appointment appointment;
 
-  late http.Client client;
   late AppointmentApi appointmentApi;
   late SharedPreferences prefs;
 
@@ -35,7 +29,6 @@ void main() {
     SharedPreferences.setMockInitialValues({});
 
     prefs = await SharedPreferences.getInstance();
-    client = MockHTTPClient();
     appointmentApi = MockAppointmentApi();
 
     appointmentEncoded = json.encode(MockDataAppointment.appointment);
@@ -57,13 +50,9 @@ void main() {
       },
       build: () {
         when(
-          () => client.get(allAppointmentsUrl),
+          () => appointmentApi.getAppointments(),
         ).thenAnswer(
-          (_) async => http.Response(
-            MockDataAppointment.allAppointmentsJson,
-            200,
-            headers: headers,
-          ),
+          (_) async => MockDataAppointment.allAppointmentsJson,
         );
         return AppointmentBloc(appointmentApi);
       },
@@ -90,13 +79,9 @@ void main() {
       },
       build: () {
         when(
-          () => client.get(allAppointmentsUrl),
+          () => appointmentApi.getAppointments(),
         ).thenAnswer(
-          (_) async => http.Response(
-            MockDataAppointment.allAppointmentsJson,
-            200,
-            headers: headers,
-          ),
+          (_) async => MockDataAppointment.allAppointmentsJson,
         );
         return AppointmentBloc(appointmentApi);
       },
@@ -135,7 +120,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         AppointmentAddSuccess(),
@@ -155,7 +139,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -177,7 +160,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -199,7 +181,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentAdded(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -230,7 +211,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         AppointmentEditSuccess(),
@@ -250,7 +230,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -272,7 +251,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -294,7 +272,6 @@ void main() {
       act: (bloc) => bloc.add(
         AppointmentEdited(appointment: MockDataAppointment.appointment),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
         const AppointmentAddFailure(
@@ -327,7 +304,6 @@ void main() {
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         AppointmentRemoveSuccess(),
@@ -349,7 +325,6 @@ void main() {
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
@@ -373,7 +348,6 @@ void main() {
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
@@ -397,7 +371,6 @@ void main() {
           appointmentId: MockDataAppointment.appointment.id!,
         ),
       ),
-      wait: const Duration(seconds: 1),
       expect: () => <AppointmentState>[
         AppointmentRemoveInProgress(),
         const AppointmentRemoveFailure(
