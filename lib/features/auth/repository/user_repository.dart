@@ -1,17 +1,24 @@
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../core/storage/user_storage.dart';
 import '../model/user.dart';
 
 class UserRepository {
-  static Future<List<User>> load() async {
-    final userStorage = UserStorage();
+  final userStorage = UserStorage();
+
+  Future<List<User>> loadUsers() async {
     final users = await userStorage.getUsers();
     return users;
   }
 
-  static Future<void> removeUser() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('user');
+  Future<void> setUser(User user) async {
+    await userStorage.setUser(user);
+  }
+
+  Future<User?> getUser() async {
+    final user = await userStorage.getUser();
+    return user;
+  }
+
+  Future<void> removeUser() async {
+    await userStorage.removeUser();
   }
 }
