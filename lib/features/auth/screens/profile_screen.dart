@@ -6,6 +6,7 @@ import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
+import '../repository/user_repository.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,11 +21,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final TextTheme textTheme = Theme.of(context).textTheme;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     final l10n = S.of(context);
+    final UserRepository userRepo = UserRepository();
 
     return BlocProvider(
-      create: (context) => AuthBloc()..add(const UserLoad()),
+      create: (context) => AuthBloc(userRepo)..add(const UserLoad()),
       child: MainLayout(
         title: l10n.profileAppBarTitle,
         currentIndex: 3,

@@ -7,6 +7,7 @@ import 'core/theme/theme.dart';
 import 'features/appointments/screens/appointments_screen.dart';
 import 'features/appointments/screens/calendar_screen.dart';
 import 'features/auth/bloc/auth_bloc.dart';
+import 'features/auth/repository/user_repository.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/profile_screen.dart';
 import 'splash_screen.dart';
@@ -23,8 +24,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final UserRepository userRepo = UserRepository();
+
     return BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc(),
+      create: (context) => AuthBloc(userRepo),
       child: MaterialApp(
         title: 'Salon Appointment',
         theme: themeData,
