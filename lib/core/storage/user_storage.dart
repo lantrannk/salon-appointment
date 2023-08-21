@@ -43,4 +43,9 @@ class UserStorage {
     final String? userStr = prefs.getString('user');
     return userStr != null ? User.fromJson(jsonDecode(userStr)) : null;
   }
+
+  Future<void> removeUser() async {
+    final SharedPreferences prefs = await _prefs;
+    await prefs.remove('user');
+  }
 }
