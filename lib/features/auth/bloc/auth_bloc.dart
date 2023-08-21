@@ -1,22 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 
-import '../../../core/storage/user_storage.dart';
 import '../../../core/validations/validations.dart';
 import '../model/user.dart';
-import '../repository/user_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(LoginInProgress()) {
+  AuthBloc(this.userRepo) : super(LoginInProgress()) {
     on<LoginEvent>(_handleLoginEvent);
     on<LogoutEvent>(_handleLogOutEvent);
     on<UserLoad>(_getUser);
   }
 
-  final UserStorage userStorage = UserStorage();
+  final UserRepository userRepo;
 
   Future<void> _handleLoginEvent(
     LoginEvent event,
@@ -24,7 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(LoginInProgress());
     try {
-      final List<User> users = await userStorage.getUsers();
+      final List<User> users = await userRepo.loadUsers();
       if (FormValidation.isValidPassword(event.password) != null ||
           FormValidation.isValidPhoneNumber(event.phoneNumber) != null) {
         emit(const LoginFailure('invalid-account'));
@@ -37,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 e.phoneNumber == event.phoneNumber &&
                 e.password == event.password)
             .first;
-        await userStorage.setUser(user);
+        await userRepo.setUser(user);
         emit(LoginSuccess());
       } else {
         emit(const LoginFailure('incorrect-account'));
@@ -54,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(LogoutInProgress());
-    await UserRepository.removeUser();
+    await userRepo.removeUser();
     emit(LogoutSuccess());
   }
 
@@ -63,7 +62,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final user = await userStorage.getUser();
+      final user = await userRepo.getUser();
 
       emit(
         UserLoadSuccess(
