@@ -21,19 +21,19 @@ class Assets {
 
   static const IconData logoutIcon = Icons.logout;
 
-  static const IconData breakIcon = IconData(
+  static const IconData checkIcon = IconData(
     0xe800,
     fontFamily: _kFontFam,
     fontPackage: _kFontPkg,
   );
 
-  static const IconData differentIcon = IconData(
+  static const IconData notificationsIcon = IconData(
     0xe801,
     fontFamily: _kFontFam,
     fontPackage: _kFontPkg,
   );
 
-  static const IconData checkIcon = IconData(
+  static const IconData personIcon = IconData(
     0xe802,
     fontFamily: _kFontFam,
     fontPackage: _kFontPkg,
@@ -45,14 +45,8 @@ class Assets {
     fontPackage: _kFontPkg,
   );
 
-  static const IconData personIcon = IconData(
+  static const IconData differentIcon = IconData(
     0xe804,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
-  );
-
-  static const IconData notificationsIcon = IconData(
-    0xe805,
     fontFamily: _kFontFam,
     fontPackage: _kFontPkg,
   );
