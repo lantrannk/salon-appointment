@@ -33,7 +33,7 @@ class MonthCalendarCell extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 5,
-        horizontal: 2,
+        horizontal: 4,
       ),
       decoration: BoxDecoration(
         color: bgColor,
@@ -61,6 +61,7 @@ class MonthCalendarCell extends StatelessWidget {
                     day.day.toString(),
                     style: textTheme.bodySmall!.copyWith(
                       height: 18 / 12,
+                      fontWeight: FontWeight.w500,
                       color: dayColor ?? colorScheme.secondary,
                     ),
                     textAlign: TextAlign.end,
