@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../features/appointments/screens/new_appointment_screen.dart';
 import '../constants/assets.dart';
 import '../generated/l10n.dart';
+import '../utils.dart';
 import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {
@@ -57,7 +58,9 @@ class _MainLayoutState extends State<MainLayout> {
           context,
           MaterialPageRoute(
             builder: (context) => NewAppointmentScreen(
-              selectedDay: widget.selectedDay,
+              selectedDay: isBeforeNow(widget.selectedDay)
+                  ? DateTime.now()
+                  : widget.selectedDay,
             ),
           ),
         ),
