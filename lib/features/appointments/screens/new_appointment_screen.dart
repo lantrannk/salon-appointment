@@ -91,11 +91,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
           ),
           automaticallyImplyLeading: false,
           actions: [
-            SAButton.icon(
-              onPressed: () => Navigator.of(context).pop(),
-              child: SAIcons(
-                icon: Assets.closeIcon,
-                color: colorScheme.secondaryContainer,
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: SAButton.icon(
+                onPressed: () => Navigator.of(context).pop(),
+                child: SAIcons(
+                  icon: Assets.closeIcon,
+                  color: colorScheme.secondaryContainer,
+                ),
               ),
             ),
           ],
