@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/storage/user_storage.dart';
+import '../../../core/utils.dart';
 import '../../auth/model/user.dart';
 import '../api/appointment_api.dart';
 import '../model/appointment.dart';
@@ -20,6 +24,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentRemoved>(_removeAppointment);
     on<AppointmentAdded>(_addAppointment);
     on<AppointmentEdited>(_editAppointment);
+    on<AppointmentDateTimeChanged>(_changeDateTime);
     on<UserLoad>(_getUser);
   }
 
@@ -95,6 +100,53 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       emit(UserLoadSuccess(user!));
     } on Exception catch (e) {
       emit(UserLoadFailure(error: e.toString()));
+    }
+  }
+
+  void _changeDateTime(
+    AppointmentDateTimeChanged event,
+    Emitter<AppointmentState> emit,
+  ) {
+    final date = event.dateTime;
+    final startTime = setDateTime(
+      date,
+      event.startTime,
+    );
+    final endTime = setDateTime(
+      date,
+      event.endTime,
+    );
+
+    if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
+      emit(
+        const AppointmentDateTimeChangeFailure(
+          error: 'before-now',
+        ),
+      );
+    } else if (!isAfterStartTime(startTime, endTime)) {
+      emit(
+        const AppointmentDateTimeChangeFailure(
+          error: 'different-time',
+        ),
+      );
+    } else if (isBreakTime(startTime) || isBreakTime(endTime)) {
+      emit(
+        const AppointmentDateTimeChangeFailure(
+          error: 'break-conflict',
+        ),
+      );
+    } else if (isClosedTime(startTime) || isClosedTime(endTime)) {
+      emit(
+        const AppointmentDateTimeChangeFailure(
+          error: 'closed-conflict',
+        ),
+      );
+    } else {
+      emit(AppointmentDateTimeChangeSuccess(
+        date: date,
+        startTime: startTime,
+        endTime: endTime,
+      ));
     }
   }
 }

@@ -8,6 +8,12 @@ abstract class AppointmentState extends Equatable {
   List<User> get users => [];
 
   String? get error => '';
+
+  DateTime get date => DateTime.now();
+
+  DateTime get startTime => DateTime.now();
+
+  DateTime get endTime => DateTime.now();
 }
 
 class UserLoadSuccess extends AppointmentState {
@@ -102,6 +108,36 @@ class AppointmentRemoveSuccess extends AppointmentState {
 
 class AppointmentRemoveFailure extends AppointmentState {
   const AppointmentRemoveFailure({this.error});
+
+  @override
+  final String? error;
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class AppointmentDateTimeChangeSuccess extends AppointmentState {
+  const AppointmentDateTimeChangeSuccess({
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+  });
+
+  @override
+  final DateTime date;
+
+  @override
+  final DateTime startTime;
+
+  @override
+  final DateTime endTime;
+
+  @override
+  List<Object?> get props => [date, startTime, endTime];
+}
+
+class AppointmentDateTimeChangeFailure extends AppointmentState {
+  const AppointmentDateTimeChangeFailure({this.error});
 
   @override
   final String? error;
