@@ -112,7 +112,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       message: l10n.addSuccess,
                       isSuccess: true,
                     );
-
                     Navigator.pop(context);
                     break;
                   case AppointmentAddInProgress:
@@ -163,28 +162,56 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       ),
                       const SizedBox(height: 12),
                       DatePicker(
-                          dateTime: dateTime,
-                          onPressed: () async {
-                            final DateTime? date = await showDatePicker(
-                              context: context,
-                              initialDate: dateTime,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(dateTime.year + 5),
+                        dateTime: dateTime,
+                        onPressed: () async {
+                          final DateTime? date = await showDatePicker(
+                            context: context,
+                            initialDate: dateTime,
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(dateTime.year + 5),
+                          );
+                          if (date != null) {
+                            final tempDateTime = date;
+                            final tempStartTime = setDateTime(
+                              tempDateTime,
+                              TimeOfDay.fromDateTime(startTime),
                             );
-                            if (date != null && date != dateTime) {
+                            final tempEndTime = setDateTime(
+                              tempDateTime,
+                              TimeOfDay.fromDateTime(endTime),
+                            );
+
+                            if (isBeforeNow(tempStartTime) ||
+                                isBeforeNow(tempEndTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.invalidStartTimeError,
+                                isSuccess: false,
+                              );
+                            } else if (isBreakTime(tempStartTime) ||
+                                isBreakTime(tempEndTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.breakTimeConflictError,
+                                isSuccess: false,
+                              );
+                            } else if (isClosedTime(tempStartTime) ||
+                                isClosedTime(tempEndTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.closedTimeError,
+                                isSuccess: false,
+                              );
+                            } else if (date != dateTime) {
                               setState(() {
-                                dateTime = date;
-                                startTime = setDateTime(
-                                  dateTime,
-                                  TimeOfDay.fromDateTime(startTime),
-                                );
-                                endTime = setDateTime(
-                                  dateTime,
-                                  TimeOfDay.fromDateTime(endTime),
-                                );
+                                dateTime = tempDateTime;
+                                startTime = tempStartTime;
+                                endTime = tempEndTime;
                               });
                             }
-                          }),
+                          }
+                        },
+                      ),
                       const SizedBox(height: 12),
                       TimePicker(
                         startTime: startTime,
@@ -194,8 +221,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                             context: context,
                             initialTime: TimeOfDay.fromDateTime(startTime),
                           );
-                          final List<Appointment> appointments =
-                              await AppointmentStorage.getAppointments();
                           if (time != null) {
                             final DateTime tempStartTime =
                                 setDateTime(dateTime, time);
@@ -206,21 +231,24 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                 message: l10n.invalidStartTimeError,
                                 isSuccess: false,
                               );
+                            } else if (isBreakTime(tempStartTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.breakTimeConflictError,
+                                isSuccess: false,
+                              );
+                            } else if (isClosedTime(tempStartTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.closedTimeError,
+                                isSuccess: false,
+                              );
                             } else if (time !=
                                 TimeOfDay.fromDateTime(startTime)) {
-                              if (isFullAppointments(
-                                  appointments, tempStartTime)) {
-                                SASnackBar.show(
-                                  context: context,
-                                  message: l10n.fullAppointmentsError,
-                                  isSuccess: false,
-                                );
-                              } else {
-                                setState(() {
-                                  startTime = tempStartTime;
-                                  endTime = autoAddHalfHour(startTime);
-                                });
-                              }
+                              setState(() {
+                                startTime = tempStartTime;
+                                endTime = autoAddHalfHour(startTime);
+                              });
                             }
                           }
                         },
@@ -232,10 +260,23 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                           if (time != null) {
                             final DateTime tempEndTime =
                                 setDateTime(dateTime, time);
+
                             if (!isAfterStartTime(startTime, tempEndTime)) {
                               SASnackBar.show(
                                 context: context,
                                 message: l10n.invalidEndTimeError,
+                                isSuccess: false,
+                              );
+                            } else if (isBreakTime(tempEndTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.breakTimeConflictError,
+                                isSuccess: false,
+                              );
+                            } else if (isClosedTime(tempEndTime)) {
+                              SASnackBar.show(
+                                context: context,
+                                message: l10n.closedTimeError,
                                 isSuccess: false,
                               );
                             } else if (time !=
@@ -279,19 +320,18 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         height: 44,
                         width: double.infinity,
                         child: SAButton.elevated(
-                          onPressed: () {
-                            if (isBreakTime(startTime) ||
-                                isBreakTime(endTime)) {
+                          onPressed: () async {
+                            final appointments =
+                                await AppointmentStorage.getAppointments();
+
+                            if (isFullAppointments(
+                              appointments,
+                              startTime,
+                              endTime,
+                            )) {
                               SASnackBar.show(
                                 context: context,
-                                message: l10n.breakTimeConflictError,
-                                isSuccess: false,
-                              );
-                            } else if (isClosedTime(startTime) ||
-                                isClosedTime(endTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.closedTimeError,
+                                message: l10n.fullAppointmentsError,
                                 isSuccess: false,
                               );
                             } else if (services == null) {
