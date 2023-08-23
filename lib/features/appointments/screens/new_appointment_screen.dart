@@ -44,12 +44,12 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   late DateTime dateTime = widget.appointment?.date ??
       setDateTime(
         widget.selectedDay,
-        TimeOfDay.fromDateTime(DateTime.now()),
+        getTime(DateTime.now()),
       );
   late DateTime startTime = widget.appointment?.startTime ??
       setDateTime(
         widget.selectedDay,
-        TimeOfDay.fromDateTime(DateTime.now()),
+        getTime(DateTime.now()),
       );
   late DateTime endTime =
       widget.appointment?.endTime ?? autoAddHalfHour(startTime);
@@ -67,6 +67,8 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     super.dispose();
   }
 
+  TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -74,6 +76,21 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
     final appointmentApi = AppointmentApi(http.Client());
+
+    String dateTimeChangeFailure(String error) {
+      switch (error) {
+        case 'before-now':
+          return l10n.invalidStartTimeError;
+        case 'different-time':
+          return l10n.invalidEndTimeError;
+        case 'break-conflict':
+          return l10n.breakTimeConflictError;
+        case 'closed-conflict':
+          return l10n.closedTimeError;
+        default:
+          return 'Unknown error';
+      }
+    }
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
@@ -116,6 +133,20 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       isSuccess: true,
                     );
                     Navigator.pop(context);
+                    break;
+                  case AppointmentDateTimeChangeSuccess:
+                    dateTime = state.date;
+                    startTime = state.startTime;
+                    endTime = state.endTime;
+                    ctx.read<AppointmentBloc>().add(UserLoad());
+                    break;
+                  case AppointmentDateTimeChangeFailure:
+                    SASnackBar.show(
+                      context: context,
+                      message: dateTimeChangeFailure(state.error!),
+                      isSuccess: false,
+                    );
+                    ctx.read<AppointmentBloc>().add(UserLoad());
                     break;
                   case AppointmentAddInProgress:
                     loadingIndicator.show(
@@ -173,45 +204,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                             firstDate: DateTime.now(),
                             lastDate: DateTime(dateTime.year + 5),
                           );
-                          if (date != null) {
-                            final tempDateTime = date;
-                            final tempStartTime = setDateTime(
-                              tempDateTime,
-                              TimeOfDay.fromDateTime(startTime),
-                            );
-                            final tempEndTime = setDateTime(
-                              tempDateTime,
-                              TimeOfDay.fromDateTime(endTime),
-                            );
-
-                            if (isBeforeNow(tempStartTime) ||
-                                isBeforeNow(tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.invalidStartTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (isBreakTime(tempStartTime) ||
-                                isBreakTime(tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.breakTimeConflictError,
-                                isSuccess: false,
-                              );
-                            } else if (isClosedTime(tempStartTime) ||
-                                isClosedTime(tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.closedTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (date != dateTime) {
-                              setState(() {
-                                dateTime = tempDateTime;
-                                startTime = tempStartTime;
-                                endTime = tempEndTime;
-                              });
-                            }
+                          if (date != null && date != dateTime) {
+                            context.read<AppointmentBloc>().add(
+                                  AppointmentDateTimeChanged(
+                                    dateTime: date,
+                                    startTime: getTime(startTime),
+                                    endTime: getTime(endTime),
+                                  ),
+                                );
                           }
                         },
                       ),
@@ -222,72 +222,35 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         onStartTimePressed: () async {
                           final TimeOfDay? time = await showTimePicker(
                             context: context,
-                            initialTime: TimeOfDay.fromDateTime(startTime),
+                            initialTime: getTime(startTime),
                           );
-                          if (time != null) {
-                            final DateTime tempStartTime =
-                                setDateTime(dateTime, time);
-
-                            if (isBeforeNow(tempStartTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.invalidStartTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (isBreakTime(tempStartTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.breakTimeConflictError,
-                                isSuccess: false,
-                              );
-                            } else if (isClosedTime(tempStartTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.closedTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (time !=
-                                TimeOfDay.fromDateTime(startTime)) {
-                              setState(() {
-                                startTime = tempStartTime;
-                                endTime = autoAddHalfHour(startTime);
-                              });
-                            }
+                          if (time != null && time != getTime(startTime)) {
+                            context.read<AppointmentBloc>().add(
+                                  AppointmentDateTimeChanged(
+                                    dateTime: dateTime,
+                                    startTime: time,
+                                    endTime: getTime(
+                                      autoAddHalfHour(
+                                        setDateTime(dateTime, time),
+                                      ),
+                                    ),
+                                  ),
+                                );
                           }
                         },
                         onEndTimePressed: () async {
                           final TimeOfDay? time = await showTimePicker(
                             context: context,
-                            initialTime: TimeOfDay.fromDateTime(endTime),
+                            initialTime: getTime(endTime),
                           );
-                          if (time != null) {
-                            final DateTime tempEndTime =
-                                setDateTime(dateTime, time);
-
-                            if (!isAfterStartTime(startTime, tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.invalidEndTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (isBreakTime(tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.breakTimeConflictError,
-                                isSuccess: false,
-                              );
-                            } else if (isClosedTime(tempEndTime)) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.closedTimeError,
-                                isSuccess: false,
-                              );
-                            } else if (time !=
-                                TimeOfDay.fromDateTime(endTime)) {
-                              setState(() {
-                                endTime = tempEndTime;
-                              });
-                            }
+                          if (time != null && time != getTime(endTime)) {
+                            context.read<AppointmentBloc>().add(
+                                  AppointmentDateTimeChanged(
+                                    dateTime: dateTime,
+                                    startTime: getTime(startTime),
+                                    endTime: time,
+                                  ),
+                                );
                           }
                         },
                       ),
