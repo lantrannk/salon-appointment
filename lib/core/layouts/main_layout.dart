@@ -217,15 +217,13 @@ Widget _buildIcon({
     padding: EdgeInsets.zero,
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
       children: [
         if (!isActive)
           const SizedBox(
-            height: 18,
+            height: 2,
           )
         else
-          Container(
-            margin: const EdgeInsets.only(bottom: 16),
+          SizedBox(
             height: 2,
             child: Divider(
               thickness: 2,
@@ -234,16 +232,19 @@ Widget _buildIcon({
               color: topColor,
             ),
           ),
-        GradientIcon(
-          icon: icon,
-          size: size,
-          gradient: LinearGradient(
-            colors: [
-              topColor,
-              bottomColor,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+        SizedBox(
+          height: bottomNavigationBarHeight - 4,
+          child: GradientIcon(
+            icon: icon,
+            size: size,
+            gradient: LinearGradient(
+              colors: [
+                topColor,
+                bottomColor,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
           ),
         ),
       ],
