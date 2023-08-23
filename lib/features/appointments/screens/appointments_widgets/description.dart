@@ -30,7 +30,9 @@ class _DescriptionState extends State<Description> {
             (overflow == TextOverflow.ellipsis) ? null : TextOverflow.ellipsis;
       }),
       style: TextButton.styleFrom(
+        minimumSize: Size.zero,
         padding: EdgeInsets.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       child: Align(
         alignment: Alignment.centerLeft,
