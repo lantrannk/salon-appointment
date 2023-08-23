@@ -115,6 +115,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     dowBuilder: (context, day) {
                       return Container(
                         alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                        ),
                         child: SAText.weekCalendarCell(
                           text: dayOfWeekFormat.format(day),
                           color: colorScheme.secondary,
@@ -145,6 +148,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         _focusedDay.month - 1,
                         _focusedDay.day,
                       ),
+                      textAlign: TextAlign.start,
                     ),
                     rightChevronIcon: CalendarChevronText(
                       focusedDay: DateTime(
@@ -152,6 +156,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         _focusedDay.month + 1,
                         _focusedDay.day,
                       ),
+                      textAlign: TextAlign.end,
                     ),
                     titleTextStyle: textTheme.bodyMedium!.copyWith(
                       color: colorScheme.onPrimary,
@@ -266,19 +271,25 @@ class _CalendarScreenState extends State<CalendarScreen> {
 class CalendarChevronText extends StatelessWidget {
   const CalendarChevronText({
     required this.focusedDay,
+    required this.textAlign,
     super.key,
   });
 
   final DateTime focusedDay;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
 
-    return Text(
-      calendarTitleFormat.format(focusedDay),
-      style: themeData.textTheme.bodyMedium!.copyWith(
-        color: themeData.colorScheme.onPrimary.withOpacity(0.3991),
+    return SizedBox(
+      width: 110,
+      child: Text(
+        calendarTitleFormat.format(focusedDay),
+        textAlign: textAlign,
+        style: themeData.textTheme.bodyMedium!.copyWith(
+          color: themeData.colorScheme.onPrimary.withOpacity(0.3991),
+        ),
       ),
     );
   }
