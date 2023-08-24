@@ -7,7 +7,8 @@ import '../../features/auth/api/user_api.dart';
 import '../../features/auth/model/user.dart';
 
 class UserStorage {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  static final Future<SharedPreferences> _prefs =
+      SharedPreferences.getInstance();
 
   /// Save a [List] of [String] user encode
   Future<void> setUsers() async {
