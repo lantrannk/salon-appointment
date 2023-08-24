@@ -126,3 +126,13 @@ class AppointmentDateTimeChangeFailure extends AppointmentState {
   @override
   List<Object?> get props => [error];
 }
+
+class AppointmentDateTimeBeforeChange extends AppointmentState {
+  const AppointmentDateTimeBeforeChange({this.error});
+
+  @override
+  final String? error;
+
+  @override
+  List<Object?> get props => [error];
+}

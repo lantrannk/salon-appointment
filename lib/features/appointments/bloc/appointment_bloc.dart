@@ -104,6 +104,8 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       event.endTime,
     );
 
+    emit(const AppointmentDateTimeBeforeChange(error: ''));
+
     if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
       emit(
         const AppointmentDateTimeChangeFailure(
