@@ -22,7 +22,7 @@ void main() {
 
     userRepo = MockUserRepo();
 
-    when(() => userRepo.loadUsers())
+    when(() => userRepo.getUsers())
         .thenAnswer((_) async => MockDataUser.allUsers);
 
     when(() => userRepo.setUser(MockDataUser.adminUser))

@@ -5,11 +5,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/core/storage/user_storage.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
+import 'package:salon_appointment/features/auth/model/user.dart';
+import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
@@ -19,7 +20,7 @@ class MockAppointmentApi extends Mock implements AppointmentApi {}
 
 class MockAppointmentRepo extends Mock implements AppointmentRepository {}
 
-class MockUserStorage extends Mock implements UserStorage {}
+class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -30,8 +31,10 @@ void main() {
 
   late AppointmentApi appointmentApi;
   late AppointmentRepository appointmentRepo;
-  late UserStorage userStorage;
+  late UserRepository userRepo;
   late SharedPreferences prefs;
+  late User adminUser;
+  late User customerUser;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
@@ -39,13 +42,15 @@ void main() {
     prefs = await SharedPreferences.getInstance();
     appointmentApi = MockAppointmentApi();
     appointmentRepo = MockAppointmentRepo();
-    userStorage = MockUserStorage();
+    userRepo = MockUserRepository();
 
     appointmentEncoded = json.encode(MockDataAppointment.appointment);
     appointment = MockDataAppointment.appointment;
+    adminUser = MockDataUser.adminUser;
+    customerUser = MockDataUser.customerUser;
 
     when(
-      () => userStorage.getUsers(),
+      () => userRepo.getUsers(),
     ).thenAnswer(
       (_) async => MockDataUser.allUsers,
     );
@@ -66,14 +71,21 @@ void main() {
       },
       build: () {
         when(
-          () => appointmentRepo.load(),
+          () => appointmentRepo.loadAllAppointments(adminUser),
         ).thenAnswer(
           (_) async => MockDataAppointment.allAppointments,
         );
+
+        when(
+          () => userRepo.getUser(),
+        ).thenAnswer(
+          (_) async => adminUser,
+        );
+
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -98,14 +110,21 @@ void main() {
       },
       build: () {
         when(
-          () => appointmentRepo.load(),
+          () => appointmentRepo.loadAllAppointments(customerUser),
         ).thenAnswer(
           (_) async => MockDataAppointment.appointmentsOfUser,
         );
+
+        when(
+          () => userRepo.getUser(),
+        ).thenAnswer(
+          (_) async => customerUser,
+        );
+
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -138,9 +157,9 @@ void main() {
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -161,9 +180,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -186,9 +205,9 @@ void main() {
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -211,9 +230,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -245,9 +264,9 @@ void main() {
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -268,9 +287,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -293,9 +312,9 @@ void main() {
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -318,9 +337,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -352,9 +371,9 @@ void main() {
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -377,9 +396,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -404,9 +423,9 @@ void main() {
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
@@ -431,9 +450,9 @@ void main() {
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi,
-          appointmentRepo,
-          userStorage,
+          appointmentApi: appointmentApi,
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
       act: (bloc) => bloc.add(
