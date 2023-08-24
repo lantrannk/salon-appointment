@@ -117,8 +117,11 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     break;
                   case AppointmentDateTimeChangeFailure:
                     SASnackBar.show(
-                      context: context,
-                      message: dateTimeChangeFailure(state.error!),
+                      context: ctx,
+                      message: dateTimeChangeFailure(
+                        context,
+                        state.error!,
+                      ),
                       isSuccess: false,
                     );
                     break;
