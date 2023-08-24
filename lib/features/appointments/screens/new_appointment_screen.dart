@@ -174,9 +174,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     break;
                 }
               },
-              buildWhen: (previous, current) =>
-                  current is AppointmentDateTimeChangeSuccess ||
-                  current is AppointmentDateTimeChangeFailure,
               builder: (context, state) {
                 final User user = widget.user;
                 return Column(
