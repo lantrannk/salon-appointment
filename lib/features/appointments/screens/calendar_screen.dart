@@ -6,9 +6,9 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
-import '../../../core/storage/user_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
+import '../../auth/repository/user_repository.dart';
 import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
@@ -28,7 +28,7 @@ class CalendarScreen extends StatefulWidget {
 class _CalendarScreenState extends State<CalendarScreen> {
   final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
-  final userStorage = UserStorage();
+  final userRepo = UserRepository();
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -47,10 +47,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
-      create: (context) => AppointmentBloc(
-        appointmentApi,
-        appointmentRepo,
-        userStorage,
+      create: (_) => AppointmentBloc(
+        appointmentApi: appointmentApi,
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
       )..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 1,

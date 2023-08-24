@@ -6,10 +6,10 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
-import '../../../core/storage/user_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
+import '../../auth/repository/user_repository.dart';
 import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
@@ -32,7 +32,7 @@ class AppointmentScreen extends StatefulWidget {
 class _AppointmentScreenState extends State<AppointmentScreen> {
   final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
-  final userStorage = UserStorage();
+  final userRepo = UserRepository();
 
   DateTime? _focusedDay;
   DateTime? _selectedDay;
@@ -53,9 +53,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi,
-        appointmentRepo,
-        userStorage,
+        appointmentApi: appointmentApi,
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
       )..add(AppointmentLoad()),
       child: MainLayout(
         currentIndex: 0,
