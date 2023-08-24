@@ -19,12 +19,12 @@ import '../screens/appointments_screen.dart';
 class NewAppointmentScreen extends StatefulWidget {
   const NewAppointmentScreen({
     required this.selectedDay,
-    this.user,
+    required this.user,
     this.appointment,
     super.key,
   });
 
-  final User? user;
+  final User user;
   final Appointment? appointment;
   final DateTime selectedDay;
 
@@ -97,7 +97,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
         appointmentApi,
         appointmentRepo,
         userStorage,
-      )..add(UserLoad()),
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
@@ -126,19 +126,10 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
             child: BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
                 switch (state.runtimeType) {
-                  case UserLoadFailure:
-                    SASnackBar.show(
-                      context: context,
-                      message: l10n.addSuccess,
-                      isSuccess: true,
-                    );
-                    Navigator.pop(context);
-                    break;
                   case AppointmentDateTimeChangeSuccess:
                     dateTime = state.date;
                     startTime = state.startTime;
                     endTime = state.endTime;
-                    ctx.read<AppointmentBloc>().add(UserLoad());
                     break;
                   case AppointmentDateTimeChangeFailure:
                     SASnackBar.show(
@@ -146,7 +137,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       message: dateTimeChangeFailure(state.error!),
                       isSuccess: false,
                     );
-                    ctx.read<AppointmentBloc>().add(UserLoad());
                     break;
                   case AppointmentAddInProgress:
                     loadingIndicator.show(
@@ -184,175 +174,175 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     break;
                 }
               },
+              buildWhen: (previous, current) =>
+                  current is AppointmentDateTimeChangeSuccess ||
+                  current is AppointmentDateTimeChangeFailure,
               builder: (context, state) {
-                if (state is UserLoadSuccess) {
-                  final User user = widget.user ?? state.user;
-                  return Column(
-                    children: [
-                      const SizedBox(height: 12),
-                      Text(
-                        user.name,
-                        style: textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 12),
-                      DatePicker(
-                        dateTime: dateTime,
-                        onPressed: () async {
-                          final DateTime? date = await showDatePicker(
-                            context: context,
-                            initialDate: dateTime,
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(dateTime.year + 5),
-                          );
-                          if (date != null && date != dateTime) {
-                            context.read<AppointmentBloc>().add(
-                                  AppointmentDateTimeChanged(
-                                    dateTime: date,
-                                    startTime: getTime(startTime),
-                                    endTime: getTime(endTime),
-                                  ),
-                                );
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      TimePicker(
-                        startTime: startTime,
-                        endTime: endTime,
-                        onStartTimePressed: () async {
-                          final TimeOfDay? time = await showTimePicker(
-                            context: context,
-                            initialTime: getTime(startTime),
-                          );
-                          if (time != null && time != getTime(startTime)) {
-                            context.read<AppointmentBloc>().add(
-                                  AppointmentDateTimeChanged(
-                                    dateTime: dateTime,
-                                    startTime: time,
-                                    endTime: getTime(
-                                      autoAddHalfHour(
-                                        setDateTime(dateTime, time),
-                                      ),
+                final User user = widget.user;
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Text(
+                      user.name,
+                      style: textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 12),
+                    DatePicker(
+                      dateTime: dateTime,
+                      onPressed: () async {
+                        final DateTime? date = await showDatePicker(
+                          context: context,
+                          initialDate: dateTime,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(dateTime.year + 5),
+                        );
+                        if (date != null && date != dateTime) {
+                          context.read<AppointmentBloc>().add(
+                                AppointmentDateTimeChanged(
+                                  dateTime: date,
+                                  startTime: getTime(startTime),
+                                  endTime: getTime(endTime),
+                                ),
+                              );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TimePicker(
+                      startTime: startTime,
+                      endTime: endTime,
+                      onStartTimePressed: () async {
+                        final TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: getTime(startTime),
+                        );
+                        if (time != null && time != getTime(startTime)) {
+                          context.read<AppointmentBloc>().add(
+                                AppointmentDateTimeChanged(
+                                  dateTime: dateTime,
+                                  startTime: time,
+                                  endTime: getTime(
+                                    autoAddHalfHour(
+                                      setDateTime(dateTime, time),
                                     ),
                                   ),
-                                );
-                          }
-                        },
-                        onEndTimePressed: () async {
-                          final TimeOfDay? time = await showTimePicker(
-                            context: context,
-                            initialTime: getTime(endTime),
-                          );
-                          if (time != null && time != getTime(endTime)) {
-                            context.read<AppointmentBloc>().add(
-                                  AppointmentDateTimeChanged(
-                                    dateTime: dateTime,
-                                    startTime: getTime(startTime),
-                                    endTime: time,
-                                  ),
-                                );
-                          }
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      Dropdown(
-                          items: items,
-                          selectedValue: services,
-                          onChanged: (value) {
-                            setState(() {
-                              services = value;
-                            });
-                          }),
-                      const SizedBox(height: 12),
-                      Input(
-                        controller: descpController,
-                        text: l10n.description,
-                        focusNode: descpFocusNode,
-                        onEditCompleted: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                        color: colorScheme.secondaryContainer,
-                        maxLines: 4,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: colorScheme.secondaryContainer,
-                          ),
-                          borderRadius: BorderRadius.circular(8),
+                                ),
+                              );
+                        }
+                      },
+                      onEndTimePressed: () async {
+                        final TimeOfDay? time = await showTimePicker(
+                          context: context,
+                          initialTime: getTime(endTime),
+                        );
+                        if (time != null && time != getTime(endTime)) {
+                          context.read<AppointmentBloc>().add(
+                                AppointmentDateTimeChanged(
+                                  dateTime: dateTime,
+                                  startTime: getTime(startTime),
+                                  endTime: time,
+                                ),
+                              );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    Dropdown(
+                        items: items,
+                        selectedValue: services,
+                        onChanged: (value) {
+                          setState(() {
+                            services = value;
+                          });
+                        }),
+                    const SizedBox(height: 12),
+                    Input(
+                      controller: descpController,
+                      text: l10n.description,
+                      focusNode: descpFocusNode,
+                      onEditCompleted: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      color: colorScheme.secondaryContainer,
+                      maxLines: 4,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 1,
+                          color: colorScheme.secondaryContainer,
                         ),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        height: 44,
-                        width: double.infinity,
-                        child: SAButton.elevated(
-                          onPressed: () async {
-                            final appointments =
-                                await AppointmentStorage.getAppointments();
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: 44,
+                      width: double.infinity,
+                      child: SAButton.elevated(
+                        onPressed: () async {
+                          final appointments =
+                              await AppointmentStorage.getAppointments();
 
-                            if (isFullAppointments(
-                              appointments,
-                              startTime,
-                              endTime,
-                            )) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.fullAppointmentsError,
-                                isSuccess: false,
-                              );
-                            } else if (services == null) {
-                              SASnackBar.show(
-                                context: context,
-                                message: l10n.emptyServicesError,
-                                isSuccess: false,
-                              );
-                            } else {
-                              context.read<AppointmentBloc>().add(
-                                    widget.appointment == null
-                                        ? AppointmentAdded(
-                                            appointment: Appointment(
-                                              userId: user.id,
-                                              date: dateTime,
-                                              startTime: startTime,
-                                              endTime: endTime,
-                                              services: services!,
-                                              description:
-                                                  descpController.text == ''
-                                                      ? l10n.defaultDescription
-                                                      : descpController.text,
-                                            ),
-                                          )
-                                        : AppointmentEdited(
-                                            appointment:
-                                                widget.appointment!.copyWith(
-                                              date: dateTime,
-                                              startTime: startTime,
-                                              endTime: endTime,
-                                              services: services,
-                                              description:
-                                                  descpController.text == ''
-                                                      ? l10n.defaultDescription
-                                                      : descpController.text,
-                                            ),
+                          if (isFullAppointments(
+                            appointments,
+                            startTime,
+                            endTime,
+                          )) {
+                            SASnackBar.show(
+                              context: context,
+                              message: l10n.fullAppointmentsError,
+                              isSuccess: false,
+                            );
+                          } else if (services == null) {
+                            SASnackBar.show(
+                              context: context,
+                              message: l10n.emptyServicesError,
+                              isSuccess: false,
+                            );
+                          } else {
+                            context.read<AppointmentBloc>().add(
+                                  widget.appointment == null
+                                      ? AppointmentAdded(
+                                          appointment: Appointment(
+                                            userId: user.id,
+                                            date: dateTime,
+                                            startTime: startTime,
+                                            endTime: endTime,
+                                            services: services!,
+                                            description:
+                                                descpController.text == ''
+                                                    ? l10n.defaultDescription
+                                                    : descpController.text,
                                           ),
-                                  );
-                            }
-                          },
-                          bgColor: colorScheme.primary,
-                          child: Text(
-                            widget.appointment == null
-                                ? l10n.createAppointmentButton
-                                : l10n.editAppointmentButton,
-                            style: textTheme.labelMedium!.copyWith(
-                              color: colorScheme.onPrimary,
-                            ),
+                                        )
+                                      : AppointmentEdited(
+                                          appointment:
+                                              widget.appointment!.copyWith(
+                                            date: dateTime,
+                                            startTime: startTime,
+                                            endTime: endTime,
+                                            services: services,
+                                            description:
+                                                descpController.text == ''
+                                                    ? l10n.defaultDescription
+                                                    : descpController.text,
+                                          ),
+                                        ),
+                                );
+                          }
+                        },
+                        bgColor: colorScheme.primary,
+                        child: Text(
+                          widget.appointment == null
+                              ? l10n.createAppointmentButton
+                              : l10n.editAppointmentButton,
+                          style: textTheme.labelMedium!.copyWith(
+                            color: colorScheme.onPrimary,
                           ),
                         ),
                       ),
-                    ],
-                  );
-                }
-                return Container();
+                    ),
+                  ],
+                );
               },
             ),
           ),
