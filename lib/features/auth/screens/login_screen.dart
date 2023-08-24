@@ -72,7 +72,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Input.phoneNumber(
               text: l10n.phoneNumber,
               controller: phoneNumberController,
-              height: 72,
               focusNode: phoneNumberFocusNode,
               onEditCompleted: () {
                 FocusScope.of(context).nextFocus();
@@ -90,7 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
             Input.password(
               text: l10n.password,
               controller: passwordController,
-              height: 72,
               focusNode: passwordFocusNode,
               onEditCompleted: () {
                 FocusScope.of(context).unfocus();
