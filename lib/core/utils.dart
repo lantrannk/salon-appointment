@@ -61,27 +61,6 @@ bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
       ),
     );
 
-/// Returns [bool] that [appointments] in period [startTime] to [endTime] is not full
-bool isFullAppointments(
-  List<Appointment> appointments,
-  DateTime startTime,
-  DateTime endTime,
-) {
-  final beforeTime = startTime.subtract(
-    const Duration(minutes: 1),
-  );
-
-  final startTimeConflict = appointments.where(
-    (e) => e.startTime.isAfter(beforeTime) && e.startTime.isBefore(endTime),
-  );
-
-  final endTimeConflict = appointments.where(
-    (e) => e.endTime.isAfter(beforeTime) && e.endTime.isBefore(endTime),
-  );
-
-  return startTimeConflict.length >= 5 || endTimeConflict.length >= 5;
-}
-
 /// Returns a sorted [appointments] list of a [date]
 List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
   final dateStr = dateFormat.format(date);
@@ -107,6 +86,8 @@ DateTime rangeEndDay(DateTime dateTime) => dateTime.add(
         days: DateTime.daysPerWeek - dateTime.weekday,
       ),
     );
+
+TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
 
 final today = DateTime.now();
 final firstDay = DateTime(today.year - 10, today.month, today.day);

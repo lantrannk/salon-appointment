@@ -11,6 +11,7 @@ import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../api/appointment_api.dart';
+import '../appointment_utils.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
@@ -67,8 +68,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     super.dispose();
   }
 
-  TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
-
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -76,21 +75,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
     final appointmentApi = AppointmentApi(http.Client());
-
-    String dateTimeChangeFailure(String error) {
-      switch (error) {
-        case 'before-now':
-          return l10n.invalidStartTimeError;
-        case 'different-time':
-          return l10n.invalidEndTimeError;
-        case 'break-conflict':
-          return l10n.breakTimeConflictError;
-        case 'closed-conflict':
-          return l10n.closedTimeError;
-        default:
-          return 'Unknown error';
-      }
-    }
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
