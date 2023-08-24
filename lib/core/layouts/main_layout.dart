@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 
 import '../../features/appointments/screens/new_appointment_screen.dart';
 import '../constants/assets.dart';
@@ -40,6 +41,7 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
+    final UserRepository userRepository = UserRepository();
 
     return Scaffold(
       appBar: AppBar(
@@ -54,16 +56,21 @@ class _MainLayoutState extends State<MainLayout> {
       ),
       body: widget.child,
       floatingActionButton: SAButton.floating(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewAppointmentScreen(
-              selectedDay: isBeforeNow(widget.selectedDay)
-                  ? DateTime.now()
-                  : widget.selectedDay,
+        onPressed: () async {
+          final user = await userRepository.getUser();
+
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewAppointmentScreen(
+                selectedDay: isBeforeNow(widget.selectedDay)
+                    ? DateTime.now()
+                    : widget.selectedDay,
+                user: user!,
+              ),
             ),
-          ),
-        ),
+          );
+        },
         child: SAIcons(
           icon: Assets.addIcon,
           size: 30,
