@@ -16,25 +16,6 @@ abstract class AppointmentState extends Equatable {
   DateTime get endTime => DateTime.now();
 }
 
-class UserLoadSuccess extends AppointmentState {
-  const UserLoadSuccess(this.user);
-
-  final User user;
-
-  @override
-  List<Object?> get props => [user];
-}
-
-class UserLoadFailure extends AppointmentState {
-  const UserLoadFailure({this.error});
-
-  @override
-  final String? error;
-
-  @override
-  List<Object?> get props => [error];
-}
-
 class AppointmentInitial extends AppointmentState {
   @override
   List<Object?> get props => [];

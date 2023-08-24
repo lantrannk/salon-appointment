@@ -4,8 +4,6 @@ abstract class AppointmentEvent {
   const AppointmentEvent();
 }
 
-class UserLoad extends AppointmentEvent {}
-
 class AppointmentLoad extends AppointmentEvent {}
 
 class AppointmentAdded extends AppointmentEvent {

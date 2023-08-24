@@ -25,7 +25,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentAdded>(_addAppointment);
     on<AppointmentEdited>(_editAppointment);
     on<AppointmentDateTimeChanged>(_changeDateTime);
-    on<UserLoad>(_getUser);
   }
 
   final AppointmentApi appointmentApi;
@@ -88,18 +87,6 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       emit(AppointmentRemoveSuccess());
     } on Exception catch (e) {
       emit(AppointmentRemoveFailure(error: e.toString()));
-    }
-  }
-
-  Future<void> _getUser(
-    UserLoad event,
-    Emitter<AppointmentState> emit,
-  ) async {
-    try {
-      final user = await userStorage.getUser();
-      emit(UserLoadSuccess(user!));
-    } on Exception catch (e) {
-      emit(UserLoadFailure(error: e.toString()));
     }
   }
 
