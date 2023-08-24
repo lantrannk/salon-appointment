@@ -4,7 +4,7 @@ import '../model/user.dart';
 class UserRepository {
   final userStorage = UserStorage();
 
-  Future<List<User>> loadUsers() async {
+  Future<List<User>> getUsers() async {
     final users = await userStorage.getUsers();
     return users;
   }
