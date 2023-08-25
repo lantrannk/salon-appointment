@@ -4,8 +4,6 @@ abstract class AppointmentEvent {
   const AppointmentEvent();
 }
 
-class UserLoad extends AppointmentEvent {}
-
 class AppointmentLoad extends AppointmentEvent {}
 
 class AppointmentAdded extends AppointmentEvent {
@@ -30,4 +28,18 @@ class AppointmentRemoved extends AppointmentEvent {
   });
 
   final String appointmentId;
+}
+
+class AppointmentDateTimeChanged extends AppointmentEvent {
+  const AppointmentDateTimeChanged({
+    required this.dateTime,
+    required this.startTime,
+    required this.endTime,
+  });
+
+  final DateTime dateTime;
+
+  final TimeOfDay startTime;
+
+  final TimeOfDay endTime;
 }

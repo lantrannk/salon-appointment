@@ -8,25 +8,12 @@ abstract class AppointmentState extends Equatable {
   List<User> get users => [];
 
   String? get error => '';
-}
 
-class UserLoadSuccess extends AppointmentState {
-  const UserLoadSuccess(this.user);
+  DateTime get date => DateTime.now();
 
-  final User user;
+  DateTime get startTime => DateTime.now();
 
-  @override
-  List<Object?> get props => [user];
-}
-
-class UserLoadFailure extends AppointmentState {
-  const UserLoadFailure({this.error});
-
-  @override
-  final String? error;
-
-  @override
-  List<Object?> get props => [error];
+  DateTime get endTime => DateTime.now();
 }
 
 class AppointmentInitial extends AppointmentState {
@@ -102,6 +89,46 @@ class AppointmentRemoveSuccess extends AppointmentState {
 
 class AppointmentRemoveFailure extends AppointmentState {
   const AppointmentRemoveFailure({this.error});
+
+  @override
+  final String? error;
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class AppointmentDateTimeChangeSuccess extends AppointmentState {
+  const AppointmentDateTimeChangeSuccess({
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+  });
+
+  @override
+  final DateTime date;
+
+  @override
+  final DateTime startTime;
+
+  @override
+  final DateTime endTime;
+
+  @override
+  List<Object?> get props => [date, startTime, endTime];
+}
+
+class AppointmentDateTimeChangeFailure extends AppointmentState {
+  const AppointmentDateTimeChangeFailure({this.error});
+
+  @override
+  final String? error;
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class AppointmentDateTimeBeforeChange extends AppointmentState {
+  const AppointmentDateTimeBeforeChange({this.error});
 
   @override
   final String? error;
