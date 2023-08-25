@@ -24,29 +24,30 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final UserRepository userRepo = UserRepository();
-
-    return BlocProvider<AuthBloc>(
-      create: (context) => AuthBloc(userRepo),
-      child: MaterialApp(
-        title: 'Salon Appointment',
-        theme: themeData,
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [
-          S.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: S.delegate.supportedLocales,
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const SplashScreen(),
-          '/login': (context) => const LoginScreen(),
-          '/calendar': (context) => const CalendarScreen(),
-          '/appointment': (context) => const AppointmentScreen(),
-          '/profile': (context) => const ProfileScreen(),
-        },
+    return RepositoryProvider(
+      create: (context) => UserRepository(),
+      child: BlocProvider<AuthBloc>(
+        create: (context) => AuthBloc(context.read<UserRepository>()),
+        child: MaterialApp(
+          title: 'Salon Appointment',
+          theme: themeData,
+          debugShowCheckedModeBanner: false,
+          localizationsDelegates: const [
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: S.delegate.supportedLocales,
+          initialRoute: '/',
+          routes: {
+            '/': (context) => const SplashScreen(),
+            '/login': (context) => const LoginScreen(),
+            '/calendar': (context) => const CalendarScreen(),
+            '/appointment': (context) => const AppointmentScreen(),
+            '/profile': (context) => const ProfileScreen(),
+          },
+        ),
       ),
     );
   }

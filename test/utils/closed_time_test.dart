@@ -9,10 +9,10 @@ void main() {
       expect(isClosedTime(time), false);
     });
 
-    test('time is 10:00 PM then return false', () {
+    test('time is 10:00 PM then return true', () {
       final time = DateTime(2023, 7, 20, 22, 0);
 
-      expect(isClosedTime(time), false);
+      expect(isClosedTime(time), true);
     });
 
     test('time is after 10:00 PM then return true', () {

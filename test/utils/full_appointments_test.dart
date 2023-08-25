@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:salon_appointment/core/utils.dart';
+import 'package:salon_appointment/features/appointments/appointment_utils.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 
 void main() {
@@ -20,8 +20,8 @@ void main() {
         },
         {
           'date': '2023-07-20T00:00:00.000',
-          'startTime': '2023-07-20T18:00:00.000',
-          'endTime': '2023-07-20T18:30:00.000',
+          'startTime': '2023-07-20T18:15:00.000',
+          'endTime': '2023-07-20T18:45:00.000',
           'userId': '1',
           'services': 'Non-Invasive Body Contouring',
           'description': 'Nothing to write.',
@@ -30,8 +30,8 @@ void main() {
         },
         {
           'date': '2023-07-20T00:00:00.000',
-          'startTime': '2023-07-20T18:00:00.000',
-          'endTime': '2023-07-20T18:30:00.000',
+          'startTime': '2023-07-20T18:05:00.000',
+          'endTime': '2023-07-20T18:35:00.000',
           'userId': '1',
           'services': 'Non-Invasive Body Contouring',
           'description': 'Nothing to write.',
@@ -50,8 +50,8 @@ void main() {
         },
         {
           'date': '2023-07-20T00:00:00.000',
-          'startTime': '2023-07-20T18:00:00.000',
-          'endTime': '2023-07-20T18:30:00.000',
+          'startTime': '2023-07-20T18:20:00.000',
+          'endTime': '2023-07-20T18:50:00.000',
           'userId': '1',
           'services': 'Back',
           'description': 'Nothing to write.',
@@ -105,15 +105,17 @@ void main() {
 
     test('there are less than 5 appointments at the time then return false',
         () {
-      final DateTime dateTime = DateTime(2023, 7, 19, 18, 0);
+      final DateTime startTime = DateTime(2023, 7, 19, 18, 0);
+      final DateTime endTime = DateTime(2023, 7, 19, 18, 30);
 
-      expect(isFullAppointments(appointments, dateTime), false);
+      expect(isFullAppointments(appointments, startTime, endTime), false);
     });
 
     test('there are 5 or more appointments at the time then return true', () {
-      final DateTime dateTime = DateTime(2023, 7, 20, 18, 0);
+      final DateTime startTime = DateTime(2023, 7, 20, 18, 0);
+      final DateTime endTime = DateTime(2023, 7, 20, 18, 30);
 
-      expect(isFullAppointments(appointments, dateTime), true);
+      expect(isFullAppointments(appointments, startTime, endTime), true);
     });
   });
 }

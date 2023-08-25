@@ -6,10 +6,10 @@ import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/storage/appointment_storage.dart';
-import '../../../core/storage/user_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
+import '../../auth/repository/user_repository.dart';
 import '../api/appointment_api.dart';
 import '../appointment_utils.dart';
 import '../bloc/appointment_bloc.dart';
@@ -37,7 +37,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   final descpController = TextEditingController();
   final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
-  final userStorage = UserStorage();
+  final userRepo = UserRepository();
 
   final nameFocusNode = FocusNode();
   final descpFocusNode = FocusNode();
@@ -78,9 +78,9 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi,
-        appointmentRepo,
-        userStorage,
+        appointmentApi: appointmentApi,
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
       ),
       child: Scaffold(
         appBar: AppBar(

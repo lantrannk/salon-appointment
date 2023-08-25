@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/storage/user_storage.dart';
 import '../../../core/utils.dart';
 import '../../auth/model/user.dart';
+import '../../auth/repository/user_repository.dart';
 import '../api/appointment_api.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
@@ -15,11 +15,11 @@ part 'appointment_event.dart';
 part 'appointment_state.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
-  AppointmentBloc(
-    this.appointmentApi,
-    this.appointmentRepository,
-    this.userStorage,
-  ) : super(AppointmentInitial()) {
+  AppointmentBloc({
+    required this.appointmentApi,
+    required this.appointmentRepository,
+    required this.userRepository,
+  }) : super(AppointmentInitial()) {
     on<AppointmentLoad>(_getAppointmentList);
     on<AppointmentRemoved>(_removeAppointment);
     on<AppointmentAdded>(_addAppointment);
@@ -29,7 +29,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
   final AppointmentApi appointmentApi;
   final AppointmentRepository appointmentRepository;
-  final UserStorage userStorage;
+  final UserRepository userRepository;
 
   Future<void> _getAppointmentList(
     AppointmentLoad event,
@@ -37,8 +37,11 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentLoadInProgress());
-      final List<Appointment> appointments = await appointmentRepository.load();
-      final List<User> users = await userStorage.getUsers();
+
+      final List<User> users = await userRepository.getUsers();
+      final User? user = await userRepository.getUser();
+      final List<Appointment> appointments =
+          await appointmentRepository.loadAllAppointments(user!);
 
       emit(
         AppointmentLoadSuccess(
