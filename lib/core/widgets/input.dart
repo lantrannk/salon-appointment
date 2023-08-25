@@ -104,12 +104,12 @@ class _PhoneNumberInput extends Input {
         hintText: text,
         errorText: errorText,
         errorStyle: const TextStyle(
-          height: 0.5,
+          height: 0.7,
           fontSize: 12,
         ),
         errorMaxLines: 1,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
+        prefix: const Padding(
+          padding: EdgeInsets.only(left: 10),
         ),
       ),
       onEditingComplete: onEditCompleted,
@@ -152,12 +152,12 @@ class _PasswordInput extends Input {
         hintText: text,
         errorText: errorText,
         errorStyle: const TextStyle(
-          height: 0.5,
+          height: 0.7,
           fontSize: 12,
         ),
         errorMaxLines: 1,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
+        prefix: const Padding(
+          padding: EdgeInsets.only(left: 10),
         ),
       ),
       onEditingComplete: onEditCompleted,
