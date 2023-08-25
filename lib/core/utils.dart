@@ -6,6 +6,7 @@ import 'constants/date_format.dart';
 /// Returns a list of [DateTime] objects from [first] to [last], inclusive.
 List<DateTime> daysInRange(DateTime first, DateTime last) {
   final dayCount = last.difference(first).inDays + 1;
+
   return List.generate(
     dayCount,
     (index) => DateTime.utc(first.year, first.month, first.day + index),
@@ -38,7 +39,7 @@ bool isBreakTime(DateTime time) {
 
 /// Returns [bool] that [time] conflict the close time or not
 bool isClosedTime(DateTime time) {
-  final DateTime closedTime = DateTime(time.year, time.month, time.day, 22, 0);
+  final DateTime closedTime = DateTime(time.year, time.month, time.day, 21, 59);
   final DateTime openedTime = DateTime(time.year, time.month, time.day, 8, 0);
 
   return time.isAfter(closedTime) || time.isBefore(openedTime);
@@ -60,13 +61,7 @@ bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
       ),
     );
 
-/// Returns [bool] that [appointments] at [dateTime] is not full
-bool isFullAppointments(List<Appointment> appointments, DateTime dateTime) {
-  final appointmentsOfDateTime =
-      appointments.where((e) => e.startTime == dateTime);
-  return appointmentsOfDateTime.length >= 5;
-}
-
+/// Returns a sorted [appointments] list of a [date]
 List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
   final dateStr = dateFormat.format(date);
 
@@ -78,17 +73,21 @@ List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
   return appointmentsOfDate;
 }
 
+/// Returns the start day of a week
 DateTime rangeStartDay(DateTime dateTime) => dateTime.subtract(
       Duration(
         days: dateTime.weekday - 1,
       ),
     );
 
+/// Returns the end day of a week
 DateTime rangeEndDay(DateTime dateTime) => dateTime.add(
       Duration(
         days: DateTime.daysPerWeek - dateTime.weekday,
       ),
     );
+
+TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
 
 final today = DateTime.now();
 final firstDay = DateTime(today.year - 10, today.month, today.day);
