@@ -21,7 +21,6 @@ class Input extends StatelessWidget {
     required TextEditingController controller,
     required FocusNode focusNode,
     required VoidCallback onEditCompleted,
-    double? height,
     String? errorText,
     Function(String)? onChanged,
   }) = _PhoneNumberInput;
@@ -31,7 +30,6 @@ class Input extends StatelessWidget {
     required TextEditingController controller,
     required FocusNode focusNode,
     required VoidCallback onEditCompleted,
-    double? height,
     String? errorText,
     Function(String)? onChanged,
   }) = _PasswordInput;
@@ -81,7 +79,6 @@ class _PhoneNumberInput extends Input {
     required super.controller,
     required super.focusNode,
     required super.onEditCompleted,
-    super.height,
     this.errorText,
     this.onChanged,
   });
@@ -94,29 +91,31 @@ class _PhoneNumberInput extends Input {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
-      height: height,
-      child: TextFormField(
-        controller: controller,
-        enableInteractiveSelection: true,
-        focusNode: focusNode,
-        keyboardType: TextInputType.phone,
-        style: textTheme.labelSmall!.copyWith(
-          color: colorScheme.onPrimary,
-          letterSpacing: -0.24,
-        ),
-        decoration: InputDecoration(
-          hintText: text,
-          errorText: errorText,
-          contentPadding: const EdgeInsets.only(
-            left: 20,
-          ),
-        ),
-        onEditingComplete: onEditCompleted,
-        validator: FormValidation.isValidPhoneNumber,
-        textInputAction: TextInputAction.next,
-        onChanged: onChanged,
+    return TextFormField(
+      controller: controller,
+      enableInteractiveSelection: true,
+      focusNode: focusNode,
+      keyboardType: TextInputType.phone,
+      style: textTheme.labelSmall!.copyWith(
+        color: colorScheme.onPrimary,
+        letterSpacing: -0.24,
       ),
+      decoration: InputDecoration(
+        hintText: text,
+        errorText: errorText,
+        errorStyle: const TextStyle(
+          height: 0.7,
+          fontSize: 12,
+        ),
+        errorMaxLines: 1,
+        prefix: const Padding(
+          padding: EdgeInsets.only(left: 10),
+        ),
+      ),
+      onEditingComplete: onEditCompleted,
+      validator: FormValidation.isValidPhoneNumber,
+      textInputAction: TextInputAction.next,
+      onChanged: onChanged,
     );
   }
 }
@@ -128,7 +127,6 @@ class _PasswordInput extends Input {
     required super.controller,
     required super.focusNode,
     required super.onEditCompleted,
-    super.height,
     this.errorText,
     this.onChanged,
   });
@@ -141,28 +139,30 @@ class _PasswordInput extends Input {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
-      height: height,
-      child: TextFormField(
-        controller: controller,
-        enableInteractiveSelection: true,
-        focusNode: focusNode,
-        obscureText: true,
-        style: textTheme.labelSmall!.copyWith(
-          color: colorScheme.onPrimary,
-          letterSpacing: -0.24,
-        ),
-        decoration: InputDecoration(
-          hintText: text,
-          errorText: errorText,
-          contentPadding: const EdgeInsets.only(
-            left: 20,
-          ),
-        ),
-        onEditingComplete: onEditCompleted,
-        validator: FormValidation.isValidPassword,
-        onChanged: onChanged,
+    return TextFormField(
+      controller: controller,
+      enableInteractiveSelection: true,
+      focusNode: focusNode,
+      obscureText: true,
+      style: textTheme.labelSmall!.copyWith(
+        color: colorScheme.onPrimary,
+        letterSpacing: -0.24,
       ),
+      decoration: InputDecoration(
+        hintText: text,
+        errorText: errorText,
+        errorStyle: const TextStyle(
+          height: 0.7,
+          fontSize: 12,
+        ),
+        errorMaxLines: 1,
+        prefix: const Padding(
+          padding: EdgeInsets.only(left: 10),
+        ),
+      ),
+      onEditingComplete: onEditCompleted,
+      validator: FormValidation.isValidPassword,
+      onChanged: onChanged,
     );
   }
 }
