@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../core/constants/date_format.dart';
@@ -9,7 +8,6 @@ import '../../../core/layouts/main_layout.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/repository/user_repository.dart';
-import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
@@ -26,7 +24,6 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
   final userRepo = UserRepository();
 
@@ -48,7 +45,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi: appointmentApi,
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
       )..add(AppointmentLoad()),

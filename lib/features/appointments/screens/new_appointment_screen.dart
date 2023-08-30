@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
@@ -9,7 +8,6 @@ import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
-import '../api/appointment_api.dart';
 import '../appointment_utils.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
@@ -34,7 +32,6 @@ class NewAppointmentScreen extends StatefulWidget {
 
 class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
   final descpController = TextEditingController();
-  final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
   final userRepo = UserRepository();
 
@@ -73,11 +70,9 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
-    final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi: appointmentApi,
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
       ),

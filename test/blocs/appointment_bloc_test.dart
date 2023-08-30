@@ -5,7 +5,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
@@ -15,8 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
 import '../constants/mock_data/mock_data.dart';
-
-class MockAppointmentApi extends Mock implements AppointmentApi {}
 
 class MockAppointmentRepo extends Mock implements AppointmentRepository {}
 
@@ -29,7 +26,6 @@ void main() {
   late String appointmentEncoded;
   late Appointment appointment;
 
-  late AppointmentApi appointmentApi;
   late AppointmentRepository appointmentRepo;
   late UserRepository userRepo;
   late SharedPreferences prefs;
@@ -40,7 +36,6 @@ void main() {
     SharedPreferences.setMockInitialValues({});
 
     prefs = await SharedPreferences.getInstance();
-    appointmentApi = MockAppointmentApi();
     appointmentRepo = MockAppointmentRepo();
     userRepo = MockUserRepository();
 
@@ -83,7 +78,6 @@ void main() {
         );
 
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -122,7 +116,6 @@ void main() {
         );
 
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -152,12 +145,11 @@ void main() {
       'add appointment successful',
       build: () {
         when(
-          () => appointmentApi.addAppointment(appointment),
+          () => appointmentRepo.addAppointment(appointment),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -175,12 +167,11 @@ void main() {
       'add appointment with not modified error',
       build: () {
         when(
-          () => appointmentApi.addAppointment(appointment),
+          () => appointmentRepo.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -200,12 +191,11 @@ void main() {
       'add appointment with bad request error',
       build: () {
         when(
-          () => appointmentApi.addAppointment(appointment),
+          () => appointmentRepo.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -225,12 +215,11 @@ void main() {
       'add appointment with not found error',
       build: () {
         when(
-          () => appointmentApi.addAppointment(appointment),
+          () => appointmentRepo.addAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -259,12 +248,11 @@ void main() {
       'update appointment successful',
       build: () {
         when(
-          () => appointmentApi.updateAppointment(appointment),
+          () => appointmentRepo.editAppointment(appointment),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -282,12 +270,11 @@ void main() {
       'update appointment with not modified error',
       build: () {
         when(
-          () => appointmentApi.updateAppointment(appointment),
+          () => appointmentRepo.editAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -307,12 +294,11 @@ void main() {
       'update appointment with bad request error',
       build: () {
         when(
-          () => appointmentApi.updateAppointment(appointment),
+          () => appointmentRepo.editAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -332,12 +318,11 @@ void main() {
       'update appointment with not found error',
       build: () {
         when(
-          () => appointmentApi.updateAppointment(appointment),
+          () => appointmentRepo.editAppointment(appointment),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -366,12 +351,11 @@ void main() {
       'remove appointment successful',
       build: () {
         when(
-          () => appointmentApi.deleteAppointment(appointment.id!),
+          () => appointmentRepo.removeAppointment(appointment.id!),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -391,12 +375,11 @@ void main() {
       'remove appointment with not modified error',
       build: () {
         when(
-          () => appointmentApi.deleteAppointment(appointment.id!),
+          () => appointmentRepo.removeAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -418,12 +401,11 @@ void main() {
       'remove appointment with bad request error',
       build: () {
         when(
-          () => appointmentApi.deleteAppointment(appointment.id!),
+          () => appointmentRepo.removeAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
@@ -445,12 +427,11 @@ void main() {
       'remove appointment with not found error',
       build: () {
         when(
-          () => appointmentApi.deleteAppointment(appointment.id!),
+          () => appointmentRepo.removeAppointment(appointment.id!),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
         return AppointmentBloc(
-          appointmentApi: appointmentApi,
           appointmentRepository: appointmentRepo,
           userRepository: userRepo,
         );
