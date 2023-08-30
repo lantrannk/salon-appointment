@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
-import '../../../core/storage/appointment_storage.dart';
 import '../../../core/utils.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
@@ -264,7 +263,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       child: SAButton.elevated(
                         onPressed: () async {
                           final appointments =
-                              await AppointmentStorage.getAllAppointments();
+                              await appointmentRepo.getAllAppointments();
 
                           if (isFullAppointments(
                             appointments,
