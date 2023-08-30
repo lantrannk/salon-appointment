@@ -183,7 +183,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         if (date != null && date != dateTime) {
                           context.read<AppointmentBloc>().add(
                                 AppointmentDateTimeChanged(
-                                  dateTime: date,
+                                  date: date,
                                   startTime: getTime(startTime),
                                   endTime: getTime(endTime),
                                 ),
@@ -203,7 +203,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         if (time != null && time != getTime(startTime)) {
                           context.read<AppointmentBloc>().add(
                                 AppointmentDateTimeChanged(
-                                  dateTime: dateTime,
+                                  date: dateTime,
                                   startTime: time,
                                   endTime: getTime(
                                     autoAddHalfHour(
@@ -222,7 +222,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                         if (time != null && time != getTime(endTime)) {
                           context.read<AppointmentBloc>().add(
                                 AppointmentDateTimeChanged(
-                                  dateTime: dateTime,
+                                  date: dateTime,
                                   startTime: getTime(startTime),
                                   endTime: time,
                                 ),
@@ -232,7 +232,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     ),
                     const SizedBox(height: 12),
                     Dropdown(
-                        items: items,
+                        items: allServices,
                         selectedValue: services,
                         onChanged: (value) {
                           setState(() {
@@ -264,7 +264,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       child: SAButton.elevated(
                         onPressed: () async {
                           final appointments =
-                              await AppointmentStorage.getAppointments();
+                              await AppointmentStorage.getAllAppointments();
 
                           if (isFullAppointments(
                             appointments,

@@ -32,12 +32,12 @@ class AppointmentRemoved extends AppointmentEvent {
 
 class AppointmentDateTimeChanged extends AppointmentEvent {
   const AppointmentDateTimeChanged({
-    required this.dateTime,
+    required this.date,
     required this.startTime,
     required this.endTime,
   });
 
-  final DateTime dateTime;
+  final DateTime date;
 
   final TimeOfDay startTime;
 

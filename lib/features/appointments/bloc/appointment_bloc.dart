@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/error_message.dart';
 import '../../../core/utils.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
@@ -97,7 +98,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     AppointmentDateTimeChanged event,
     Emitter<AppointmentState> emit,
   ) {
-    final date = event.dateTime;
+    final date = event.date;
     final startTime = setDateTime(
       date,
       event.startTime,
@@ -112,25 +113,25 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
       emit(
         const AppointmentDateTimeChangeFailure(
-          error: 'before-now',
+          error: ErrorMessage.beforeNow,
         ),
       );
     } else if (!isAfterStartTime(startTime, endTime)) {
       emit(
         const AppointmentDateTimeChangeFailure(
-          error: 'different-time',
+          error: ErrorMessage.differentTime,
         ),
       );
     } else if (isBreakTime(startTime) || isBreakTime(endTime)) {
       emit(
         const AppointmentDateTimeChangeFailure(
-          error: 'break-conflict',
+          error: ErrorMessage.breakConflict,
         ),
       );
     } else if (isClosedTime(startTime) || isClosedTime(endTime)) {
       emit(
         const AppointmentDateTimeChangeFailure(
-          error: 'closed-conflict',
+          error: ErrorMessage.closedConflict,
         ),
       );
     } else {

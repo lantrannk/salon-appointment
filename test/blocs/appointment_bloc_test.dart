@@ -14,7 +14,7 @@ import 'package:salon_appointment/features/auth/repository/user_repository.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/api_error_message.dart';
-import '../mock_data/mock_data.dart';
+import '../constants/mock_data/mock_data.dart';
 
 class MockAppointmentApi extends Mock implements AppointmentApi {}
 

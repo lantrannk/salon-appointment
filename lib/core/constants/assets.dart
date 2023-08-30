@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Assets {
-  static const _kFontFam = 'CustomIcons';
+  static const fontFamily = 'CustomIcons';
 
-  static const String? _kFontPkg = null;
+  static const String? fontPackage = null;
 
   static const AssetImage bgImage = AssetImage('assets/images/background.png');
 
@@ -23,31 +23,31 @@ class Assets {
 
   static const IconData checkIcon = IconData(
     0xe800,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
+    fontFamily: fontFamily,
+    fontPackage: fontPackage,
   );
 
   static const IconData notificationsIcon = IconData(
     0xe801,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
+    fontFamily: fontFamily,
+    fontPackage: fontPackage,
   );
 
   static const IconData personIcon = IconData(
     0xe802,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
+    fontFamily: fontFamily,
+    fontPackage: fontPackage,
   );
 
   static const IconData scheduleIcon = IconData(
     0xe803,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
+    fontFamily: fontFamily,
+    fontPackage: fontPackage,
   );
 
   static const IconData differentIcon = IconData(
     0xe804,
-    fontFamily: _kFontFam,
-    fontPackage: _kFontPkg,
+    fontFamily: fontFamily,
+    fontPackage: fontPackage,
   );
 }

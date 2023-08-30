@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/error_message.dart';
 import '../../core/generated/l10n.dart';
 import 'model/appointment.dart';
 
@@ -7,16 +8,16 @@ String dateTimeChangeFailure(BuildContext context, String error) {
   final l10n = S.of(context);
 
   switch (error) {
-    case 'before-now':
+    case ErrorMessage.beforeNow:
       return l10n.invalidStartTimeError;
-    case 'different-time':
+    case ErrorMessage.differentTime:
       return l10n.invalidEndTimeError;
-    case 'break-conflict':
+    case ErrorMessage.breakConflict:
       return l10n.breakTimeConflictError;
-    case 'closed-conflict':
+    case ErrorMessage.closedConflict:
       return l10n.closedTimeError;
     default:
-      return 'Unknown error';
+      return ErrorMessage.unknown;
   }
 }
 

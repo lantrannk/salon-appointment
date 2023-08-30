@@ -7,7 +7,7 @@ import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../mock_data/mock_data.dart';
+import '../constants/mock_data/mock_data.dart';
 
 class MockUserRepo extends Mock implements UserRepository {}
 
