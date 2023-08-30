@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:salon_appointment/core/constants/storage_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/appointments/api/appointment_api.dart';
@@ -13,14 +14,16 @@ class AppointmentStorage {
     final String appointments = await appointmentApi.getAppointments();
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('appointments', appointments);
+    await prefs.setString(StorageKey.allAppointmentsKey, appointments);
   }
 
   /// Returns a [List] of [Appointment] from storage
-  static Future<List<Appointment>> getAppointments() async {
+  static Future<List<Appointment>> getAllAppointments() async {
     await setAppointments();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String appointmentsStr = prefs.getString('appointments')!;
+    final String appointmentsStr = prefs.getString(
+      StorageKey.allAppointmentsKey,
+    )!;
     final List<Appointment> appointments =
         (json.decode(appointmentsStr) as List)
             .map((e) => Appointment.fromJson(e))
@@ -29,8 +32,10 @@ class AppointmentStorage {
     return appointments;
   }
 
-  static Future<List<Appointment>> getAppointmentsOfUser(String userId) async {
-    final List<Appointment> appointments = await getAppointments();
+  static Future<List<Appointment>> getAppointmentsByUserId(
+    String userId,
+  ) async {
+    final List<Appointment> appointments = await getAllAppointments();
     final List<Appointment> appointmentsOfUser =
         appointments.where((e) => e.userId == userId).toList();
     return appointmentsOfUser;

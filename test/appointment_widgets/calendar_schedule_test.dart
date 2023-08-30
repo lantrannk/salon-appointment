@@ -6,8 +6,8 @@ import 'package:salon_appointment/core/constants/assets.dart';
 import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constants/mock_data/mock_data.dart';
 import '../helpers/pump_app.dart';
-import '../mock_data/mock_data.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
