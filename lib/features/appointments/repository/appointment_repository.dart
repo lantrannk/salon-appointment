@@ -47,4 +47,16 @@ class AppointmentRepository {
         appointments.where((e) => e.userId == userId).toList();
     return appointmentsOfUser;
   }
+
+  Future<void> addAppointment(Appointment appointment) async {
+    await appointmentApi.addAppointment(appointment);
+  }
+
+  Future<void> editAppointment(Appointment appointment) async {
+    await appointmentApi.updateAppointment(appointment);
+  }
+
+  Future<void> removeAppointment(String appointmentId) async {
+    await appointmentApi.deleteAppointment(appointmentId);
+  }
 }
