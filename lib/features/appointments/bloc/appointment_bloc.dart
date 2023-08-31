@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/error_message.dart';
-import '../../../core/utils.dart';
+import '../../../core/utils/common.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
 import '../api/appointment_api.dart';
