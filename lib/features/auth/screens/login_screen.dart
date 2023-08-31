@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/common_layout.dart';
 import '../../../core/validations/validations.dart';
@@ -112,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   }
                   if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, '/calendar');
+                    Navigator.pushReplacementNamed(context, Routes.calendar);
                   }
                   if (state is LoginFailure) {
                     loadingIndicator.hide(context);
