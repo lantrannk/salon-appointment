@@ -17,12 +17,12 @@ import '../screens/appointments_screen.dart';
 class NewAppointmentScreen extends StatefulWidget {
   const NewAppointmentScreen({
     required this.selectedDay,
-    required this.user,
+    this.user,
     this.appointment,
     super.key,
   });
 
-  final User user;
+  final User? user;
   final Appointment? appointment;
   final DateTime selectedDay;
 
@@ -50,11 +50,21 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       );
   late DateTime endTime =
       widget.appointment?.endTime ?? autoAddHalfHour(startTime);
+
   late String? services = widget.appointment?.services;
+  late User user;
 
   @override
   void initState() {
     descpController.text = widget.appointment?.description ?? '';
+    user = const User(
+      id: '',
+      name: '',
+      phoneNumber: '',
+      avatar: '',
+      password: '',
+      isAdmin: false,
+    );
     super.initState();
   }
 
@@ -75,7 +85,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       create: (_) => AppointmentBloc(
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
-      ),
+      )..add(AppointmentInitialize()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
@@ -104,6 +114,17 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
             child: BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
                 switch (state.runtimeType) {
+                  case AppointmentInitializeSuccess:
+                    user = widget.user ?? state.user;
+                    break;
+                  case AppointmentInitializeFailure:
+                    Navigator.pop(ctx);
+                    SASnackBar.show(
+                      context: context,
+                      message: state.error!,
+                      isSuccess: false,
+                    );
+                    break;
                   case AppointmentDateTimeChangeSuccess:
                     dateTime = state.date;
                     startTime = state.startTime;
@@ -156,7 +177,6 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                 }
               },
               builder: (context, state) {
-                final User user = widget.user;
                 return Column(
                   children: [
                     const SizedBox(height: 12),
