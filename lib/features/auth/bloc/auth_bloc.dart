@@ -53,7 +53,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(LogoutInProgress());
-    await userRepo.removeUser();
+    await userRepo.clearStorage();
     emit(LogoutSuccess());
   }
 
