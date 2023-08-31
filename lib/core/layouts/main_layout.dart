@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../features/appointments/screens/new_appointment_screen.dart';
 import '../constants/assets.dart';
 import '../generated/l10n.dart';
-import '../utils.dart';
+import '../utils/common.dart';
 import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {

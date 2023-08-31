@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:salon_appointment/features/appointments/appointment_utils.dart';
+import 'package:salon_appointment/core/utils/common.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 
 void main() {

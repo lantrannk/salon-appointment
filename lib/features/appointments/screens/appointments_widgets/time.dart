@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/assets.dart';
-import '../../../../core/utils.dart';
+import '../../../../core/utils/common.dart';
 import '../../../../core/widgets/widgets.dart';
 
 class Time extends StatelessWidget {

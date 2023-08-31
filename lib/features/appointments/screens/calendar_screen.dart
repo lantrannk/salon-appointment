@@ -5,7 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/constants/date_format.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
-import '../../../core/utils.dart';
+import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/repository/user_repository.dart';
 import '../bloc/appointment_bloc.dart';

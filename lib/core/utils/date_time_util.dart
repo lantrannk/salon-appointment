@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../features/appointments/model/appointment.dart';
-import 'constants/date_format.dart';
+import '../../features/appointments/model/appointment.dart';
+import '../constants/date_format.dart';
 
 /// Returns a list of [DateTime] objects from [first] to [last], inclusive.
 List<DateTime> daysInRange(DateTime first, DateTime last) {
@@ -60,18 +60,6 @@ bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
         ),
       ),
     );
-
-/// Returns a sorted [appointments] list of a [date]
-List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
-  final dateStr = dateFormat.format(date);
-
-  final List<Appointment> appointmentsOfDate = appointments
-      .where((e) => dateFormat.format(e.date) == dateStr)
-      .toList()
-    ..sort((a, b) => a.startTime.compareTo(b.startTime));
-
-  return appointmentsOfDate;
-}
 
 /// Returns the start day of a week
 DateTime rangeStartDay(DateTime dateTime) => dateTime.subtract(
