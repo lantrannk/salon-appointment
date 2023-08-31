@@ -24,6 +24,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentAdded>(_addAppointment);
     on<AppointmentEdited>(_editAppointment);
     on<AppointmentDateTimeChanged>(_changeDateTime);
+    on<AppointmentInitialize>(_getUser);
   }
 
   final AppointmentRepository appointmentRepository;
@@ -86,6 +87,31 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
       emit(AppointmentRemoveInProgress());
       await appointmentRepository.removeAppointment(event.appointmentId);
       emit(AppointmentRemoveSuccess());
+    } on Exception catch (e) {
+      emit(AppointmentRemoveFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _getUser(
+    AppointmentInitialize event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    try {
+      emit(AppointmentInitializeInProgress());
+      final User? user = await userRepository.getUser();
+      if (user == null) {
+        emit(
+          const AppointmentRemoveFailure(
+            error: ErrorMessage.unknown,
+          ),
+        );
+      } else {
+        emit(
+          AppointmentInitializeSuccess(
+            user: user,
+          ),
+        );
+      }
     } on Exception catch (e) {
       emit(AppointmentRemoveFailure(error: e.toString()));
     }
