@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/constants/error_message.dart';
-import '../../core/generated/l10n.dart';
-import 'model/appointment.dart';
+import '../../features/appointments/model/appointment.dart';
+import '../constants/date_format.dart';
+import '../constants/error_message.dart';
+import '../generated/l10n.dart';
 
 String dateTimeChangeFailure(BuildContext context, String error) {
   final l10n = S.of(context);
@@ -40,4 +41,16 @@ bool isFullAppointments(
   );
 
   return startTimeConflict.length >= 5 || endTimeConflict.length >= 5;
+}
+
+/// Returns a sorted [appointments] list of a [date]
+List<Appointment> groupByDate(List<Appointment> appointments, DateTime date) {
+  final dateStr = dateFormat.format(date);
+
+  final List<Appointment> appointmentsOfDate = appointments
+      .where((e) => dateFormat.format(e.date) == dateStr)
+      .toList()
+    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+
+  return appointmentsOfDate;
 }

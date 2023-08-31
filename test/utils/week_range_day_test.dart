@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:salon_appointment/core/utils.dart';
+import 'package:salon_appointment/core/utils/common.dart';
 
 void main() {
   group('test get range day of a week -', () {
