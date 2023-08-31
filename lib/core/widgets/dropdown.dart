@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
 
-import '../constants/assets.dart';
+import '../constants/constants.dart';
+import 'widgets.dart';
 
 class Dropdown extends StatelessWidget {
   const Dropdown({

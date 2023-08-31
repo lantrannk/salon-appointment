@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/appointments/model/appointment.dart';
-import '../constants/date_format.dart';
-import '../constants/error_message.dart';
+import '../constants/constants.dart';
 import '../generated/l10n.dart';
 
 String dateTimeChangeFailure(BuildContext context, String error) {

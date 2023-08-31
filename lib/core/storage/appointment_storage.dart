@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:salon_appointment/core/constants/storage_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../features/appointments/api/appointment_api.dart';
 import '../../features/appointments/model/appointment.dart';
+import '../constants/constants.dart';
 
 class AppointmentStorage {
   /// Save a [List] of [String] appointment encode
