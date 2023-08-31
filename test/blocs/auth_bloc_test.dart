@@ -31,7 +31,7 @@ void main() {
     when(() => userRepo.getUser())
         .thenAnswer((_) async => MockDataUser.adminUser);
 
-    when(() => userRepo.removeUser()).thenAnswer((_) async => Future.value());
+    when(() => userRepo.clearStorage()).thenAnswer((_) async => Future.value());
   });
 
   group('test auth bloc: login -', () {

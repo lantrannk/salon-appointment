@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 
 import '../../features/appointments/screens/new_appointment_screen.dart';
@@ -41,7 +42,7 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final UserRepository userRepository = UserRepository();
+    final UserRepository userRepository = context.read<UserRepository>();
 
     return Scaffold(
       appBar: AppBar(
