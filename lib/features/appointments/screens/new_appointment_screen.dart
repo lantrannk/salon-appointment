@@ -232,6 +232,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     const SizedBox(height: 12),
                     Dropdown(
                         items: allServices,
+                        hint: l10n.servicesDropdownHint,
                         selectedValue: services,
                         onChanged: (value) {
                           setState(() {

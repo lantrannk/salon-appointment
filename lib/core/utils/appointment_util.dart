@@ -18,7 +18,7 @@ String dateTimeChangeFailure(BuildContext context, String error) {
     case ErrorMessage.closedConflict:
       return l10n.closedTimeError;
     default:
-      return ErrorMessage.unknown;
+      return l10n.unknownError;
   }
 }
 
