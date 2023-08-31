@@ -118,14 +118,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (state is LoginFailure) {
                     loadingIndicator.hide(context);
                     switch (state.error) {
-                      case 'invalid-account':
+                      case ErrorMessage.invalidAccount:
                         SASnackBar.show(
                           context: context,
                           message: l10n.invalidAccountError,
                           isSuccess: false,
                         );
                         break;
-                      case 'incorrect-account':
+                      case ErrorMessage.incorrectAccount:
                         SASnackBar.show(
                           context: context,
                           message: l10n.incorrectAccountError,
