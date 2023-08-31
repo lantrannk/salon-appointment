@@ -7,5 +7,7 @@ class ErrorMessage {
 
   static const String closedConflict = 'closed-conflict';
 
-  static const String unknown = 'Unknown error';
+  static const String invalidAccount = 'invalid-account';
+
+  static const String incorrectAccount = 'incorrect-account';
 }
