@@ -200,6 +200,16 @@ class S {
     );
   }
 
+  /// `Select Services`
+  String get servicesDropdownHint {
+    return Intl.message(
+      'Select Services',
+      name: 'servicesDropdownHint',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Nothing to write.`
   String get defaultDescription {
     return Intl.message(
@@ -465,6 +475,16 @@ class S {
     return Intl.message(
       'This time is full of appointments. Please pick another time.',
       name: 'fullAppointmentsError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong.`
+  String get unknownError {
+    return Intl.message(
+      'Something went wrong.',
+      name: 'unknownError',
       desc: '',
       args: [],
     );

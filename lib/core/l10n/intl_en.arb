@@ -14,6 +14,7 @@
   "profileAppBarTitle": "Profile",
   "editAppointmentAppBarTitle": "Edit Appointment",
   "emptyAppointments": "There are no appointments.",
+  "servicesDropdownHint": "Select Services",
   "defaultDescription": "Nothing to write.",
   "description": "Description",
   "createAppointmentButton": "Create New Appointment",
@@ -40,5 +41,6 @@
   "unableEditError": "You cannot edit appointments in less than 24 hours.",
   "invalidEndTimeError": "The end time must be after the start time of at least 30 minutes.",
   "invalidStartTimeError": "You cannot choose a time before now.",
-  "fullAppointmentsError": "This time is full of appointments. Please pick another time."
+  "fullAppointmentsError": "This time is full of appointments. Please pick another time.",
+  "unknownError": "Something went wrong."
 }
