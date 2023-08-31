@@ -34,6 +34,7 @@ void main() {
     dropdownWidget = Scaffold(
       body: Dropdown(
         items: const ['1', '2', '3'],
+        hint: 'Select Services',
         selectedValue: selectedValue,
         onChanged: onChanged,
       ),
