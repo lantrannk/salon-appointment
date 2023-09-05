@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../core/constants/constants.dart';
@@ -10,12 +9,11 @@ import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
-import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
 import 'appointments_widgets/appointments_widgets.dart';
-import 'new_appointment_screen.dart';
+import 'appointment_form.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
@@ -30,7 +28,6 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _AppointmentScreenState extends State<AppointmentScreen> {
-  final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
   final userRepo = UserRepository();
 
@@ -53,7 +50,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi: appointmentApi,
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
       )..add(AppointmentLoad()),
@@ -207,7 +203,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                     MaterialPageRoute(
                                       builder: (_) => BlocProvider.value(
                                         value: ctx.read<AppointmentBloc>(),
-                                        child: NewAppointmentScreen(
+                                        child: AppointmentForm(
                                           appointment: events[index],
                                           user: findUser(events[index].userId),
                                           selectedDay: _selectedDay!,

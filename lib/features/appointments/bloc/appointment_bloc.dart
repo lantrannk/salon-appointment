@@ -8,7 +8,6 @@ import '../../../core/constants/constants.dart';
 import '../../../core/utils/common.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
-import '../api/appointment_api.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
 
@@ -17,7 +16,6 @@ part 'appointment_state.dart';
 
 class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   AppointmentBloc({
-    required this.appointmentApi,
     required this.appointmentRepository,
     required this.userRepository,
   }) : super(AppointmentInitial()) {
@@ -26,9 +24,9 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentAdded>(_addAppointment);
     on<AppointmentEdited>(_editAppointment);
     on<AppointmentDateTimeChanged>(_changeDateTime);
+    on<AppointmentInitialize>(_getUser);
   }
 
-  final AppointmentApi appointmentApi;
   final AppointmentRepository appointmentRepository;
   final UserRepository userRepository;
 
@@ -61,7 +59,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAddInProgress());
-      await appointmentApi.addAppointment(event.appointment);
+      await appointmentRepository.addAppointment(event.appointment);
       emit(AppointmentAddSuccess());
     } on Exception catch (e) {
       emit(AppointmentAddFailure(error: e.toString()));
@@ -74,7 +72,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentAddInProgress());
-      await appointmentApi.updateAppointment(event.appointment);
+      await appointmentRepository.editAppointment(event.appointment);
       emit(AppointmentEditSuccess());
     } on Exception catch (e) {
       emit(AppointmentAddFailure(error: e.toString()));
@@ -87,8 +85,33 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
   ) async {
     try {
       emit(AppointmentRemoveInProgress());
-      await appointmentApi.deleteAppointment(event.appointmentId);
+      await appointmentRepository.removeAppointment(event.appointmentId);
       emit(AppointmentRemoveSuccess());
+    } on Exception catch (e) {
+      emit(AppointmentRemoveFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _getUser(
+    AppointmentInitialize event,
+    Emitter<AppointmentState> emit,
+  ) async {
+    try {
+      emit(AppointmentInitializeInProgress());
+      final User? user = await userRepository.getUser();
+      if (user == null) {
+        emit(
+          const AppointmentRemoveFailure(
+            error: ErrorMessage.unknownUser,
+          ),
+        );
+      } else {
+        emit(
+          AppointmentInitializeSuccess(
+            user: user,
+          ),
+        );
+      }
     } on Exception catch (e) {
       emit(AppointmentRemoveFailure(error: e.toString()));
     }

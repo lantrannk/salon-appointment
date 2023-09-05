@@ -10,4 +10,6 @@ class ErrorMessage {
   static const String invalidAccount = 'invalid-account';
 
   static const String incorrectAccount = 'incorrect-account';
+
+  static const String unknownUser = 'unknown-user';
 }
