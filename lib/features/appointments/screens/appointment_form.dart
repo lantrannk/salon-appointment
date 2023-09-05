@@ -1,39 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
-import '../../../core/storage/appointment_storage.dart';
 import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
-import '../api/appointment_api.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
 import '../screens/appointments_screen.dart';
 
-class NewAppointmentScreen extends StatefulWidget {
-  const NewAppointmentScreen({
+class AppointmentForm extends StatefulWidget {
+  const AppointmentForm({
     required this.selectedDay,
-    required this.user,
+    this.user,
     this.appointment,
     super.key,
   });
 
-  final User user;
+  final User? user;
   final Appointment? appointment;
   final DateTime selectedDay;
 
   @override
-  State<NewAppointmentScreen> createState() => _NewAppointmentScreenState();
+  State<AppointmentForm> createState() => _AppointmentFormState();
 }
 
-class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
+class _AppointmentFormState extends State<AppointmentForm> {
   final descpController = TextEditingController();
-  final appointmentApi = AppointmentApi(http.Client());
   final appointmentRepo = AppointmentRepository();
   final userRepo = UserRepository();
 
@@ -52,11 +48,14 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
       );
   late DateTime endTime =
       widget.appointment?.endTime ?? autoAddHalfHour(startTime);
+
   late String? services = widget.appointment?.services;
+  late User? user;
 
   @override
   void initState() {
     descpController.text = widget.appointment?.description ?? '';
+    user = widget.user;
     super.initState();
   }
 
@@ -72,14 +71,12 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
-    final appointmentApi = AppointmentApi(http.Client());
 
     return BlocProvider<AppointmentBloc>(
       create: (_) => AppointmentBloc(
-        appointmentApi: appointmentApi,
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
-      ),
+      )..add(AppointmentInitialize()),
       child: Scaffold(
         appBar: AppBar(
           title: SAText.appBarTitle(
@@ -108,6 +105,17 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
             child: BlocConsumer<AppointmentBloc, AppointmentState>(
               listener: (ctx, state) {
                 switch (state.runtimeType) {
+                  case AppointmentInitializeSuccess:
+                    user ??= state.user;
+                    break;
+                  case AppointmentInitializeFailure:
+                    Navigator.pop(ctx);
+                    SASnackBar.show(
+                      context: context,
+                      message: state.error!,
+                      isSuccess: false,
+                    );
+                    break;
                   case AppointmentDateTimeChangeSuccess:
                     dateTime = state.date;
                     startTime = state.startTime;
@@ -160,12 +168,11 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                 }
               },
               builder: (context, state) {
-                final User user = widget.user;
                 return Column(
                   children: [
                     const SizedBox(height: 12),
                     Text(
-                      user.name,
+                      user?.name ?? '',
                       style: textTheme.titleLarge,
                     ),
                     const SizedBox(height: 12),
@@ -263,7 +270,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                       child: SAButton.elevated(
                         onPressed: () async {
                           final appointments =
-                              await AppointmentStorage.getAllAppointments();
+                              await appointmentRepo.getAllAppointments();
 
                           if (isFullAppointments(
                             appointments,
@@ -286,7 +293,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                                   widget.appointment == null
                                       ? AppointmentAdded(
                                           appointment: Appointment(
-                                            userId: user.id,
+                                            userId: user!.id,
                                             date: dateTime,
                                             startTime: startTime,
                                             endTime: endTime,
