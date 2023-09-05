@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/utils/common.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
 
 import '../generated/l10n.dart';
+import '../utils/common.dart';
+import '../widgets/widgets.dart';
 
 class TimePicker extends StatelessWidget {
   const TimePicker({

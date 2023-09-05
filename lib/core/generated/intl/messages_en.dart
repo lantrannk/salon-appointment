@@ -82,9 +82,13 @@ class MessageLookup extends MessageLookupByLibrary {
             "Do you want to delete this appointment?"),
         "removeConfirmTitle":
             MessageLookupByLibrary.simpleMessage("Remove Appointment"),
+        "servicesDropdownHint":
+            MessageLookupByLibrary.simpleMessage("Select Services"),
         "toText": MessageLookupByLibrary.simpleMessage("To:"),
         "unableEditError": MessageLookupByLibrary.simpleMessage(
             "You cannot edit appointments in less than 24 hours."),
+        "unknownError":
+            MessageLookupByLibrary.simpleMessage("Something went wrong."),
         "updateSuccess":
             MessageLookupByLibrary.simpleMessage("Appointment updated."),
         "yesConfirm": MessageLookupByLibrary.simpleMessage("Yes")

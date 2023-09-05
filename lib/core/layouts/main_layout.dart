@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 
 import '../../features/appointments/screens/new_appointment_screen.dart';
-import '../constants/assets.dart';
+import '../constants/constants.dart';
 import '../generated/l10n.dart';
 import '../utils/common.dart';
 import '../widgets/widgets.dart';
@@ -102,15 +102,15 @@ class _MainLayoutState extends State<MainLayout> {
                 switch (_currentIndex) {
                   case 0:
                     // Appointment Screen
-                    Navigator.pushNamed(context, '/appointment');
+                    Navigator.pushNamed(context, Routes.appointment);
                     break;
                   case 1:
                     // Calendar Screen
-                    Navigator.pushNamed(context, '/calendar');
+                    Navigator.pushNamed(context, Routes.calendar);
                     break;
                   case 3:
                     // Profile Screen
-                    Navigator.pushNamed(context, '/profile');
+                    Navigator.pushNamed(context, Routes.profile);
                     break;
                 }
               });

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/common_layout.dart';
 import '../../../core/validations/validations.dart';
@@ -112,19 +113,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   }
                   if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, '/calendar');
+                    Navigator.pushReplacementNamed(context, Routes.calendar);
                   }
                   if (state is LoginFailure) {
                     loadingIndicator.hide(context);
                     switch (state.error) {
-                      case 'invalid-account':
+                      case ErrorMessage.invalidAccount:
                         SASnackBar.show(
                           context: context,
                           message: l10n.invalidAccountError,
                           isSuccess: false,
                         );
                         break;
-                      case 'incorrect-account':
+                      case ErrorMessage.incorrectAccount:
                         SASnackBar.show(
                           context: context,
                           message: l10n.incorrectAccountError,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 
-import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/storage/appointment_storage.dart';
@@ -232,6 +231,7 @@ class _NewAppointmentScreenState extends State<NewAppointmentScreen> {
                     const SizedBox(height: 12),
                     Dropdown(
                         items: allServices,
+                        hint: l10n.servicesDropdownHint,
                         selectedValue: services,
                         onChanged: (value) {
                           setState(() {
