@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
 
-import '../constants/assets.dart';
+import '../constants/constants.dart';
+import 'widgets.dart';
 
 class Dropdown extends StatelessWidget {
   const Dropdown({
     required this.items,
     required this.selectedValue,
     required this.onChanged,
+    required this.hint,
     this.height = 44,
     this.width = double.infinity,
     super.key,
   });
 
   final List<String> items;
+  final String hint;
   final String? selectedValue;
   final double? height;
   final double? width;
@@ -38,7 +40,7 @@ class Dropdown extends StatelessWidget {
         ),
       ),
       child: DropdownButton<String>(
-        hint: const Text('Select Services'),
+        hint: Text(hint),
         value: selectedValue,
         onChanged: onChanged,
         items: items

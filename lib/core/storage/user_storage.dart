@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/constants/storage_key.dart';
+import '../constants/constants.dart';
 
 class UserStorage {
   static final Future<SharedPreferences> _prefs =

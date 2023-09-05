@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/assets.dart';
+import '../../../../core/constants/constants.dart';
 import '../../../../core/generated/l10n.dart';
 import '../../../../core/widgets/widgets.dart';
 import '../../model/appointment.dart';

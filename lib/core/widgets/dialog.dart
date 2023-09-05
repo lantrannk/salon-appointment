@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/generated/l10n.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
+
+import '../generated/l10n.dart';
+import 'widgets.dart';
 
 class AlertConfirmDialog extends StatelessWidget {
   const AlertConfirmDialog({

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'core/constants/constants.dart';
 import 'core/generated/l10n.dart';
 import 'core/theme/theme.dart';
 import 'features/appointments/screens/appointments_screen.dart';
@@ -39,13 +40,13 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: S.delegate.supportedLocales,
-          initialRoute: '/',
+          initialRoute: Routes.home,
           routes: {
-            '/': (context) => const SplashScreen(),
-            '/login': (context) => const LoginScreen(),
-            '/calendar': (context) => const CalendarScreen(),
-            '/appointment': (context) => const AppointmentScreen(),
-            '/profile': (context) => const ProfileScreen(),
+            Routes.home: (context) => const SplashScreen(),
+            Routes.login: (context) => const LoginScreen(),
+            Routes.calendar: (context) => const CalendarScreen(),
+            Routes.appointment: (context) => const AppointmentScreen(),
+            Routes.profile: (context) => const ProfileScreen(),
           },
         ),
       ),

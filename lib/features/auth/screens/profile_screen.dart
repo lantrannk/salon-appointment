@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/assets.dart';
+import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
 import '../../../core/widgets/widgets.dart';
@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    '/login',
+                    Routes.login,
                     (route) => false,
                   );
                 }

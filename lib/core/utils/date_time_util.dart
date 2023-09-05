@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../features/appointments/model/appointment.dart';
-import '../constants/date_format.dart';
+import '../constants/constants.dart';
 
 /// Returns a list of [DateTime] objects from [first] to [last], inclusive.
 List<DateTime> daysInRange(DateTime first, DateTime last) {

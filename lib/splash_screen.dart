@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'core/constants/constants.dart';
 import 'core/generated/l10n.dart';
 import 'core/layouts/common_layout.dart';
 import 'core/storage/user_storage.dart';
@@ -18,8 +19,8 @@ class SplashScreen extends StatelessWidget {
       builder: (_, snapshot) {
         Timer(const Duration(seconds: 2), () {
           (snapshot.hasData)
-              ? Navigator.pushReplacementNamed(context, '/calendar')
-              : Navigator.pushReplacementNamed(context, '/login');
+              ? Navigator.pushReplacementNamed(context, Routes.calendar)
+              : Navigator.pushReplacementNamed(context, Routes.login);
         });
 
         return const CommonLayout(
@@ -47,7 +48,6 @@ class Logo extends StatelessWidget {
             l10n.logo,
             style: TextStyle(
               fontSize: 70,
-              fontFamily: 'Poppins',
               color: colorScheme.onPrimary,
             ),
           ),
@@ -58,7 +58,6 @@ class Logo extends StatelessWidget {
             l10n.logoText,
             style: TextStyle(
               fontSize: 220,
-              fontFamily: 'Poppins',
               color: colorScheme.onPrimary.withOpacity(0.24),
             ),
           ),

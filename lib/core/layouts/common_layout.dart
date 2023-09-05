@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/constants/assets.dart';
+import 'package:salon_appointment/core/constants/constants.dart';
 
 class CommonLayout extends StatelessWidget {
   const CommonLayout({

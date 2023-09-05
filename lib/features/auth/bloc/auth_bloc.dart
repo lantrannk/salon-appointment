@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 
+import '../../../core/constants/constants.dart';
 import '../../../core/validations/validations.dart';
 import '../model/user.dart';
+import '../repository/user_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -26,7 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final List<User> users = await userRepo.getUsers();
       if (FormValidation.isValidPassword(event.password) != null ||
           FormValidation.isValidPhoneNumber(event.phoneNumber) != null) {
-        emit(const LoginFailure('invalid-account'));
+        emit(const LoginFailure(ErrorMessage.invalidAccount));
         return;
       }
       if (FormValidation.isLoginSuccess(
@@ -39,7 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         await userRepo.setUser(user);
         emit(LoginSuccess());
       } else {
-        emit(const LoginFailure('incorrect-account'));
+        emit(const LoginFailure(ErrorMessage.incorrectAccount));
       }
     } on Exception catch (e) {
       emit(

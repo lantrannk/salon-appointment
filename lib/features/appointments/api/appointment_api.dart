@@ -10,10 +10,8 @@ class AppointmentApi {
 
   final http.Client client;
 
-  static const String baseUrl = '$apiUrl/appointments';
-
   Future<String> getAppointments() async {
-    final url = Uri.parse(baseUrl);
+    final url = Uri.parse(appointmentUrl);
 
     final response = await client.get(url);
 
@@ -21,8 +19,7 @@ class AppointmentApi {
   }
 
   Future<String> addAppointment(Appointment appointment) async {
-    final url = Uri.parse(baseUrl);
-    final headers = {'Content-Type': 'application/json'};
+    final url = Uri.parse(appointmentUrl);
     final map = appointment.toJson();
     final body = json.encode(map);
 
@@ -36,8 +33,7 @@ class AppointmentApi {
   }
 
   Future<String> updateAppointment(Appointment appointment) async {
-    final url = Uri.parse('$baseUrl/${appointment.id}');
-    final headers = {'Content-Type': 'application/json'};
+    final url = Uri.parse('$appointmentUrl/${appointment.id}');
     final map = appointment.toJson();
     final body = json.encode(map);
 
@@ -51,7 +47,7 @@ class AppointmentApi {
   }
 
   Future<String> deleteAppointment(String appointmentId) async {
-    final url = Uri.parse('$baseUrl/$appointmentId');
+    final url = Uri.parse('$appointmentUrl/$appointmentId');
 
     final response = await client.delete(url);
 
