@@ -79,11 +79,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
       )..add(AppointmentInitialize()),
       child: Scaffold(
         appBar: AppBar(
-          title: SAText.appBarTitle(
-            text: widget.appointment == null
+          title: Text(
+            widget.appointment == null
                 ? l10n.newAppointmentAppBarTitle
                 : l10n.editAppointmentAppBarTitle,
-            style: textTheme.titleLarge!,
           ),
           automaticallyImplyLeading: false,
           actions: [
@@ -93,7 +92,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 onPressed: () => Navigator.of(context).pop(),
                 child: SAIcons(
                   icon: Assets.closeIcon,
-                  color: colorScheme.secondaryContainer,
+                  color: colorScheme.tertiaryContainer,
                 ),
               ),
             ),
@@ -173,7 +172,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     const SizedBox(height: 12),
                     Text(
                       user?.name ?? '',
-                      style: textTheme.titleLarge,
+                      style: textTheme.titleLarge!.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     DatePicker(
@@ -253,12 +255,12 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       onEditCompleted: () {
                         FocusScope.of(context).unfocus();
                       },
-                      color: colorScheme.secondaryContainer,
+                      color: colorScheme.tertiaryContainer,
                       maxLines: 4,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
-                          color: colorScheme.secondaryContainer,
+                          color: colorScheme.tertiaryContainer,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -320,14 +322,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
                                 );
                           }
                         },
-                        bgColor: colorScheme.primary,
                         child: Text(
                           widget.appointment == null
                               ? l10n.createAppointmentButton
                               : l10n.editAppointmentButton,
-                          style: textTheme.labelMedium!.copyWith(
-                            color: colorScheme.onPrimary,
-                          ),
                         ),
                       ),
                     ),

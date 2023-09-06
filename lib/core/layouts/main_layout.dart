@@ -39,17 +39,47 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: AppBar(
         title: Padding(
           padding: const EdgeInsets.symmetric(vertical: 24),
-          child: SAText.appBarTitle(
-            text: widget.title,
-            style: textTheme.titleLarge!,
-          ),
+          child: Text(widget.title),
         ),
+        actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              right: 12,
+            ),
+            child: Container(
+              width: 36,
+              decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: colorScheme.tertiary,
+                    strokeAlign: BorderSide.strokeAlignInside,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: SAButton.icon(
+                onPressed: () {},
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                  ),
+                  child: SAIcons(
+                    icon: Assets.lightIcon,
+                    size: 20,
+                    color: colorScheme.tertiary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
         automaticallyImplyLeading: false,
       ),
       body: widget.child,
@@ -132,7 +162,7 @@ class CustomBottomAppBar extends StatelessWidget {
     final l10n = S.of(context);
 
     return BottomNavigationBar(
-      backgroundColor: colorScheme.onPrimary,
+      backgroundColor: colorScheme.surface,
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,
@@ -143,13 +173,13 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.checkIcon,
-            topColor: colorScheme.onTertiary,
-            bottomColor: colorScheme.onSecondary,
+            topColor: colorScheme.primaryContainer,
+            bottomColor: colorScheme.secondaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.checkIcon,
             topColor: colorScheme.primary,
-            bottomColor: colorScheme.onSurface,
+            bottomColor: colorScheme.secondary,
             isActive: true,
           ),
           label: l10n.appointmentsLabel,
@@ -157,13 +187,13 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.scheduleIcon,
-            topColor: colorScheme.onTertiary,
-            bottomColor: colorScheme.onSecondary,
+            topColor: colorScheme.primaryContainer,
+            bottomColor: colorScheme.secondaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.scheduleIcon,
             topColor: colorScheme.primary,
-            bottomColor: colorScheme.onSurface,
+            bottomColor: colorScheme.secondary,
             isActive: true,
           ),
           label: l10n.calendarLabel,
@@ -177,13 +207,13 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.personIcon,
-            topColor: colorScheme.onTertiary,
-            bottomColor: colorScheme.onSecondary,
+            topColor: colorScheme.primaryContainer,
+            bottomColor: colorScheme.secondaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.personIcon,
             topColor: colorScheme.primary,
-            bottomColor: colorScheme.onSurface,
+            bottomColor: colorScheme.secondary,
             isActive: true,
           ),
           label: l10n.profileLabel,
@@ -191,13 +221,13 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.notificationsIcon,
-            topColor: colorScheme.onTertiary,
-            bottomColor: colorScheme.onSecondary,
+            topColor: colorScheme.primaryContainer,
+            bottomColor: colorScheme.secondaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.notificationsIcon,
             topColor: colorScheme.primary,
-            bottomColor: colorScheme.onSurface,
+            bottomColor: colorScheme.secondary,
             isActive: true,
           ),
           label: l10n.notificationsLabel,

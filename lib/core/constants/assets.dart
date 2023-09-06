@@ -21,6 +21,8 @@ class Assets {
 
   static const IconData logoutIcon = Icons.logout;
 
+  static const IconData lightIcon = Icons.sunny;
+
   static const IconData checkIcon = IconData(
     0xe800,
     fontFamily: fontFamily,

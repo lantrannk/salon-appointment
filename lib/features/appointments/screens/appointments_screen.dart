@@ -12,8 +12,8 @@ import '../../auth/repository/user_repository.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
-import 'appointments_widgets/appointments_widgets.dart';
 import 'appointment_form.dart';
+import 'appointments_widgets/appointments_widgets.dart';
 
 class AppointmentScreen extends StatefulWidget {
   const AppointmentScreen({
@@ -62,7 +62,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
             BlocBuilder<AppointmentBloc, AppointmentState>(
               builder: (ctx, state) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
@@ -70,9 +70,11 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         blurRadius: 12,
                         spreadRadius: 0,
                         color: colorScheme.primary.withOpacity(0.3219),
+                        blurStyle: BlurStyle.outer,
                       ),
                     ],
                     shape: BoxShape.rectangle,
+                    color: colorScheme.surface,
                   ),
                   child: TableCalendar<Appointment>(
                     headerVisible: false,
@@ -89,7 +91,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           day: day,
                           gradient: LinearGradient(
                             colors: [
-                              colorScheme.onSurface,
+                              colorScheme.secondary,
                               colorScheme.primary,
                             ],
                             begin: Alignment.topCenter,
@@ -126,13 +128,31 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                 );
               },
             ),
-            const SizedBox(height: 10),
-            Text(
-              monthCharFormat.format(_selectedDay!),
-              style: textTheme.labelSmall!.copyWith(
-                color: colorScheme.secondary,
-                fontWeight: FontWeight.w600,
-                letterSpacing: -0.24,
+            Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: colorScheme.surface,
+                boxShadow: [
+                  BoxShadow(
+                    offset: const Offset(0, 2),
+                    blurRadius: 8,
+                    blurStyle: BlurStyle.outer,
+                    spreadRadius: 0,
+                    color: colorScheme.primary.withOpacity(0.16),
+                  ),
+                ],
+              ),
+              width: double.infinity,
+              child: Text(
+                monthCharFormat.format(_selectedDay!),
+                textAlign: TextAlign.center,
+                style: textTheme.labelSmall!.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: -0.24,
+                ),
               ),
             ),
             const SizedBox(height: 8),
@@ -171,6 +191,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                   case AppointmentLoadInProgress:
                     return SAIndicator(
                       height: indicatorHeight,
+                      color: colorScheme.primary,
                     );
                   case AppointmentLoadSuccess:
                     final events =
@@ -182,7 +203,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
                       return Expanded(
                         child: Container(
-                          color: colorScheme.tertiaryContainer,
+                          color: colorScheme.background,
                           child: ListView.builder(
                             itemCount: events.length,
                             itemBuilder: (ctx, index) => AppointmentCard(
@@ -243,7 +264,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           child: Text(
                             l10n.emptyAppointments,
                             style: textTheme.bodyLarge!.copyWith(
-                              color: colorScheme.secondary,
+                              color: colorScheme.primaryContainer,
                             ),
                           ),
                         ),
@@ -255,7 +276,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         child: Text(
                           state.error!,
                           style: textTheme.bodyLarge!.copyWith(
-                            color: colorScheme.secondary,
+                            color: colorScheme.primaryContainer,
                           ),
                           textAlign: TextAlign.center,
                         ),
