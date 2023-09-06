@@ -86,7 +86,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return MonthCalendarCell(
                         day: day,
                         events: events,
-                        dayColor: colorScheme.onSecondary,
+                        timeColor: colorScheme.primaryContainer,
                       );
                     },
                     selectedBuilder: (context, day, focusedDay) {
@@ -98,7 +98,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         gradient: LinearGradient(
                           colors: [
                             colorScheme.primary,
-                            colorScheme.onSurface,
+                            colorScheme.secondary,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -114,9 +114,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 4,
                         ),
+                        color: colorScheme.surface,
                         child: SAText.weekCalendarCell(
                           text: dayOfWeekFormat.format(day),
-                          color: colorScheme.secondary,
+                          color: colorScheme.onSurface,
                         ),
                       );
                     },
@@ -125,7 +126,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     outsideDaysVisible: true,
                     rowDecoration: BoxDecoration(
                       border: Border.all(
-                        color: colorScheme.surface,
+                        color: colorScheme.onSecondary,
                         width: 1,
                         strokeAlign: BorderSide.strokeAlignOutside,
                       ),
@@ -188,6 +189,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   case AppointmentLoadInProgress:
                     return SAIndicator(
                       height: indicatorHeight,
+                      color: colorScheme.primary,
                     );
                   case AppointmentLoadSuccess:
                     final List<Appointment> events =
@@ -205,7 +207,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 gradient: LinearGradient(
                                   colors: [
                                     colorScheme.primary,
-                                    colorScheme.onSurface,
+                                    colorScheme.secondary,
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
@@ -235,7 +237,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           child: Text(
                             l10n.emptyAppointments,
                             style: textTheme.bodyLarge!.copyWith(
-                              color: colorScheme.secondary,
+                              color: colorScheme.primaryContainer,
                             ),
                           ),
                         ),
@@ -247,7 +249,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         child: Text(
                           state.error!,
                           style: textTheme.bodyLarge!.copyWith(
-                            color: colorScheme.secondary,
+                            color: colorScheme.primaryContainer,
                           ),
                           textAlign: TextAlign.center,
                         ),

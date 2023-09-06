@@ -20,7 +20,7 @@ class Service extends StatelessWidget {
             width: 1,
           ),
           VerticalDivider(
-            color: colorScheme.onSecondary,
+            color: colorScheme.primaryContainer,
             thickness: 1,
           ),
           const SizedBox(
@@ -32,6 +32,7 @@ class Service extends StatelessWidget {
               style: textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w500,
                 height: 20 / 14,
+                color: colorScheme.onSurface,
               ),
             ),
           ),
