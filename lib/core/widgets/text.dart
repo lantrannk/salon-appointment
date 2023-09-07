@@ -17,11 +17,6 @@ class SAText extends StatelessWidget {
     int maxLines,
   }) = _CalendarSchedule;
 
-  const factory SAText.appBarTitle({
-    required String text,
-    TextStyle style,
-  }) = _AppBarTitle;
-
   const factory SAText.timeCell({
     required String text,
     Color color,
@@ -40,26 +35,6 @@ class SAText extends StatelessWidget {
     return Text(
       text,
       style: style,
-    );
-  }
-}
-
-class _AppBarTitle extends SAText {
-  const _AppBarTitle({
-    required super.text,
-    super.style,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
-
-    return Text(
-      text,
-      style: textTheme.titleLarge!.copyWith(
-        color: colorScheme.secondary,
-      ),
     );
   }
 }
@@ -101,7 +76,7 @@ class _TimePicker extends SAText {
       text,
       textAlign: TextAlign.justify,
       style: textTheme.labelLarge!.copyWith(
-        color: colorScheme.secondaryContainer,
+        color: colorScheme.tertiaryContainer,
       ),
     );
   }
@@ -126,7 +101,7 @@ class _TimeCell extends SAText {
         fontSize: 10,
         fontWeight: FontWeight.w400,
         height: 12 / 10,
-        color: color ?? colorScheme.onSecondary,
+        color: color ?? colorScheme.onPrimary,
       ),
     );
   }

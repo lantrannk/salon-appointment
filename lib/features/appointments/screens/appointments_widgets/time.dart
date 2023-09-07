@@ -18,7 +18,8 @@ class Time extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData themeData = Theme.of(context);
+    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,15 +29,16 @@ class Time extends StatelessWidget {
             SAIcons(
               icon: Assets.scheduleIcon,
               size: 20,
-              color: themeData.colorScheme.tertiary,
+              color: colorScheme.tertiary,
             ),
             const SizedBox(
               width: 12,
             ),
             Text(
               '${formatTime(startTime)} - ${formatTime(endTime)}',
-              style: themeData.textTheme.bodyLarge!.copyWith(
+              style: textTheme.bodyLarge!.copyWith(
                 height: 24 / 14,
+                color: colorScheme.onSurface,
               ),
             ),
           ],
@@ -48,8 +50,8 @@ class Time extends StatelessWidget {
             ),
             Text(
               text,
-              style: themeData.textTheme.bodySmall!.copyWith(
-                color: themeData.colorScheme.onSecondary,
+              style: textTheme.bodySmall!.copyWith(
+                color: colorScheme.primaryContainer,
               ),
             ),
           ],

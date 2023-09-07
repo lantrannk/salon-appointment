@@ -42,7 +42,7 @@ class _DescriptionState extends State<Description> {
           textAlign: TextAlign.justify,
           overflow: overflow,
           style: textTheme.bodySmall!.copyWith(
-            color: colorScheme.onSecondary,
+            color: colorScheme.primaryContainer,
             height: 16 / 12,
           ),
         ),

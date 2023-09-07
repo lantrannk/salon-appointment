@@ -35,7 +35,7 @@ class MonthCalendarCell extends StatelessWidget {
         horizontal: 4,
       ),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: bgColor ?? colorScheme.surface,
         gradient: gradient,
         shape: BoxShape.rectangle,
       ),
@@ -61,7 +61,7 @@ class MonthCalendarCell extends StatelessWidget {
                     style: textTheme.bodySmall!.copyWith(
                       height: 18 / 12,
                       fontWeight: FontWeight.w500,
-                      color: dayColor ?? colorScheme.secondary,
+                      color: dayColor ?? colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.end,
                   ),
@@ -80,7 +80,7 @@ class MonthCalendarCell extends StatelessWidget {
                   Expanded(
                     child: SAText.timeCell(
                       text: timeFormat.format(events[i].startTime),
-                      color: timeColor ?? colorScheme.onSecondary,
+                      color: timeColor ?? colorScheme.primaryContainer,
                     ),
                   ),
               ],

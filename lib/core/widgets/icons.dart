@@ -18,7 +18,7 @@ class SAIcons extends StatelessWidget {
 
     return Icon(
       icon,
-      color: color ?? colorScheme.secondaryContainer,
+      color: color ?? colorScheme.primaryContainer,
       size: size ?? 24,
     );
   }
@@ -48,7 +48,7 @@ class GradientIcon extends StatelessWidget {
           child: Icon(
             icon,
             size: size,
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           shaderCallback: (bounds) {
             final Rect rect = Rect.fromLTRB(0, 0, size!, size!);
