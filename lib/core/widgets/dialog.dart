@@ -33,7 +33,7 @@ class AlertConfirmDialog extends StatelessWidget {
         child: Text(
           title,
           style: textTheme.labelMedium!.copyWith(
-            color: colorScheme.secondary,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -43,7 +43,7 @@ class AlertConfirmDialog extends StatelessWidget {
         child: Text(
           content,
           style: textTheme.labelMedium!.copyWith(
-            color: colorScheme.secondary,
+            color: colorScheme.primaryContainer,
             fontWeight: FontWeight.w100,
           ),
         ),
@@ -54,7 +54,7 @@ class AlertConfirmDialog extends StatelessWidget {
           child: Text(
             textButtonLeft ?? l10n.noConfirm,
             style: textTheme.labelMedium!.copyWith(
-              color: colorScheme.onTertiary,
+              color: colorScheme.secondaryContainer,
             ),
           ),
         ),

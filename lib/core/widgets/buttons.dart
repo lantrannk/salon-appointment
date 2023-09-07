@@ -79,7 +79,6 @@ class _SAOutlinedButton extends SAButton {
             color: colorScheme.onPrimary,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),
-          backgroundColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
           ),
@@ -142,13 +141,13 @@ class _SAElevatedButton extends SAButton {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: bgColor,
-        alignment: Alignment.center,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-      ),
+      // style: ElevatedButton.styleFrom(
+      //   backgroundColor: bgColor,
+      //   alignment: Alignment.center,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(8),
+      //   ),
+      // ),
       onPressed: onPressed,
       child: child,
     );
@@ -192,7 +191,7 @@ class _SAFloatingActionButton extends SAButton {
             end: Alignment.bottomCenter,
             colors: [
               colorScheme.primary,
-              colorScheme.onSurface,
+              colorScheme.secondary,
             ],
           ),
           shape: BoxShape.circle,

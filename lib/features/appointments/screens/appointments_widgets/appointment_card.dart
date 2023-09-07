@@ -38,7 +38,7 @@ class AppointmentCard extends StatelessWidget {
         top: 8,
       ),
       decoration: BoxDecoration(
-        color: colorScheme.background,
+        color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
             color: colorScheme.primary.withOpacity(0.16),
@@ -64,8 +64,9 @@ class AppointmentCard extends StatelessWidget {
                 children: [
                   SAButton.icon(
                     onPressed: onEditPressed,
-                    child: const SAIcons(
+                    child: SAIcons(
                       icon: Assets.editIcon,
+                      color: colorScheme.tertiaryContainer,
                     ),
                   ),
                   const SizedBox(
@@ -73,8 +74,9 @@ class AppointmentCard extends StatelessWidget {
                   ),
                   SAButton.icon(
                     onPressed: onRemovePressed,
-                    child: const SAIcons(
+                    child: SAIcons(
                       icon: Assets.removeIcon,
+                      color: colorScheme.tertiaryContainer,
                     ),
                   ),
                 ],
