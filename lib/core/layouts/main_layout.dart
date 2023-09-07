@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../features/appointments/screens/appointment_form.dart';
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
+import '../theme/theme_model.dart';
 import '../utils/common.dart';
 import '../widgets/widgets.dart';
 
@@ -65,16 +67,26 @@ class _MainLayoutState extends State<MainLayout> {
                 ),
               ),
               child: SAButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<ThemeModel>(context, listen: false).toggleTheme();
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                   ),
-                  child: SAIcons(
-                    icon: Assets.lightIcon,
-                    size: 20,
-                    color: colorScheme.tertiary,
-                  ),
+                  child: Provider.of<ThemeModel>(context, listen: false)
+                              .themeMode ==
+                          ThemeMode.dark
+                      ? SAIcons(
+                          icon: Assets.lightIcon,
+                          size: 20,
+                          color: colorScheme.tertiary,
+                        )
+                      : SAIcons(
+                          icon: Assets.darkIcon,
+                          size: 20,
+                          color: colorScheme.onSurface,
+                        ),
                 ),
               ),
             ),
@@ -108,7 +120,7 @@ class _MainLayoutState extends State<MainLayout> {
           boxShadow: [
             BoxShadow(
               color: colorScheme.primary.withOpacity(0.1601),
-              offset: const Offset(0, 2),
+              offset: const Offset(0, -2),
               blurRadius: 8,
               spreadRadius: 0,
               blurStyle: BlurStyle.outer,
@@ -162,7 +174,6 @@ class CustomBottomAppBar extends StatelessWidget {
     final l10n = S.of(context);
 
     return BottomNavigationBar(
-      backgroundColor: colorScheme.surface,
       currentIndex: currentIndex,
       onTap: onTap,
       type: BottomNavigationBarType.fixed,

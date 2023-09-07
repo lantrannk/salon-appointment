@@ -23,6 +23,8 @@ class Assets {
 
   static const IconData lightIcon = Icons.sunny;
 
+  static const IconData darkIcon = Icons.nights_stay;
+
   static const IconData checkIcon = IconData(
     0xe800,
     fontFamily: fontFamily,
