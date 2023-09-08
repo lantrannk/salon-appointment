@@ -33,10 +33,10 @@ class Dropdown extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: colorScheme.onPrimary,
+        color: colorScheme.onPrimary.withOpacity(0.235),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: colorScheme.tertiaryContainer,
+          color: colorScheme.onSurface,
         ),
       ),
       child: DropdownButton<String>(
