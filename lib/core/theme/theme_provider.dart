@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeMode themeMode = ThemeMode.light;
+  ThemeMode themeMode = ThemeMode.system;
+  Brightness brightness =
+      SchedulerBinding.instance.platformDispatcher.platformBrightness;
 
   void toggleTheme() {
-    if (themeMode == ThemeMode.dark) {
+    if (brightness == Brightness.dark) {
       themeMode = ThemeMode.light;
+      brightness = Brightness.light;
       return notifyListeners();
-    }
-
-    if (themeMode == ThemeMode.light) {
+    } else {
       themeMode = ThemeMode.dark;
+      brightness = Brightness.dark;
       return notifyListeners();
     }
   }
