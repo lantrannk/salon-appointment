@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
         create: (context) => AuthBloc(context.read<UserRepository>()),
         child: MaterialApp(
           title: 'Salon Appointment',
-          theme: themeData,
-          darkTheme: darkTheme,
+          theme: AppTheme().themeData,
+          darkTheme: AppDarkTheme().themeData,
           themeMode:
               Provider.of<ThemeProvider>(context, listen: true).themeMode,
           debugShowCheckedModeBanner: false,
