@@ -41,6 +41,10 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -68,18 +72,13 @@ class _MainLayoutState extends State<MainLayout> {
               ),
               child: SAButton.icon(
                 onPressed: () {
-                  Provider.of<ThemeProvider>(context, listen: false)
-                      .toggleTheme();
+                  themeProvider.toggleTheme();
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                   ),
-                  child: Provider.of<ThemeProvider>(
-                            context,
-                            listen: false,
-                          ).themeMode ==
-                          ThemeMode.dark
+                  child: themeProvider.themeMode == ThemeMode.dark
                       ? SAIcons(
                           icon: Assets.lightIcon,
                           size: 20,
