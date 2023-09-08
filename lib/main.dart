@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'core/constants/constants.dart';
 import 'core/generated/l10n.dart';
 import 'core/theme/theme.dart';
-import 'core/theme/theme_model.dart';
+import 'core/theme/theme_provider.dart';
 import 'features/appointments/screens/appointments_screen.dart';
 import 'features/appointments/screens/calendar_screen.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -17,8 +17,8 @@ import 'splash_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider<ThemeModel>(
-      create: (_) => ThemeModel(),
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (_) => ThemeProvider(),
       child: const MyApp(),
     ),
   );
@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
           title: 'Salon Appointment',
           theme: themeData,
           darkTheme: darkTheme,
-          themeMode: Provider.of<ThemeModel>(context, listen: true).themeMode,
+          themeMode:
+              Provider.of<ThemeProvider>(context, listen: true).themeMode,
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             S.delegate,

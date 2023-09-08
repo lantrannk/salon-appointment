@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../features/appointments/screens/appointment_form.dart';
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
-import '../theme/theme_model.dart';
+import '../theme/theme_provider.dart';
 import '../utils/common.dart';
 import '../widgets/widgets.dart';
 
@@ -68,14 +68,17 @@ class _MainLayoutState extends State<MainLayout> {
               ),
               child: SAButton.icon(
                 onPressed: () {
-                  Provider.of<ThemeModel>(context, listen: false).toggleTheme();
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme();
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
                   ),
-                  child: Provider.of<ThemeModel>(context, listen: false)
-                              .themeMode ==
+                  child: Provider.of<ThemeProvider>(
+                            context,
+                            listen: false,
+                          ).themeMode ==
                           ThemeMode.dark
                       ? SAIcons(
                           icon: Assets.lightIcon,
