@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/constants/constants.dart';
+
+import '../widgets/background_image.dart';
 
 class CommonLayout extends StatelessWidget {
   const CommonLayout({
@@ -15,23 +16,12 @@ class CommonLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: bgImage ?? Assets.bgImage,
-            colorFilter: ColorFilter.mode(
-              bgColor ?? colorScheme.primary.withOpacity(0.5),
-              BlendMode.multiply,
-            ),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: child,
+      body: Stack(
+        children: [
+          const BackgroundImage(),
+          child,
+        ],
       ),
     );
   }
