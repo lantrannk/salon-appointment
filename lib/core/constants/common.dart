@@ -11,3 +11,5 @@ const List<String> allServices = [
   'Neck & Shoulders',
   'Non-Invasive Body Contouring',
 ];
+
+const String phoneNumberRegExpPattern = r'^(?:[+0][1-9])?[0-9]{10,12}$';
