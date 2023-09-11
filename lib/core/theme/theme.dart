@@ -99,6 +99,7 @@ class AppTheme {
       timePickerTheme: _timePickerTheme,
       datePickerTheme: _datePickerTheme,
       bottomNavigationBarTheme: _bottomNavigationBarTheme,
+      dialogTheme: _dialogTheme,
     );
   }
 
@@ -195,26 +196,19 @@ class AppTheme {
       backgroundColor: AppColors.surface,
     );
   }
-}
 
-InputBorder get _focusedBorder {
-  return OutlineInputBorder(
-    borderSide: const BorderSide(
-      width: 2,
-      color: AppColors.primary,
-    ),
-    borderRadius: BorderRadius.circular(8),
-  );
-}
-
-OutlineInputBorder get _focusedErrorBorder {
-  return OutlineInputBorder(
-    borderSide: const BorderSide(
-      width: 2,
-      color: AppColors.error,
-    ),
-    borderRadius: BorderRadius.circular(8),
-  );
+  DialogTheme get _dialogTheme {
+    return DialogTheme(
+      backgroundColor: _colorScheme.surface,
+      titleTextStyle: SATextTheme.textTheme.labelLarge!.copyWith(
+        color: _colorScheme.onSurface,
+        fontWeight: FontWeight.bold,
+      ),
+      contentTextStyle: SATextTheme.textTheme.bodyLarge!.copyWith(
+        color: _colorScheme.primaryContainer,
+      ),
+    );
+  }
 }
 
 class AppDarkTheme extends AppTheme {
