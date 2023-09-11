@@ -15,7 +15,7 @@ class Dropdown extends StatelessWidget {
   });
 
   final List<String> items;
-  final String hint;
+  final Widget? hint;
   final String? selectedValue;
   final double? height;
   final double? width;
@@ -40,7 +40,7 @@ class Dropdown extends StatelessWidget {
         ),
       ),
       child: DropdownButton<String>(
-        hint: Text(hint),
+        hint: hint,
         value: selectedValue,
         onChanged: onChanged,
         items: items
