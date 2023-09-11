@@ -87,7 +87,6 @@ class AppTheme {
       iconButtonTheme: _iconButtonTheme,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          // textStyle: SATextTheme.textTheme.labelMedium,
           foregroundColor: _colorScheme.onPrimary,
           backgroundColor: _colorScheme.primary,
           alignment: Alignment.center,
@@ -128,10 +127,10 @@ class AppTheme {
 
   AppBarTheme get _appBarTheme {
     return AppBarTheme(
-      color: AppColors.surface,
+      color: _colorScheme.surface,
       elevation: 0,
       titleTextStyle: SATextTheme.textTheme.titleLarge!.copyWith(
-        color: AppColors.onSurface,
+        color: _colorScheme.onSurface,
         fontWeight: FontWeight.w500,
       ),
       centerTitle: false,
@@ -141,8 +140,13 @@ class AppTheme {
   InputDecorationTheme get _inputDecorationTheme {
     return InputDecorationTheme(
       hintStyle: SATextTheme.textTheme.labelSmall!.copyWith(
-        color: AppColors.onPrimary,
+        color: _colorScheme.onPrimary,
       ),
+      errorStyle: SATextTheme.textTheme.bodySmall?.copyWith(
+        height: 0.7,
+        color: _colorScheme.error,
+      ),
+      errorMaxLines: 1,
       contentPadding: const EdgeInsets.all(8),
       border: OutlineInputBorder(
         borderSide: BorderSide.none,
@@ -151,24 +155,44 @@ class AppTheme {
       focusedBorder: _focusedBorder,
       focusedErrorBorder: _focusedErrorBorder,
       filled: true,
-      fillColor: AppColors.onPrimary.withOpacity(0.235),
+      fillColor: _colorScheme.onPrimary.withOpacity(0.235),
+    );
+  }
+
+  InputBorder get _focusedBorder {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        width: 2,
+        color: _colorScheme.primary,
+      ),
+      borderRadius: BorderRadius.circular(8),
+    );
+  }
+
+  OutlineInputBorder get _focusedErrorBorder {
+    return OutlineInputBorder(
+      borderSide: BorderSide(
+        width: 2,
+        color: _colorScheme.error,
+      ),
+      borderRadius: BorderRadius.circular(8),
     );
   }
 
   IconThemeData get _iconTheme {
-    return const IconThemeData(
-      color: AppColors.tertiary,
+    return IconThemeData(
+      color: _colorScheme.tertiary,
       size: 16,
     );
   }
 
   IconButtonThemeData get _iconButtonTheme {
-    return const IconButtonThemeData(
+    return IconButtonThemeData(
       style: ButtonStyle(
         iconColor: MaterialStatePropertyAll<Color>(
-          AppColors.onSurface,
+          _colorScheme.onSurface,
         ),
-        iconSize: MaterialStatePropertyAll<double>(24),
+        iconSize: const MaterialStatePropertyAll<double>(24),
       ),
     );
   }
@@ -176,24 +200,24 @@ class AppTheme {
   TimePickerThemeData get _timePickerTheme {
     return TimePickerThemeData(
       helpTextStyle: SATextTheme.textTheme.labelSmall!.copyWith(
-        color: AppColors.primary,
+        color: _colorScheme.primary,
         fontWeight: FontWeight.w500,
       ),
-      backgroundColor: AppColors.surface,
+      backgroundColor: _colorScheme.surface,
     );
   }
 
   DatePickerThemeData get _datePickerTheme {
-    return const DatePickerThemeData(
+    return DatePickerThemeData(
       yearForegroundColor: MaterialStatePropertyAll<Color>(
-        AppColors.grey,
+        _colorScheme.primaryContainer,
       ),
     );
   }
 
   BottomNavigationBarThemeData get _bottomNavigationBarTheme {
-    return const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.surface,
+    return BottomNavigationBarThemeData(
+      backgroundColor: _colorScheme.surface,
     );
   }
 
@@ -233,69 +257,4 @@ class AppDarkTheme extends AppTheme {
 
   @override
   Color get _primaryColor => AppColors.darkPrimary;
-
-  @override
-  AppBarTheme get _appBarTheme {
-    return AppBarTheme(
-      color: AppColors.darkSurface,
-      elevation: 0,
-      titleTextStyle: SATextTheme.textTheme.titleLarge?.copyWith(
-        color: AppColors.onPrimary,
-        fontWeight: FontWeight.w500,
-      ),
-      centerTitle: false,
-    );
-  }
-
-  @override
-  IconThemeData get _iconTheme {
-    return const IconThemeData(
-      color: AppColors.grey,
-      size: 16,
-    );
-  }
-
-  @override
-  IconButtonThemeData get _iconButtonTheme {
-    return const IconButtonThemeData(
-      style: ButtonStyle(
-        iconColor: MaterialStatePropertyAll<Color>(
-          AppColors.grey,
-        ),
-        iconSize: MaterialStatePropertyAll<double>(24),
-      ),
-    );
-  }
-
-  @override
-  TimePickerThemeData get _timePickerTheme {
-    return TimePickerThemeData(
-      helpTextStyle: SATextTheme.textTheme.labelSmall!.copyWith(
-        color: AppColors.grey,
-        fontWeight: FontWeight.w500,
-      ),
-      backgroundColor: AppColors.darkSurface,
-    );
-  }
-
-  @override
-  DatePickerThemeData get _datePickerTheme {
-    return DatePickerThemeData(
-      headerHelpStyle: SATextTheme.textTheme.labelSmall?.copyWith(
-        color: AppColors.grey,
-        fontWeight: FontWeight.w500,
-      ),
-      yearForegroundColor: const MaterialStatePropertyAll<Color>(
-        AppColors.grey,
-      ),
-      backgroundColor: AppColors.darkSurface,
-    );
-  }
-
-  @override
-  BottomNavigationBarThemeData get _bottomNavigationBarTheme {
-    return const BottomNavigationBarThemeData(
-      backgroundColor: AppColors.darkSurface,
-    );
-  }
 }
