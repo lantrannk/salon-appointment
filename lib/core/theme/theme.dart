@@ -33,6 +33,12 @@ class SATextTheme {
       );
 
   static final TextTheme textTheme = TextTheme(
+    displayLarge: _defaultTextStyle(
+      fontSize: 220,
+    ),
+    displayMedium: _defaultTextStyle(
+      fontSize: 70,
+    ),
     displaySmall: _defaultTextStyle(
       fontSize: 30,
     ),

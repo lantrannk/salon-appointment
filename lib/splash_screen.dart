@@ -1,21 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'core/constants/constants.dart';
 import 'core/generated/l10n.dart';
 import 'core/layouts/common_layout.dart';
-import 'core/storage/user_storage.dart';
+import 'features/auth/repository/user_repository.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final UserStorage userStorage = UserStorage();
-
     return FutureBuilder(
-      future: userStorage.getUser(),
+      future: context.read<UserRepository>().getUser(),
       builder: (_, snapshot) {
         Timer(const Duration(seconds: 2), () {
           (snapshot.hasData)
@@ -37,18 +36,19 @@ class Logo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final TextTheme textTheme = Theme.of(context).textTheme;
     final l10n = S.of(context);
 
     return Stack(
       alignment: Alignment.center,
       children: [
         Positioned(
-          top: 180,
+          top: 118,
           child: Text(
             l10n.logo,
-            style: TextStyle(
-              fontSize: 70,
+            style: textTheme.displayMedium!.copyWith(
               color: colorScheme.onPrimary,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
@@ -56,9 +56,9 @@ class Logo extends StatelessWidget {
           top: 28,
           child: Text(
             l10n.logoText,
-            style: TextStyle(
-              fontSize: 220,
+            style: textTheme.displayLarge!.copyWith(
               color: colorScheme.onPrimary.withOpacity(0.24),
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
