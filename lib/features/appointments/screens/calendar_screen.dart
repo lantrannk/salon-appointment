@@ -256,7 +256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     );
                 }
-                return Container();
+                return const SizedBox.shrink();
               },
             ),
           ],

@@ -280,7 +280,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       ),
                     );
                 }
-                return Container();
+                return const SizedBox.shrink();
               },
             ),
           ],
