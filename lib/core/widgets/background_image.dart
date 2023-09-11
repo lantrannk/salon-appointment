@@ -3,7 +3,14 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 
 class BackgroundImage extends StatelessWidget {
-  const BackgroundImage({super.key});
+  const BackgroundImage({
+    this.bgColor,
+    this.bgImage,
+    super.key,
+  });
+
+  final Color? bgColor;
+  final ImageProvider<Object>? bgImage;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +21,9 @@ class BackgroundImage extends StatelessWidget {
       height: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: Assets.bgImage,
+          image: bgImage ?? Assets.bgImage,
           colorFilter: ColorFilter.mode(
-            colorScheme.primary.withOpacity(0.5),
+            bgColor ?? colorScheme.primary.withOpacity(0.5),
             BlendMode.multiply,
           ),
           fit: BoxFit.cover,
