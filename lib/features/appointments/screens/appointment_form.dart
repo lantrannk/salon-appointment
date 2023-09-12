@@ -239,19 +239,18 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     ),
                     const SizedBox(height: 12),
                     Dropdown(
-                        items: allServices,
-                        hint: Text(
-                          l10n.servicesDropdownHint,
-                          style: textTheme.labelSmall!.copyWith(
-                            color: colorScheme.onSurface,
-                          ),
-                        ),
-                        selectedValue: services,
-                        onChanged: (value) {
-                          setState(() {
-                            services = value;
-                          });
-                        }),
+                      items: allServices,
+                      hint: l10n.servicesDropdownHint,
+                      style: textTheme.labelSmall!.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
+                      selectedValue: services,
+                      onChanged: (value) {
+                        setState(() {
+                          services = value;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 12),
                     Input(
                       controller: descpController,

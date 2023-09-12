@@ -9,14 +9,16 @@ class Dropdown extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
     required this.hint,
+    this.style,
     this.height = 44,
     this.width = double.infinity,
     super.key,
   });
 
   final List<String> items;
-  final Widget? hint;
+  final String hint;
   final String? selectedValue;
+  final TextStyle? style;
   final double? height;
   final double? width;
   final Function(String?)? onChanged;
@@ -40,20 +42,28 @@ class Dropdown extends StatelessWidget {
         ),
       ),
       child: DropdownButton<String>(
-        hint: hint,
+        hint: Text(
+          hint,
+          style: style,
+        ),
         value: selectedValue,
         onChanged: onChanged,
         items: items
             .map<DropdownMenuItem<String>>(
               (value) => DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: style,
+                ),
               ),
             )
             .toList(),
-        icon: const SAIcons(
+        icon: SAIcons(
           icon: Assets.dropdownIcon,
+          color: colorScheme.onSurface,
         ),
+        dropdownColor: colorScheme.surface,
         underline: const SizedBox(),
         isExpanded: true,
       ),
