@@ -186,8 +186,8 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.checkIcon,
-            topColor: colorScheme.primaryContainer,
-            bottomColor: colorScheme.secondaryContainer,
+            topColor: colorScheme.secondaryContainer,
+            bottomColor: colorScheme.primaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.checkIcon,
@@ -200,8 +200,8 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.scheduleIcon,
-            topColor: colorScheme.primaryContainer,
-            bottomColor: colorScheme.secondaryContainer,
+            topColor: colorScheme.secondaryContainer,
+            bottomColor: colorScheme.primaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.scheduleIcon,
@@ -220,8 +220,8 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.personIcon,
-            topColor: colorScheme.primaryContainer,
-            bottomColor: colorScheme.secondaryContainer,
+            topColor: colorScheme.secondaryContainer,
+            bottomColor: colorScheme.primaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.personIcon,
@@ -234,8 +234,8 @@ class CustomBottomAppBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: _buildIcon(
             icon: Assets.notificationsIcon,
-            topColor: colorScheme.primaryContainer,
-            bottomColor: colorScheme.secondaryContainer,
+            topColor: colorScheme.secondaryContainer,
+            bottomColor: colorScheme.primaryContainer,
           ),
           activeIcon: _buildIcon(
             icon: Assets.notificationsIcon,
@@ -290,8 +290,13 @@ Widget _buildIcon({
                 topColor,
                 bottomColor,
               ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              stops: const [
+                0.0,
+                0.7,
+              ],
+              tileMode: TileMode.mirror,
             ),
           ),
         ),
