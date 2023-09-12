@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 
+import '../constants/api_error.dart';
 import '../constants/api_error_message.dart';
 import '../constants/api_url.dart';
 import '../constants/mock_data/mock_data.dart';
@@ -43,10 +44,7 @@ void main() {
         when(
           () => client.get(allUsersUrl),
         ).thenAnswer(
-          (_) async => http.Response(
-            ApiErrorMessage.notModified,
-            304,
-          ),
+          (_) async => ApiError.notModifiedError,
         );
 
         expect(
@@ -63,10 +61,7 @@ void main() {
         when(
           () => client.get(allUsersUrl),
         ).thenAnswer(
-          (_) async => http.Response(
-            ApiErrorMessage.badRequest,
-            400,
-          ),
+          (_) async => ApiError.badRequestError,
         );
 
         expect(
@@ -83,10 +78,7 @@ void main() {
         when(
           () => client.get(allUsersUrl),
         ).thenAnswer(
-          (_) async => http.Response(
-            ApiErrorMessage.notFound,
-            404,
-          ),
+          (_) async => ApiError.notFoundError,
         );
 
         expect(
@@ -103,10 +95,7 @@ void main() {
         when(
           () => client.get(allUsersUrl),
         ).thenAnswer(
-          (_) async => http.Response(
-            ApiErrorMessage.gatewayTimeout,
-            504,
-          ),
+          (_) async => ApiError.gatewayTimeoutError,
         );
 
         expect(
