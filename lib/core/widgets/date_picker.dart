@@ -25,14 +25,15 @@ class DatePicker extends StatelessWidget {
         children: [
           Icon(
             Assets.scheduleIcon,
-            color: colorScheme.tertiaryContainer,
+            color: colorScheme.onSurface,
+            size: 20,
           ),
           SAButton.text(
             onPressed: onPressed,
             child: Text(
               dateFormat.format(dateTime),
               style: textTheme.labelLarge!.copyWith(
-                color: colorScheme.tertiaryContainer,
+                color: colorScheme.onSurface,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -41,7 +42,8 @@ class DatePicker extends StatelessWidget {
             alignment: Alignment.centerRight,
             child: Icon(
               Assets.calendarIcon,
-              color: colorScheme.tertiaryContainer,
+              color: colorScheme.onSurface,
+              size: 20,
             ),
           ),
         ],

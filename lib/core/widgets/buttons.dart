@@ -182,7 +182,7 @@ class _SAFloatingActionButton extends SAButton {
         width: width,
         decoration: BoxDecoration(
           border: Border.all(
-            color: colorScheme.onPrimary,
+            color: colorScheme.surface,
             width: 6,
             strokeAlign: BorderSide.strokeAlignOutside,
           ),

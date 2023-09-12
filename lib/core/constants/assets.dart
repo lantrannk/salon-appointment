@@ -21,7 +21,9 @@ class Assets {
 
   static const IconData logoutIcon = Icons.logout;
 
-  static const IconData lightIcon = Icons.sunny;
+  static const IconData lightIcon = Icons.wb_sunny_outlined;
+
+  static const IconData darkIcon = Icons.nights_stay_outlined;
 
   static const IconData checkIcon = IconData(
     0xe800,

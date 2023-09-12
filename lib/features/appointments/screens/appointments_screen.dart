@@ -202,56 +202,53 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           users.where((e) => e.id == userId).first;
 
                       return Expanded(
-                        child: Container(
-                          color: colorScheme.background,
-                          child: ListView.builder(
-                            itemCount: events.length,
-                            itemBuilder: (ctx, index) => AppointmentCard(
-                              key: Key('appointment_${events[index].id!}'),
-                              name: findUser(events[index].userId).name,
-                              avatar: findUser(events[index].userId).avatar,
-                              appointment: events[index],
-                              onEditPressed: () {
-                                if (isLessThan24HoursFromNow(events[index])) {
-                                  SASnackBar.show(
-                                    context: context,
-                                    message: l10n.unableEditError,
-                                    isSuccess: false,
-                                  );
-                                } else {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => BlocProvider.value(
-                                        value: ctx.read<AppointmentBloc>(),
-                                        child: AppointmentForm(
-                                          appointment: events[index],
-                                          user: findUser(events[index].userId),
-                                          selectedDay: _selectedDay!,
-                                        ),
+                        child: ListView.builder(
+                          itemCount: events.length,
+                          itemBuilder: (ctx, index) => AppointmentCard(
+                            key: Key('appointment_${events[index].id!}'),
+                            name: findUser(events[index].userId).name,
+                            avatar: findUser(events[index].userId).avatar,
+                            appointment: events[index],
+                            onEditPressed: () {
+                              if (isLessThan24HoursFromNow(events[index])) {
+                                SASnackBar.show(
+                                  context: context,
+                                  message: l10n.unableEditError,
+                                  isSuccess: false,
+                                );
+                              } else {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => BlocProvider.value(
+                                      value: ctx.read<AppointmentBloc>(),
+                                      child: AppointmentForm(
+                                        appointment: events[index],
+                                        user: findUser(events[index].userId),
+                                        selectedDay: _selectedDay!,
                                       ),
                                     ),
-                                  );
-                                }
-                              },
-                              onRemovePressed: () {
-                                AlertConfirmDialog.show(
-                                  context: ctx,
-                                  title: l10n.removeConfirmTitle,
-                                  content: l10n.removeConfirmMessage,
-                                  onPressedRight: () {
-                                    ctx.read<AppointmentBloc>().add(
-                                          AppointmentRemoved(
-                                            appointmentId: events[index].id!,
-                                          ),
-                                        );
-                                  },
-                                  onPressedLeft: () {
-                                    Navigator.pop(ctx, false);
-                                  },
+                                  ),
                                 );
-                              },
-                            ),
+                              }
+                            },
+                            onRemovePressed: () {
+                              AlertConfirmDialog.show(
+                                context: ctx,
+                                title: l10n.removeConfirmTitle,
+                                content: l10n.removeConfirmMessage,
+                                onPressedRight: () {
+                                  ctx.read<AppointmentBloc>().add(
+                                        AppointmentRemoved(
+                                          appointmentId: events[index].id!,
+                                        ),
+                                      );
+                                },
+                                onPressedLeft: () {
+                                  Navigator.pop(ctx, false);
+                                },
+                              );
+                            },
                           ),
                         ),
                       );

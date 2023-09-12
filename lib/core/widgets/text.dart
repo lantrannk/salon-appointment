@@ -76,7 +76,7 @@ class _TimePicker extends SAText {
       text,
       textAlign: TextAlign.justify,
       style: textTheme.labelLarge!.copyWith(
-        color: colorScheme.tertiaryContainer,
+        color: colorScheme.onSurface,
       ),
     );
   }

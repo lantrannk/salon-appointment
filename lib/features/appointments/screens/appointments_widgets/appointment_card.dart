@@ -66,7 +66,7 @@ class AppointmentCard extends StatelessWidget {
                     onPressed: onEditPressed,
                     child: SAIcons(
                       icon: Assets.editIcon,
-                      color: colorScheme.tertiaryContainer,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(
@@ -76,7 +76,7 @@ class AppointmentCard extends StatelessWidget {
                     onPressed: onRemovePressed,
                     child: SAIcons(
                       icon: Assets.removeIcon,
-                      color: colorScheme.tertiaryContainer,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],

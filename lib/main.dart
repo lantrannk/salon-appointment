@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 import 'core/constants/constants.dart';
 import 'core/generated/l10n.dart';
 import 'core/theme/theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'features/appointments/screens/appointments_screen.dart';
 import 'features/appointments/screens/calendar_screen.dart';
 import 'features/auth/bloc/auth_bloc.dart';
@@ -15,7 +17,10 @@ import 'splash_screen.dart';
 
 void main() {
   runApp(
-    const MyApp(),
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (_) => ThemeProvider(),
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -32,6 +37,8 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Salon Appointment',
           theme: themeData,
+          darkTheme: darkTheme,
+          themeMode: Provider.of<ThemeProvider>(context).themeMode,
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             S.delegate,
