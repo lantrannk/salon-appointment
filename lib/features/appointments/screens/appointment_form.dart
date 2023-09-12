@@ -80,7 +80,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            widget.appointment == null
+            isNew
                 ? l10n.newAppointmentAppBarTitle
                 : l10n.editAppointmentAppBarTitle,
           ),
@@ -142,9 +142,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
                     SASnackBar.show(
                       context: context,
-                      message: widget.appointment == null
-                          ? l10n.addSuccess
-                          : l10n.updateSuccess,
+                      message: isNew ? l10n.addSuccess : l10n.updateSuccess,
                       isSuccess: true,
                     );
 
@@ -296,7 +294,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             );
                           } else {
                             context.read<AppointmentBloc>().add(
-                                  widget.appointment == null
+                                      isNew
                                       ? AppointmentAdded(
                                           appointment: Appointment(
                                             userId: user!.id,
@@ -304,10 +302,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                                             startTime: startTime,
                                             endTime: endTime,
                                             services: services!,
-                                            description:
-                                                descpController.text == ''
-                                                    ? l10n.defaultDescription
-                                                    : descpController.text,
+                                                description: description(l10n),
                                           ),
                                         )
                                       : AppointmentEdited(
@@ -317,17 +312,14 @@ class _AppointmentFormState extends State<AppointmentForm> {
                                             startTime: startTime,
                                             endTime: endTime,
                                             services: services,
-                                            description:
-                                                descpController.text == ''
-                                                    ? l10n.defaultDescription
-                                                    : descpController.text,
+                                                description: description(l10n),
                                           ),
                                         ),
                                 );
                           }
                         },
                         child: Text(
-                          widget.appointment == null
+                              isNew
                               ? l10n.createAppointmentButton
                               : l10n.editAppointmentButton,
                         ),
@@ -342,4 +334,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
       ),
     );
   }
+
+  bool get isNew => widget.appointment == null;
+
+  String description(S l10n) => descpController.text.isEmpty
+      ? l10n.defaultDescription
+      : descpController.text;
 }
