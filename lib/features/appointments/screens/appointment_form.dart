@@ -69,7 +69,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextTheme textTheme = Theme.of(context).textTheme;
-    final double indicatorHeight = MediaQuery.of(context).size.height / 2;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double indicatorHeight = screenHeight / 2;
     final l10n = S.of(context);
 
     return BlocProvider<AppointmentBloc>(
@@ -165,167 +167,172 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 }
               },
               builder: (context, state) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 12),
-                    Text(
-                      user?.name ?? '',
-                      style: textTheme.titleLarge!.copyWith(
-                        color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    DatePicker(
-                      dateTime: dateTime,
-                      onPressed: () async {
-                        final DateTime? date = await showDatePicker(
-                          context: context,
-                          initialDate: dateTime,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(dateTime.year + 5),
-                        );
-                        if (date != null && date != dateTime) {
-                          context.read<AppointmentBloc>().add(
-                                AppointmentDateTimeChanged(
-                                  date: date,
-                                  startTime: getTime(startTime),
-                                  endTime: getTime(endTime),
-                                ),
-                              );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TimePicker(
-                      startTime: startTime,
-                      endTime: endTime,
-                      onStartTimePressed: () async {
-                        final TimeOfDay? time = await showTimePicker(
-                          context: context,
-                          initialTime: getTime(startTime),
-                        );
-                        if (time != null && time != getTime(startTime)) {
-                          context.read<AppointmentBloc>().add(
-                                AppointmentDateTimeChanged(
-                                  date: dateTime,
-                                  startTime: time,
-                                  endTime: getTime(
-                                    autoAddHalfHour(
-                                      setDateTime(dateTime, time),
+                return SizedBox(
+                  height: screenHeight - keyboardHeight,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 12),
+                        Text(
+                          user?.name ?? '',
+                          style: textTheme.titleLarge!.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        DatePicker(
+                          dateTime: dateTime,
+                          onPressed: () async {
+                            final DateTime? date = await showDatePicker(
+                              context: context,
+                              initialDate: dateTime,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(dateTime.year + 5),
+                            );
+                            if (date != null && date != dateTime) {
+                              context.read<AppointmentBloc>().add(
+                                    AppointmentDateTimeChanged(
+                                      date: date,
+                                      startTime: getTime(startTime),
+                                      endTime: getTime(endTime),
                                     ),
-                                  ),
-                                ),
-                              );
-                        }
-                      },
-                      onEndTimePressed: () async {
-                        final TimeOfDay? time = await showTimePicker(
-                          context: context,
-                          initialTime: getTime(endTime),
-                        );
-                        if (time != null && time != getTime(endTime)) {
-                          context.read<AppointmentBloc>().add(
-                                AppointmentDateTimeChanged(
-                                  date: dateTime,
-                                  startTime: getTime(startTime),
-                                  endTime: time,
-                                ),
-                              );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    Dropdown(
-                      items: allServices,
-                      hint: l10n.servicesDropdownHint,
-                      style: textTheme.labelSmall!.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                      selectedValue: services,
-                      onChanged: (value) {
-                        setState(() {
-                          services = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    Input(
-                      controller: descpController,
-                      text: l10n.description,
-                      focusNode: descpFocusNode,
-                      onEditCompleted: () {
-                        FocusScope.of(context).unfocus();
-                      },
-                      color: colorScheme.onSurface,
-                      maxLines: 4,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          width: 1,
-                          color: colorScheme.onSurface,
+                                  );
+                            }
+                          },
                         ),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
-                      height: 44,
-                      width: double.infinity,
-                      child: SAButton.elevated(
-                        onPressed: () async {
-                          final appointments =
-                              await appointmentRepo.getAllAppointments();
-
-                          if (isFullAppointments(
-                            appointments,
-                            startTime,
-                            endTime,
-                          )) {
-                            SASnackBar.show(
+                        const SizedBox(height: 12),
+                        TimePicker(
+                          startTime: startTime,
+                          endTime: endTime,
+                          onStartTimePressed: () async {
+                            final TimeOfDay? time = await showTimePicker(
                               context: context,
-                              message: l10n.fullAppointmentsError,
-                              isSuccess: false,
+                              initialTime: getTime(startTime),
                             );
-                          } else if (services == null) {
-                            SASnackBar.show(
-                              context: context,
-                              message: l10n.emptyServicesError,
-                              isSuccess: false,
-                            );
-                          } else {
-                            context.read<AppointmentBloc>().add(
-                                      isNew
-                                      ? AppointmentAdded(
-                                          appointment: Appointment(
-                                            userId: user!.id,
-                                            date: dateTime,
-                                            startTime: startTime,
-                                            endTime: endTime,
-                                            services: services!,
-                                                description: description(l10n),
-                                          ),
-                                        )
-                                      : AppointmentEdited(
-                                          appointment:
-                                              widget.appointment!.copyWith(
-                                            date: dateTime,
-                                            startTime: startTime,
-                                            endTime: endTime,
-                                            services: services,
-                                                description: description(l10n),
-                                          ),
+                            if (time != null && time != getTime(startTime)) {
+                              context.read<AppointmentBloc>().add(
+                                    AppointmentDateTimeChanged(
+                                      date: dateTime,
+                                      startTime: time,
+                                      endTime: getTime(
+                                        autoAddHalfHour(
+                                          setDateTime(dateTime, time),
                                         ),
-                                );
-                          }
-                        },
-                        child: Text(
-                              isNew
-                              ? l10n.createAppointmentButton
-                              : l10n.editAppointmentButton,
+                                      ),
+                                    ),
+                                  );
+                            }
+                          },
+                          onEndTimePressed: () async {
+                            final TimeOfDay? time = await showTimePicker(
+                              context: context,
+                              initialTime: getTime(endTime),
+                            );
+                            if (time != null && time != getTime(endTime)) {
+                              context.read<AppointmentBloc>().add(
+                                    AppointmentDateTimeChanged(
+                                      date: dateTime,
+                                      startTime: getTime(startTime),
+                                      endTime: time,
+                                    ),
+                                  );
+                            }
+                          },
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        Dropdown(
+                          items: allServices,
+                          hint: l10n.servicesDropdownHint,
+                          style: textTheme.labelSmall!.copyWith(
+                            color: colorScheme.onSurface,
+                          ),
+                          selectedValue: services,
+                          onChanged: (value) {
+                            setState(() {
+                              services = value;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        Input(
+                          controller: descpController,
+                          text: l10n.description,
+                          focusNode: descpFocusNode,
+                          onEditCompleted: () {
+                            FocusScope.of(context).unfocus();
+                          },
+                          color: colorScheme.onSurface,
+                          maxLines: 4,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              width: 1,
+                              color: colorScheme.onSurface,
+                            ),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          height: 44,
+                          width: double.infinity,
+                          child: SAButton.elevated(
+                            onPressed: () async {
+                              final appointments =
+                                  await appointmentRepo.getAllAppointments();
+
+                              if (isFullAppointments(
+                                appointments,
+                                startTime,
+                                endTime,
+                              )) {
+                                SASnackBar.show(
+                                  context: context,
+                                  message: l10n.fullAppointmentsError,
+                                  isSuccess: false,
+                                );
+                              } else if (services == null) {
+                                SASnackBar.show(
+                                  context: context,
+                                  message: l10n.emptyServicesError,
+                                  isSuccess: false,
+                                );
+                              } else {
+                                context.read<AppointmentBloc>().add(
+                                      isNew
+                                          ? AppointmentAdded(
+                                              appointment: Appointment(
+                                                userId: user!.id,
+                                                date: dateTime,
+                                                startTime: startTime,
+                                                endTime: endTime,
+                                                services: services!,
+                                                description: description(l10n),
+                                              ),
+                                            )
+                                          : AppointmentEdited(
+                                              appointment:
+                                                  widget.appointment!.copyWith(
+                                                date: dateTime,
+                                                startTime: startTime,
+                                                endTime: endTime,
+                                                services: services,
+                                                description: description(l10n),
+                                              ),
+                                            ),
+                                    );
+                              }
+                            },
+                            child: Text(
+                              isNew
+                                  ? l10n.createAppointmentButton
+                                  : l10n.editAppointmentButton,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 );
               },
             ),

@@ -48,124 +48,127 @@ class _LoginScreenState extends State<LoginScreen> {
     final l10n = S.of(context);
 
     return CommonLayout(
-      child: Padding(
+      child: Container(
+        height: screenHeight - keyboardHeight,
         padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 102,
-              ),
-              child: Container(
-                padding: EdgeInsets.only(
-                  bottom: keyboardHeight > 0 ? 100 : 140,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 52,
                 ),
-                child: SAText(
-                  text: l10n.logo,
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: colorScheme.onPrimary,
+                child: Container(
+                  padding: EdgeInsets.only(
+                    bottom: keyboardHeight > 0 ? 40 : 140,
+                  ),
+                  child: SAText(
+                    text: l10n.logo,
+                    style: TextStyle(
+                      fontSize: 40,
+                      color: colorScheme.onPrimary,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Input.phoneNumber(
-              text: l10n.phoneNumber,
-              controller: phoneNumberController,
-              focusNode: phoneNumberFocusNode,
-              onEditCompleted: () {
-                FocusScope.of(context).nextFocus();
-              },
-              errorText: phoneNumberErrorText,
-              onChanged: (value) {
-                setState(() {
-                  phoneNumberErrorText =
-                      FormValidation.isValidPhoneNumber(value);
-                  phoneNumber = phoneNumberController.text;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
-            Input.password(
-              text: l10n.password,
-              controller: passwordController,
-              focusNode: passwordFocusNode,
-              onEditCompleted: () {
-                FocusScope.of(context).unfocus();
-              },
-              errorText: passwordErrorText,
-              onChanged: (value) {
-                setState(() {
-                  passwordErrorText = FormValidation.isValidPassword(value);
-                  password = passwordController.text;
-                });
-              },
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              child: BlocListener<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is LoginInProgress) {
-                    loadingIndicator.show(
-                      context: context,
-                      height: indicatorHeight,
-                    );
-                  }
-                  if (state is LoginSuccess) {
-                    Navigator.pushReplacementNamed(context, Routes.calendar);
-                  }
-                  if (state is LoginFailure) {
-                    loadingIndicator.hide(context);
-                    switch (state.error) {
-                      case ErrorMessage.invalidAccount:
-                        SASnackBar.show(
-                          context: context,
-                          message: l10n.invalidAccountError,
-                          isSuccess: false,
-                        );
-                        break;
-                      case ErrorMessage.incorrectAccount:
-                        SASnackBar.show(
-                          context: context,
-                          message: l10n.incorrectAccountError,
-                          isSuccess: false,
-                        );
-                        break;
-                      default:
-                        SASnackBar.show(
-                          context: context,
-                          message: state.error,
-                          isSuccess: false,
-                        );
-                        break;
-                    }
-                  }
+              Input.phoneNumber(
+                text: l10n.phoneNumber,
+                controller: phoneNumberController,
+                focusNode: phoneNumberFocusNode,
+                onEditCompleted: () {
+                  FocusScope.of(context).nextFocus();
                 },
-                child: BlocBuilder<AuthBloc, AuthState>(
-                  builder: (ctx, state) {
-                    return SAButton.outlined(
-                      child: SAText(
-                        text: l10n.loginButton,
-                        style: textTheme.labelMedium!.copyWith(
-                          color: colorScheme.onPrimary,
-                        ),
-                      ),
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-                        ctx.read<AuthBloc>().add(
-                              LoginEvent(
-                                phoneNumber: phoneNumberController.text,
-                                password: passwordController.text,
-                              ),
-                            );
-                      },
-                    );
+                errorText: phoneNumberErrorText,
+                onChanged: (value) {
+                  setState(() {
+                    phoneNumberErrorText =
+                        FormValidation.isValidPhoneNumber(value);
+                    phoneNumber = phoneNumberController.text;
+                  });
+                },
+              ),
+              const SizedBox(height: 16),
+              Input.password(
+                text: l10n.password,
+                controller: passwordController,
+                focusNode: passwordFocusNode,
+                onEditCompleted: () {
+                  FocusScope.of(context).unfocus();
+                },
+                errorText: passwordErrorText,
+                onChanged: (value) {
+                  setState(() {
+                    passwordErrorText = FormValidation.isValidPassword(value);
+                    password = passwordController.text;
+                  });
+                },
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                child: BlocListener<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    if (state is LoginInProgress) {
+                      loadingIndicator.show(
+                        context: context,
+                        height: indicatorHeight,
+                      );
+                    }
+                    if (state is LoginSuccess) {
+                      Navigator.pushReplacementNamed(context, Routes.calendar);
+                    }
+                    if (state is LoginFailure) {
+                      loadingIndicator.hide(context);
+                      switch (state.error) {
+                        case ErrorMessage.invalidAccount:
+                          SASnackBar.show(
+                            context: context,
+                            message: l10n.invalidAccountError,
+                            isSuccess: false,
+                          );
+                          break;
+                        case ErrorMessage.incorrectAccount:
+                          SASnackBar.show(
+                            context: context,
+                            message: l10n.incorrectAccountError,
+                            isSuccess: false,
+                          );
+                          break;
+                        default:
+                          SASnackBar.show(
+                            context: context,
+                            message: state.error,
+                            isSuccess: false,
+                          );
+                          break;
+                      }
+                    }
                   },
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    builder: (ctx, state) {
+                      return SAButton.outlined(
+                        child: SAText(
+                          text: l10n.loginButton,
+                          style: textTheme.labelMedium!.copyWith(
+                            color: colorScheme.onPrimary,
+                          ),
+                        ),
+                        onPressed: () {
+                          FocusScope.of(context).unfocus();
+                          ctx.read<AuthBloc>().add(
+                                LoginEvent(
+                                  phoneNumber: phoneNumberController.text,
+                                  password: passwordController.text,
+                                ),
+                              );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
