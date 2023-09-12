@@ -28,10 +28,8 @@ void main() {
     );
 
     calendarCellWidget = Scaffold(
-      body: Scaffold(
-        body: CalendarCell(
-          day: DateTime(2023, 08, 11),
-        ),
+      body: CalendarCell(
+        day: DateTime(2023, 08, 11),
       ),
     );
   });
