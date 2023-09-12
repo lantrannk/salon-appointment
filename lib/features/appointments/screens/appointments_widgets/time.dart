@@ -28,7 +28,7 @@ class Time extends StatelessWidget {
           children: [
             SAIcons(
               icon: Assets.scheduleIcon,
-              size: 20,
+              size: 16,
               color: colorScheme.tertiary,
             ),
             const SizedBox(

@@ -92,7 +92,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                 onPressed: () => Navigator.of(context).pop(),
                 child: SAIcons(
                   icon: Assets.closeIcon,
-                  color: colorScheme.tertiaryContainer,
+                  color: colorScheme.onSurface,
                 ),
               ),
             ),
@@ -255,12 +255,12 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       onEditCompleted: () {
                         FocusScope.of(context).unfocus();
                       },
-                      color: colorScheme.tertiaryContainer,
+                      color: colorScheme.onSurface,
                       maxLines: 4,
                       border: OutlineInputBorder(
                         borderSide: BorderSide(
                           width: 1,
-                          color: colorScheme.tertiaryContainer,
+                          color: colorScheme.onSurface,
                         ),
                         borderRadius: BorderRadius.circular(8),
                       ),
