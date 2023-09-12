@@ -30,6 +30,7 @@ class SATextTheme {
         fontSize: fontSize,
         fontWeight: FontWeight.normal,
         height: (lineHeight ?? fontSize) / fontSize,
+        letterSpacing: -0.24,
       );
 
   static final TextTheme textTheme = TextTheme(
