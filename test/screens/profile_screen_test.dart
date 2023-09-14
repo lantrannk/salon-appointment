@@ -31,7 +31,7 @@ void main() {
   late Finder userNameFinder;
   late Finder logoutButtonFinder;
 
-  final user = MockDataUser.adminUser;
+  const user = MockDataUser.adminUser;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});

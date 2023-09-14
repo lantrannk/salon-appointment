@@ -29,6 +29,9 @@ void main() {
   late List<int> editLog;
   late List<int> removeLog;
 
+  const user = MockDataUser.adminUser;
+  final appointment = MockDataAppointment.appointment;
+
   setUp(() {
     editLog = [];
     removeLog = [];
@@ -72,10 +75,9 @@ void main() {
 
     appointmentCardWidget = Scaffold(
       body: AppointmentCard(
-        appointment: MockDataAppointment.appointment,
-        name: 'Lan Tran',
-        avatar:
-            'https://www.google.com/imgres?imgurl=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F03%2F14%2F36%2F24%2F360_F_314362441_Tx4djxQlxSSRutWEbaWP40jFvbvW0P3J.jpg&tbnid=fxJ8HNBgf3StGM&vet=12ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg..i&imgrefurl=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3Dbeauty&docid=sLPERW_WHMMG4M&w=540&h=360&q=beauty%20image&ved=2ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg',
+        appointment: appointment,
+        name: user.name,
+        avatar: user.avatar,
         onEditPressed: onEditPressed,
         onRemovePressed: onRemovePressed,
       ),

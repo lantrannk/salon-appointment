@@ -55,7 +55,7 @@ void main() {
     'id': '80'
   });
 
-  final user = MockDataUser.adminUser;
+  const user = MockDataUser.adminUser;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
@@ -67,7 +67,7 @@ void main() {
 
     expectedStates = [
       AppointmentInitializeInProgress(),
-      AppointmentInitializeSuccess(
+      const AppointmentInitializeSuccess(
         user: MockDataUser.adminUser,
       ),
     ];

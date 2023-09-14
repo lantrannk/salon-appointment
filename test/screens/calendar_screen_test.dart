@@ -38,7 +38,7 @@ void main() {
   final appointments = MockDataAppointment.allAppointments;
 
   final users = MockDataUser.allUsers;
-  final user = MockDataUser.adminUser;
+  const user = MockDataUser.adminUser;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
