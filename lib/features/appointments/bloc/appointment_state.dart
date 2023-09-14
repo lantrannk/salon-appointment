@@ -29,6 +29,8 @@ abstract class AppointmentState extends Equatable {
   DateTime get startTime => DateTime.now();
 
   DateTime get endTime => DateTime.now();
+
+  String get services => '';
 }
 
 class AppointmentInitial extends AppointmentState {
@@ -177,4 +179,16 @@ class AppointmentInitializeFailure extends AppointmentState {
 
   @override
   List<Object?> get props => [error];
+}
+
+class AppointmentServicesChangeSuccess extends AppointmentState {
+  const AppointmentServicesChangeSuccess({
+    required this.services,
+  });
+
+  @override
+  final String services;
+
+  @override
+  List<Object?> get props => [services];
 }
