@@ -5,6 +5,10 @@ abstract class AuthState extends Equatable {
 
   String get name => '';
   String get avatar => '';
+  String get phoneNumber => '';
+  String get password => '';
+  String? get phoneNumberErrorText => null;
+  String? get passwordErrorText => null;
 
   @override
   List<Object> get props => [];
@@ -38,4 +42,32 @@ class UserLoadFailure extends AuthState {
   const UserLoadFailure({this.error});
 
   final String? error;
+}
+
+class LoginInformationBeforeChange extends AuthState {}
+
+class LoginPhoneNumberOnChange extends AuthState {
+  const LoginPhoneNumberOnChange({
+    required this.phoneNumber,
+    this.phoneNumberErrorText,
+  });
+
+  @override
+  final String phoneNumber;
+
+  @override
+  final String? phoneNumberErrorText;
+}
+
+class LoginPasswordOnChange extends AuthState {
+  const LoginPasswordOnChange({
+    required this.password,
+    this.passwordErrorText,
+  });
+
+  @override
+  final String password;
+
+  @override
+  final String? passwordErrorText;
 }
