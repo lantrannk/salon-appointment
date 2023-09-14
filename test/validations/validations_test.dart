@@ -89,7 +89,7 @@ void main() {
       );
     });
 
-    test('password has no numberic character then return an error string', () {
+    test('password has no numeric character then return an error string', () {
       const String password = 'QWEqwe!@#';
 
       expect(
