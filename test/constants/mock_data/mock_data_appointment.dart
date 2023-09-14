@@ -7,7 +7,7 @@ class MockDataAppointment {
   static const String appointmentJson =
       '{"date":"2023-08-15T10:55:00.000","startTime":"2023-08-15T10:00:00.000","endTime":"2023-08-15T10:30:00.000","userId":"1","services":"Non-Invasive Body Contouring","description":"Nothing to write.","isCompleted":false,"id":"84"}';
 
-  static final appointment = Appointment.fromJson(const {
+  static const appointmentToJson = {
     'date': '2023-08-15T10:55:00.000',
     'startTime': '2023-08-15T10:00:00.000',
     'endTime': '2023-08-15T10:30:00.000',
@@ -16,7 +16,18 @@ class MockDataAppointment {
     'description': 'Nothing to write.',
     'isCompleted': false,
     'id': '84'
-  });
+  };
+
+  static final appointment = Appointment(
+    date: DateTime(2023, 8, 15, 10, 55),
+    startTime: DateTime(2023, 8, 15, 10, 0),
+    endTime: DateTime(2023, 8, 15, 10, 30),
+    userId: '1',
+    services: 'Non-Invasive Body Contouring',
+    description: 'Nothing to write.',
+    isCompleted: false,
+    id: '84',
+  );
 
   static final List<Appointment> allAppointments = [
     {
