@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/auth/bloc/auth_bloc.dart';
+import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,41 +18,37 @@ void main() {
 
   late UserRepository userRepo;
 
+  final List<User> users = MockDataUser.allUsers;
+  const User adminUser = MockDataUser.adminUser;
+
+  const String invalidAccountError = 'invalid-account';
+  const String incorrectAccountError = 'incorrect-account';
+
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
     userRepo = MockUserRepo();
 
-    when(() => userRepo.getUsers())
-        .thenAnswer((_) async => MockDataUser.allUsers);
-
-    when(() => userRepo.setUser(MockDataUser.adminUser))
-        .thenAnswer((_) async => Future.value());
-
-    when(() => userRepo.getUser())
-        .thenAnswer((_) async => MockDataUser.adminUser);
-
-    when(() => userRepo.clearStorage()).thenAnswer((_) async => Future.value());
-  });
-
-  group('test auth bloc: login -', () {
-    blocTest<AuthBloc, AuthState>(
-      'login successful',
-      build: () => AuthBloc(userRepo),
-      act: (bloc) => bloc.add(
-        const LoginEvent(
-          phoneNumber: '0794542105',
-          password: '123456',
-        ),
-      ),
-      expect: () => <AuthState>[
-        LoginInProgress(),
-        LoginSuccess(),
-      ],
+    when(() => userRepo.getUsers()).thenAnswer(
+      (_) async => users,
     );
 
+    when(() => userRepo.setUser(adminUser)).thenAnswer(
+      (_) async => Future.value(),
+    );
+
+    when(() => userRepo.getUser()).thenAnswer(
+      (_) async => adminUser,
+    );
+
+    when(() => userRepo.clearStorage()).thenAnswer(
+      (_) async => Future.value(),
+    );
+  });
+
+  group('test auth bloc: login', () {
     blocTest<AuthBloc, AuthState>(
-      'login error when phone number is empty',
+      'error when phone number is empty',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -61,12 +58,12 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when phone number is not a number',
+      'error when phone number is not a number',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -76,12 +73,12 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when phone number is longer than 10 digits',
+      'error when phone number is longer than 10 digits',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -91,12 +88,12 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when phone number is shorter than 10 digits',
+      'error when phone number is shorter than 10 digits',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -107,12 +104,12 @@ void main() {
       wait: const Duration(seconds: 2),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when password is empty',
+      'error when password is empty',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -122,12 +119,12 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when password is shorter than 6 characters',
+      'error when password is shorter than 8 characters',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -137,12 +134,72 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('invalid-account'),
+        const LoginFailure(invalidAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when phone number not exist',
+      'error when password has no Uppercase character',
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const LoginEvent(
+          phoneNumber: '0905999222',
+          password: 'qwe123!@#',
+        ),
+      ),
+      expect: () => <AuthState>[
+        LoginInProgress(),
+        const LoginFailure(invalidAccountError),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'error when password has no lowercase character',
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const LoginEvent(
+          phoneNumber: '0905999222',
+          password: 'QWE123!@#',
+        ),
+      ),
+      expect: () => <AuthState>[
+        LoginInProgress(),
+        const LoginFailure(invalidAccountError),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'error when password has no numeric character',
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const LoginEvent(
+          phoneNumber: '0905999222',
+          password: 'qweQWE!@#',
+        ),
+      ),
+      expect: () => <AuthState>[
+        LoginInProgress(),
+        const LoginFailure(invalidAccountError),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'error when password has no special character',
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const LoginEvent(
+          phoneNumber: '0905999222',
+          password: 'qwe123QWE',
+        ),
+      ),
+      expect: () => <AuthState>[
+        LoginInProgress(),
+        const LoginFailure(invalidAccountError),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'error when phone number not exist',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -152,12 +209,12 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('incorrect-account'),
+        const LoginFailure(incorrectAccountError),
       ],
     );
 
     blocTest<AuthBloc, AuthState>(
-      'login error when password is incorrect',
+      'error when password is incorrect',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LoginEvent(
@@ -167,14 +224,29 @@ void main() {
       ),
       expect: () => <AuthState>[
         LoginInProgress(),
-        const LoginFailure('incorrect-account'),
+        const LoginFailure(incorrectAccountError),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'successful',
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const LoginEvent(
+          phoneNumber: '0794542105',
+          password: 'qwQW12!@',
+        ),
+      ),
+      expect: () => <AuthState>[
+        LoginInProgress(),
+        LoginSuccess(),
       ],
     );
   });
 
-  group('test auth bloc: logout -', () {
+  group('test auth bloc: logout', () {
     blocTest<AuthBloc, AuthState>(
-      'logout successful',
+      'successful',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const LogoutEvent(),
@@ -186,17 +258,35 @@ void main() {
     );
   });
 
-  group('test auth bloc: user load -', () {
+  group('test auth bloc: user load', () {
     blocTest<AuthBloc, AuthState>(
-      'user load successful',
+      'successful',
       build: () => AuthBloc(userRepo),
       act: (bloc) => bloc.add(
         const UserLoad(),
       ),
       expect: () => <AuthState>[
         UserLoadSuccess(
-          MockDataUser.adminUser.name,
-          MockDataUser.adminUser.avatar,
+          adminUser.name,
+          adminUser.avatar,
+        ),
+      ],
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'failure',
+      setUp: () async {
+        when(() => userRepo.getUser()).thenThrow(
+          Exception('User not found.'),
+        );
+      },
+      build: () => AuthBloc(userRepo),
+      act: (bloc) => bloc.add(
+        const UserLoad(),
+      ),
+      expect: () => <AuthState>[
+        const UserLoadFailure(
+          error: 'User not found.',
         ),
       ],
     );
