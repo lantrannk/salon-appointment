@@ -15,7 +15,7 @@ class MockDataUser {
     'name': 'Lan Tran',
     'avatar':
         'https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg',
-    'password': '123456',
+    'password': 'qwQW12!@',
     'isAdmin': true,
     'id': '1'
   };
@@ -46,7 +46,7 @@ class MockDataUser {
       'name': 'Lan Tran',
       'avatar':
           'https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg',
-      'password': '123456',
+      'password': 'qwQW12!@',
       'isAdmin': true,
       'id': '1'
     },
@@ -55,7 +55,7 @@ class MockDataUser {
       'name': 'Carol Williams',
       'avatar':
           'https://assets.vogue.in/photos/611cf20c8733032148fe1b06/2:3/w_2560%2Cc_limit/Slide%25201.jpg',
-      'password': '123456',
+      'password': 'qwQW12!@',
       'isAdmin': false,
       'id': '2'
     },
@@ -64,7 +64,7 @@ class MockDataUser {
       'name': 'Hailee Steinfeld',
       'avatar':
           'https://glints.com/vn/blog/wp-content/uploads/2022/08/co%CC%82ng-vie%CC%A3%CC%82c-beauty-blogger-819x1024.jpg',
-      'password': '123456',
+      'password': 'qwQW12!@',
       'isAdmin': false,
       'id': '3'
     },
@@ -73,7 +73,7 @@ class MockDataUser {
       'name': 'Ruby Nguyen',
       'avatar':
           'https://studiochupanhdep.com//Upload/Images/Album/anh-beauty-11.jpg',
-      'password': '123456',
+      'password': 'qwQW12!@',
       'isAdmin': false,
       'id': '4'
     },
@@ -82,7 +82,7 @@ class MockDataUser {
       'name': 'Elizabeth Taylor',
       'avatar':
           'https://www.m1-beauty.de/assets/images/f/Ronja_VorherNachher_45Grad_2-c7cc48ca.jpg',
-      'password': '123456',
+      'password': 'qwQW12!@',
       'isAdmin': false,
       'id': '5'
     },
