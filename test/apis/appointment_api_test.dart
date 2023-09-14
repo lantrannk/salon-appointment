@@ -5,10 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 
-import '../constants/api_error.dart';
-import '../constants/api_error_message.dart';
-import '../constants/api_url.dart';
-import '../constants/mock_data/mock_data.dart';
+import '../constants/constants.dart';
 
 class MockClient extends Mock implements http.Client {}
 
