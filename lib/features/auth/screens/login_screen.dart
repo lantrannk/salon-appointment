@@ -4,10 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/common_layout.dart';
-import '../../../core/validations/validations.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
-import '../repository/user_repository.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,8 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final userRepo = UserRepository();
-
   final phoneNumberController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -27,9 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   String? phoneNumberErrorText;
   String? passwordErrorText;
-
-  String phoneNumber = '';
-  String password = '';
 
   @override
   void dispose() {
@@ -72,41 +65,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              Input.phoneNumber(
-                text: l10n.phoneNumber,
-                controller: phoneNumberController,
-                focusNode: phoneNumberFocusNode,
-                onEditCompleted: () {
-                  FocusScope.of(context).nextFocus();
-                },
-                errorText: phoneNumberErrorText,
-                onChanged: (value) {
-                  setState(() {
-                    phoneNumberErrorText =
-                        FormValidation.isValidPhoneNumber(value);
-                    phoneNumber = phoneNumberController.text;
-                  });
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  return Input.phoneNumber(
+                    text: l10n.phoneNumber,
+                    controller: phoneNumberController,
+                    focusNode: phoneNumberFocusNode,
+                    onEditCompleted: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                    errorText: state.phoneNumberErrorText,
+                    onChanged: (value) {
+                      context.read<AuthBloc>().add(
+                            LoginPhoneNumberChanged(
+                              phoneNumber: value,
+                            ),
+                          );
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 16),
-              Input.password(
-                text: l10n.password,
-                controller: passwordController,
-                focusNode: passwordFocusNode,
-                onEditCompleted: () {
-                  FocusScope.of(context).unfocus();
-                },
-                errorText: passwordErrorText,
-                onChanged: (value) {
-                  setState(() {
-                    passwordErrorText = FormValidation.isValidPassword(value);
-                    password = passwordController.text;
-                  });
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, state) {
+                  return Input.password(
+                    text: l10n.password,
+                    controller: passwordController,
+                    focusNode: passwordFocusNode,
+                    onEditCompleted: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                    errorText: state.passwordErrorText,
+                    onChanged: (value) {
+                      context.read<AuthBloc>().add(
+                            LoginPasswordChanged(
+                              password: value,
+                            ),
+                          );
+                    },
+                  );
                 },
               ),
               const SizedBox(height: 24),
               SizedBox(
-                child: BlocListener<AuthBloc, AuthState>(
+                child: BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
                     if (state is LoginInProgress) {
                       loadingIndicator.show(
@@ -144,27 +146,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                     }
                   },
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    builder: (ctx, state) {
-                      return SAButton.outlined(
-                        child: SAText(
-                          text: l10n.loginButton,
-                          style: textTheme.labelMedium!.copyWith(
-                            color: colorScheme.onPrimary,
-                          ),
+                  builder: (ctx, state) {
+                    return SAButton.outlined(
+                      child: SAText(
+                        text: l10n.loginButton,
+                        style: textTheme.labelMedium!.copyWith(
+                          color: colorScheme.onPrimary,
                         ),
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          ctx.read<AuthBloc>().add(
-                                LoginEvent(
-                                  phoneNumber: phoneNumberController.text,
-                                  password: passwordController.text,
-                                ),
-                              );
-                        },
-                      );
-                    },
-                  ),
+                      ),
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+                        ctx.read<AuthBloc>().add(
+                              LoginEvent(
+                                phoneNumber: phoneNumberController.text,
+                                password: passwordController.text,
+                              ),
+                            );
+                      },
+                    );
+                  },
                 ),
               ),
             ],
