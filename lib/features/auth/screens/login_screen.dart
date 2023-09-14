@@ -21,9 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final phoneNumberFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
 
-  String? phoneNumberErrorText;
-  String? passwordErrorText;
-
   @override
   void dispose() {
     phoneNumberController.dispose();
@@ -66,6 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               BlocBuilder<AuthBloc, AuthState>(
+                buildWhen: (previous, current) =>
+                    previous.phoneNumberErrorText !=
+                    current.phoneNumberErrorText,
                 builder: (context, state) {
                   return Input.phoneNumber(
                     text: l10n.phoneNumber,
@@ -87,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 16),
               BlocBuilder<AuthBloc, AuthState>(
+                buildWhen: (previous, current) =>
+                    previous.passwordErrorText != current.passwordErrorText,
                 builder: (context, state) {
                   return Input.password(
                     text: l10n.password,
