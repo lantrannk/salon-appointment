@@ -13,6 +13,7 @@ class Input extends StatelessWidget {
     this.maxLines,
     this.border,
     this.textInputAction,
+    this.letterSpacing = -0.24,
     super.key,
   });
 
@@ -23,6 +24,7 @@ class Input extends StatelessWidget {
     required VoidCallback onEditCompleted,
     String? errorText,
     Function(String)? onChanged,
+    double? letterSpacing,
   }) = _PhoneNumberInput;
 
   const factory Input.password({
@@ -32,6 +34,7 @@ class Input extends StatelessWidget {
     required VoidCallback onEditCompleted,
     String? errorText,
     Function(String)? onChanged,
+    double? letterSpacing,
   }) = _PasswordInput;
 
   final String text;
@@ -43,6 +46,7 @@ class Input extends StatelessWidget {
   final int? maxLines;
   final OutlineInputBorder? border;
   final TextInputAction? textInputAction;
+  final double? letterSpacing;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,7 @@ class Input extends StatelessWidget {
         focusNode: focusNode,
         style: textTheme.labelSmall!.copyWith(
           color: color,
-          letterSpacing: -0.24,
+          letterSpacing: letterSpacing,
         ),
         decoration: InputDecoration(
           hintText: text,
@@ -81,6 +85,7 @@ class _PhoneNumberInput extends Input {
     required super.onEditCompleted,
     this.errorText,
     this.onChanged,
+    super.letterSpacing,
   });
 
   final String? errorText;
@@ -98,16 +103,11 @@ class _PhoneNumberInput extends Input {
       keyboardType: TextInputType.phone,
       style: textTheme.labelSmall!.copyWith(
         color: colorScheme.onPrimary,
-        letterSpacing: -0.24,
+        letterSpacing: letterSpacing,
       ),
       decoration: InputDecoration(
         hintText: text,
         errorText: errorText,
-        errorStyle: const TextStyle(
-          height: 0.7,
-          fontSize: 12,
-        ),
-        errorMaxLines: 1,
         prefix: const Padding(
           padding: EdgeInsets.only(left: 10),
         ),
@@ -129,6 +129,7 @@ class _PasswordInput extends Input {
     required super.onEditCompleted,
     this.errorText,
     this.onChanged,
+    super.letterSpacing,
   });
 
   final String? errorText;
@@ -146,16 +147,11 @@ class _PasswordInput extends Input {
       obscureText: true,
       style: textTheme.labelSmall!.copyWith(
         color: colorScheme.onPrimary,
-        letterSpacing: -0.24,
+        letterSpacing: letterSpacing,
       ),
       decoration: InputDecoration(
         hintText: text,
         errorText: errorText,
-        errorStyle: const TextStyle(
-          height: 0.7,
-          fontSize: 12,
-        ),
-        errorMaxLines: 1,
         prefix: const Padding(
           padding: EdgeInsets.only(left: 10),
         ),

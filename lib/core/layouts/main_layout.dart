@@ -61,8 +61,9 @@ class _MainLayoutState extends State<MainLayout> {
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    color: colorScheme.tertiary,
+                    color: colorScheme.primaryContainer,
                     strokeAlign: BorderSide.strokeAlignInside,
+                    width: 0.5,
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -78,7 +79,7 @@ class _MainLayoutState extends State<MainLayout> {
                         ? Assets.lightIcon
                         : Assets.darkIcon,
                     size: 20,
-                    color: colorScheme.tertiary,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -112,8 +113,8 @@ class _MainLayoutState extends State<MainLayout> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.1601),
-              offset: const Offset(0, -2),
+              color: colorScheme.shadow,
+              offset: const Offset(0, 2),
               blurRadius: 8,
               spreadRadius: 0,
               blurStyle: BlurStyle.outer,

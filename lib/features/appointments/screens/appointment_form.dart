@@ -174,7 +174,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       user?.name ?? '',
                       style: textTheme.titleLarge!.copyWith(
                         color: colorScheme.onSurface,
-                        fontWeight: FontWeight.w500,
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -239,14 +238,19 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     ),
                     const SizedBox(height: 12),
                     Dropdown(
-                        items: allServices,
-                        hint: l10n.servicesDropdownHint,
-                        selectedValue: services,
-                        onChanged: (value) {
-                          setState(() {
-                            services = value;
-                          });
-                        }),
+                      items: allServices,
+                      hint: l10n.servicesDropdownHint,
+                      style: textTheme.labelSmall!.copyWith(
+                        color: colorScheme.onSurface,
+                        letterSpacing: -0.24,
+                      ),
+                      selectedValue: services,
+                      onChanged: (value) {
+                        setState(() {
+                          services = value;
+                        });
+                      },
+                    ),
                     const SizedBox(height: 12),
                     Input(
                       controller: descpController,

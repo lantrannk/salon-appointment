@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
+import '../../../core/theme/theme.dart';
 import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/repository/user_repository.dart';
@@ -38,8 +39,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    final TextTheme textTheme = Theme.of(context).textTheme;
+    final ThemeData themeData = Theme.of(context);
+    final TextTheme textTheme = themeData.textTheme;
+    final ColorScheme colorScheme = themeData.colorScheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 4;
     final l10n = S.of(context);
 
@@ -69,7 +71,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return MonthCalendarCell(
                         day: day,
                         events: events,
-                        bgColor: colorScheme.primary.withOpacity(0.0798),
+                        bgColor: colorScheme.primary.withOpacity(
+                          themeData.todayBackgroundOpacity,
+                        ),
                       );
                     },
                     defaultBuilder: (context, day, focusedDay) {
@@ -256,7 +260,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     );
                 }
-                return Container();
+                return const SizedBox.shrink();
               },
             ),
           ],
@@ -286,7 +290,9 @@ class CalendarChevronText extends StatelessWidget {
         calendarTitleFormat.format(focusedDay),
         textAlign: textAlign,
         style: themeData.textTheme.bodyMedium!.copyWith(
-          color: themeData.colorScheme.onPrimary.withOpacity(0.3991),
+          color: themeData.colorScheme.onPrimary.withOpacity(
+            themeData.chevronTextOpacity,
+          ),
         ),
       ),
     );

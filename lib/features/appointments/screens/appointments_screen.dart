@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
+import '../../../core/theme/theme.dart';
 import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
@@ -43,8 +44,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData themeData = Theme.of(context);
+    final TextTheme textTheme = themeData.textTheme;
+    final ColorScheme colorScheme = themeData.colorScheme;
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
     final l10n = S.of(context);
 
@@ -69,7 +71,9 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                         offset: const Offset(0, 8),
                         blurRadius: 12,
                         spreadRadius: 0,
-                        color: colorScheme.primary.withOpacity(0.3219),
+                        color: colorScheme.primary.withOpacity(
+                          themeData.calendarShadowOpacity,
+                        ),
                         blurStyle: BlurStyle.outer,
                       ),
                     ],
@@ -140,7 +144,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     blurRadius: 8,
                     blurStyle: BlurStyle.outer,
                     spreadRadius: 0,
-                    color: colorScheme.primary.withOpacity(0.16),
+                    color: colorScheme.shadow,
                   ),
                 ],
               ),
@@ -280,7 +284,7 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       ),
                     );
                 }
-                return Container();
+                return const SizedBox.shrink();
               },
             ),
           ],

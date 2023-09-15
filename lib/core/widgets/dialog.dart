@@ -30,23 +30,11 @@ class AlertConfirmDialog extends StatelessWidget {
     return AlertDialog(
       actionsAlignment: MainAxisAlignment.end,
       title: Center(
-        child: Text(
-          title,
-          style: textTheme.labelMedium!.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        child: Text(title),
       ),
       content: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: Text(
-          content,
-          style: textTheme.labelMedium!.copyWith(
-            color: colorScheme.primaryContainer,
-            fontWeight: FontWeight.w100,
-          ),
-        ),
+        child: Text(content),
       ),
       actions: [
         SAButton.text(

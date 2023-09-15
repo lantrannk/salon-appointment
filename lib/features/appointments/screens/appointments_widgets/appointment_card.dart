@@ -41,7 +41,7 @@ class AppointmentCard extends StatelessWidget {
         color: colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: colorScheme.primary.withOpacity(0.16),
+            color: colorScheme.shadow,
             offset: const Offset(0, 0),
             blurRadius: 8,
             spreadRadius: 0,
