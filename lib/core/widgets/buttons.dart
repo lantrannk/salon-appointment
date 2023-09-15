@@ -77,7 +77,6 @@ class _SAOutlinedButton extends SAButton {
           side: BorderSide(
             width: 2,
             color: colorScheme.onPrimary,
-            strokeAlign: BorderSide.strokeAlignOutside,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),

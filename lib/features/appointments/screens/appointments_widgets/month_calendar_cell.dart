@@ -38,6 +38,7 @@ class MonthCalendarCell extends StatelessWidget {
         color: bgColor ?? colorScheme.surface,
         gradient: gradient,
         shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,

@@ -152,10 +152,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
               child: Text(
                 monthCharFormat.format(_selectedDay!),
                 textAlign: TextAlign.center,
-                style: textTheme.labelSmall!.copyWith(
+                style: textTheme.bodyMedium!.copyWith(
                   color: colorScheme.onSurface,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: -0.24,
                 ),
               ),
             ),
@@ -170,8 +168,8 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                     );
                     break;
                   case AppointmentRemoveSuccess:
+                    Navigator.of(context).pop();
                     loadingIndicator.hide(ctx);
-                    Navigator.of(ctx).pop(true);
                     SASnackBar.show(
                       context: ctx,
                       message: l10n.deleteSuccess,

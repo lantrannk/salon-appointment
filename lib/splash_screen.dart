@@ -16,7 +16,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: context.read<UserRepository>().getUser(),
-      builder: (_, snapshot) {
+      builder: (context, snapshot) {
         Timer(const Duration(seconds: 2), () {
           (snapshot.hasData)
               ? Navigator.pushReplacementNamed(context, Routes.calendar)
