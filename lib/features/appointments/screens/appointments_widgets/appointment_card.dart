@@ -70,7 +70,7 @@ class AppointmentCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: 12,
+                    width: 24,
                   ),
                   SAButton.icon(
                     onPressed: onRemovePressed,

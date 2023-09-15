@@ -78,7 +78,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     },
                     defaultBuilder: (context, day, focusedDay) {
                       final events = groupByDate(state.appointments!, day);
-
                       return MonthCalendarCell(
                         day: day,
                         events: events,
@@ -86,16 +85,18 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     },
                     outsideBuilder: (context, day, focusedDay) {
                       final events = groupByDate(state.appointments!, day);
-
                       return MonthCalendarCell(
                         day: day,
                         events: events,
+                        iconColor: colorScheme.primary.withOpacity(
+                          themeData.calendarCellTextOpacity,
+                        ),
+                        dayColor: colorScheme.primaryContainer,
                         timeColor: colorScheme.primaryContainer,
                       );
                     },
                     selectedBuilder: (context, day, focusedDay) {
                       final events = groupByDate(state.appointments!, day);
-
                       return MonthCalendarCell(
                         day: day,
                         events: events,
@@ -126,15 +127,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       );
                     },
                   ),
-                  calendarStyle: CalendarStyle(
+                  calendarStyle: const CalendarStyle(
                     outsideDaysVisible: true,
-                    rowDecoration: BoxDecoration(
-                      border: Border.all(
-                        color: colorScheme.onSecondary,
-                        width: 1,
-                        strokeAlign: BorderSide.strokeAlignOutside,
-                      ),
-                    ),
                   ),
                   headerStyle: HeaderStyle(
                     titleCentered: true,
@@ -191,9 +185,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               builder: (context, state) {
                 switch (state.runtimeType) {
                   case AppointmentLoadInProgress:
-                    return SAIndicator(
-                      height: indicatorHeight,
-                      color: colorScheme.primary,
+                    return Expanded(
+                      child: SAIndicator(
+                        height: indicatorHeight,
+                        color: colorScheme.primary,
+                      ),
                     );
                   case AppointmentLoadSuccess:
                     final List<Appointment> events =
