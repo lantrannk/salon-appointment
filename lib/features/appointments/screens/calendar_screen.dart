@@ -24,9 +24,6 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  final appointmentRepo = AppointmentRepository();
-  final userRepo = UserRepository();
-
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
@@ -43,215 +40,218 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final double indicatorHeight = MediaQuery.of(context).size.height / 4;
     final l10n = S.of(context);
 
-    return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      )..add(AppointmentLoad()),
-      child: MainLayout(
-        currentIndex: 1,
-        selectedDay: _selectedDay!,
-        title: l10n.calendarAppBarTitle,
-        child: Column(
-          children: [
-            BlocBuilder<AppointmentBloc, AppointmentState>(
-              builder: (context, state) {
-                return TableCalendar<Appointment>(
-                  firstDay: firstDay,
-                  lastDay: lastDay,
-                  focusedDay: _focusedDay,
-                  selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-                  calendarFormat: CalendarFormat.month,
-                  startingDayOfWeek: StartingDayOfWeek.monday,
-                  calendarBuilders: CalendarBuilders(
-                    todayBuilder: (context, day, focusedDay) {
-                      final events = groupByDate(state.appointments!, day);
-                      return MonthCalendarCell(
-                        day: day,
-                        events: events,
-                        bgColor: colorScheme.primary.withOpacity(0.0798),
-                      );
-                    },
-                    defaultBuilder: (context, day, focusedDay) {
-                      final events = groupByDate(state.appointments!, day);
-                      return MonthCalendarCell(
-                        day: day,
-                        events: events,
-                      );
-                    },
-                    outsideBuilder: (context, day, focusedDay) {
-                      final events = groupByDate(state.appointments!, day);
-                      return MonthCalendarCell(
-                        day: day,
-                        events: events,
-                        timeColor: colorScheme.primaryContainer,
-                      );
-                    },
-                    selectedBuilder: (context, day, focusedDay) {
-                      final events = groupByDate(state.appointments!, day);
-                      return MonthCalendarCell(
-                        day: day,
-                        events: events,
-                        gradient: LinearGradient(
-                          colors: [
-                            colorScheme.primary,
-                            colorScheme.secondary,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                        ),
-                        dayColor: colorScheme.onPrimary,
-                        timeColor: colorScheme.onPrimary,
-                        iconColor: colorScheme.onPrimary,
-                      );
-                    },
-                    dowBuilder: (context, day) {
-                      return Container(
-                        alignment: Alignment.centerRight,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                        ),
-                        color: colorScheme.surface,
-                        child: SAText.weekCalendarCell(
-                          text: dayOfWeekFormat.format(day),
-                          color: colorScheme.onSurface,
-                        ),
-                      );
-                    },
-                  ),
-                  calendarStyle: const CalendarStyle(
-                    outsideDaysVisible: true,
-                  ),
-                  headerStyle: HeaderStyle(
-                    titleCentered: true,
-                    formatButtonVisible: false,
-                    headerPadding: EdgeInsets.zero,
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
+    return RepositoryProvider(
+      create: (context) => AppointmentRepository(),
+      child: BlocProvider<AppointmentBloc>(
+        create: (context) => AppointmentBloc(
+          appointmentRepository: context.read<AppointmentRepository>(),
+          userRepository: context.read<UserRepository>(),
+        )..add(AppointmentLoad()),
+        child: MainLayout(
+          currentIndex: 1,
+          selectedDay: _selectedDay!,
+          title: l10n.calendarAppBarTitle,
+          child: Column(
+            children: [
+              BlocBuilder<AppointmentBloc, AppointmentState>(
+                builder: (context, state) {
+                  return TableCalendar<Appointment>(
+                    firstDay: firstDay,
+                    lastDay: lastDay,
+                    focusedDay: _focusedDay,
+                    selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                    calendarFormat: CalendarFormat.month,
+                    startingDayOfWeek: StartingDayOfWeek.monday,
+                    calendarBuilders: CalendarBuilders(
+                      todayBuilder: (context, day, focusedDay) {
+                        final events = groupByDate(state.appointments!, day);
+                        return MonthCalendarCell(
+                          day: day,
+                          events: events,
+                          bgColor: colorScheme.primary.withOpacity(0.0798),
+                        );
+                      },
+                      defaultBuilder: (context, day, focusedDay) {
+                        final events = groupByDate(state.appointments!, day);
+                        return MonthCalendarCell(
+                          day: day,
+                          events: events,
+                        );
+                      },
+                      outsideBuilder: (context, day, focusedDay) {
+                        final events = groupByDate(state.appointments!, day);
+                        return MonthCalendarCell(
+                          day: day,
+                          events: events,
+                          timeColor: colorScheme.primaryContainer,
+                        );
+                      },
+                      selectedBuilder: (context, day, focusedDay) {
+                        final events = groupByDate(state.appointments!, day);
+                        return MonthCalendarCell(
+                          day: day,
+                          events: events,
+                          gradient: LinearGradient(
+                            colors: [
+                              colorScheme.primary,
+                              colorScheme.secondary,
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          dayColor: colorScheme.onPrimary,
+                          timeColor: colorScheme.onPrimary,
+                          iconColor: colorScheme.onPrimary,
+                        );
+                      },
+                      dowBuilder: (context, day) {
+                        return Container(
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                          ),
+                          color: colorScheme.surface,
+                          child: SAText.weekCalendarCell(
+                            text: dayOfWeekFormat.format(day),
+                            color: colorScheme.onSurface,
+                          ),
+                        );
+                      },
                     ),
-                    leftChevronIcon: CalendarChevronText(
-                      focusedDay: DateTime(
-                        _focusedDay.year,
-                        _focusedDay.month - 1,
-                        _focusedDay.day,
-                      ),
-                      textAlign: TextAlign.start,
+                    calendarStyle: const CalendarStyle(
+                      outsideDaysVisible: true,
                     ),
-                    rightChevronIcon: CalendarChevronText(
-                      focusedDay: DateTime(
-                        _focusedDay.year,
-                        _focusedDay.month + 1,
-                        _focusedDay.day,
-                      ),
-                      textAlign: TextAlign.end,
-                    ),
-                    titleTextStyle: textTheme.bodyMedium!.copyWith(
-                      color: colorScheme.onPrimary,
-                    ),
-                  ),
-                  daysOfWeekHeight: 44,
-                  rowHeight: 56,
-                  pageJumpingEnabled: true,
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(_selectedDay, selectedDay)) {
-                      setState(() {
-                        _selectedDay = selectedDay;
-                        _focusedDay = focusedDay;
-                      });
-                    }
-                  },
-                  onPageChanged: (focusedDay) {
-                    setState(() {
-                      _focusedDay = DateTime(
-                        focusedDay.year,
-                        focusedDay.month,
-                        _focusedDay.day,
-                      );
-                      _selectedDay = _focusedDay;
-                    });
-                  },
-                );
-              },
-            ),
-            BlocBuilder<AppointmentBloc, AppointmentState>(
-              builder: (context, state) {
-                switch (state.runtimeType) {
-                  case AppointmentLoadInProgress:
-                    return Expanded(
-                      child: SAIndicator(
-                        height: indicatorHeight,
+                    headerStyle: HeaderStyle(
+                      titleCentered: true,
+                      formatButtonVisible: false,
+                      headerPadding: EdgeInsets.zero,
+                      decoration: BoxDecoration(
                         color: colorScheme.primary,
                       ),
-                    );
-                  case AppointmentLoadSuccess:
-                    final List<Appointment> events =
-                        groupByDate(state.appointments!, _selectedDay!);
-                    if (events.isNotEmpty) {
+                      leftChevronIcon: CalendarChevronText(
+                        focusedDay: DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month - 1,
+                          _focusedDay.day,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      rightChevronIcon: CalendarChevronText(
+                        focusedDay: DateTime(
+                          _focusedDay.year,
+                          _focusedDay.month + 1,
+                          _focusedDay.day,
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
+                      titleTextStyle: textTheme.bodyMedium!.copyWith(
+                        color: colorScheme.onPrimary,
+                      ),
+                    ),
+                    daysOfWeekHeight: 44,
+                    rowHeight: 56,
+                    pageJumpingEnabled: true,
+                    onDaySelected: (selectedDay, focusedDay) {
+                      if (!isSameDay(_selectedDay, selectedDay)) {
+                        setState(() {
+                          _selectedDay = selectedDay;
+                          _focusedDay = focusedDay;
+                        });
+                      }
+                    },
+                    onPageChanged: (focusedDay) {
+                      setState(() {
+                        _focusedDay = DateTime(
+                          focusedDay.year,
+                          focusedDay.month,
+                          _focusedDay.day,
+                        );
+                        _selectedDay = _focusedDay;
+                      });
+                    },
+                  );
+                },
+              ),
+              BlocBuilder<AppointmentBloc, AppointmentState>(
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case AppointmentLoadInProgress:
                       return Expanded(
-                        child: ListView(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(top: 8),
-                              alignment: Alignment.topLeft,
-                              width: double.infinity,
-                              height: 228,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    colorScheme.primary,
-                                    colorScheme.secondary,
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                              child: CalendarSchedule(
-                                appointment: events.first,
-                                countOfAppointments: events.length,
-                                onPressed: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => AppointmentScreen(
-                                        focusedDay: _selectedDay,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                        child: SAIndicator(
+                          height: indicatorHeight,
+                          color: colorScheme.primary,
                         ),
                       );
-                    } else {
+                    case AppointmentLoadSuccess:
+                      final List<Appointment> events =
+                          groupByDate(state.appointments!, _selectedDay!);
+                      if (events.isNotEmpty) {
+                        return Expanded(
+                          child: ListView(
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(top: 8),
+                                alignment: Alignment.topLeft,
+                                width: double.infinity,
+                                height: 228,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      colorScheme.primary,
+                                      colorScheme.secondary,
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                                child: CalendarSchedule(
+                                  appointment: events.first,
+                                  countOfAppointments: events.length,
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AppointmentScreen(
+                                          focusedDay: _selectedDay,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Expanded(
+                          child: Center(
+                            child: Text(
+                              l10n.emptyAppointments,
+                              style: textTheme.bodyLarge!.copyWith(
+                                color: colorScheme.primaryContainer,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    case AppointmentLoadFailure:
                       return Expanded(
                         child: Center(
                           child: Text(
-                            l10n.emptyAppointments,
+                            state.error!,
                             style: textTheme.bodyLarge!.copyWith(
                               color: colorScheme.primaryContainer,
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                       );
-                    }
-                  case AppointmentLoadFailure:
-                    return Expanded(
-                      child: Center(
-                        child: Text(
-                          state.error!,
-                          style: textTheme.bodyLarge!.copyWith(
-                            color: colorScheme.primaryContainer,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-          ],
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

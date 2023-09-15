@@ -30,8 +30,6 @@ class AppointmentForm extends StatefulWidget {
 
 class _AppointmentFormState extends State<AppointmentForm> {
   final descpController = TextEditingController();
-  final appointmentRepo = AppointmentRepository();
-  final userRepo = UserRepository();
 
   final nameFocusNode = FocusNode();
   final descpFocusNode = FocusNode();
@@ -74,265 +72,273 @@ class _AppointmentFormState extends State<AppointmentForm> {
     final double indicatorHeight = screenHeight / 2;
     final l10n = S.of(context);
 
-    return BlocProvider<AppointmentBloc>(
-      create: (_) => AppointmentBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      )..add(AppointmentInitialize()),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            isNew
-                ? l10n.newAppointmentAppBarTitle
-                : l10n.editAppointmentAppBarTitle,
-          ),
-          automaticallyImplyLeading: false,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: SAButton.icon(
-                onPressed: () => Navigator.of(context).pop(),
-                child: SAIcons(
-                  icon: Assets.closeIcon,
-                  color: colorScheme.onSurface,
+    return RepositoryProvider(
+      create: (context) => AppointmentRepository(),
+      child: BlocProvider<AppointmentBloc>(
+        create: (context) => AppointmentBloc(
+          appointmentRepository: context.read<AppointmentRepository>(),
+          userRepository: context.read<UserRepository>(),
+        )..add(AppointmentInitialize()),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              isNew
+                  ? l10n.newAppointmentAppBarTitle
+                  : l10n.editAppointmentAppBarTitle,
+            ),
+            automaticallyImplyLeading: false,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: SAButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: SAIcons(
+                    icon: Assets.closeIcon,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Center(
-            child: BlocConsumer<AppointmentBloc, AppointmentState>(
-              listener: (ctx, state) {
-                switch (state.runtimeType) {
-                  case AppointmentInitializeSuccess:
-                    user ??= state.user;
-                    break;
-                  case AppointmentDateTimeChangeSuccess:
-                    dateTime = state.date;
-                    startTime = state.startTime;
-                    endTime = state.endTime;
-                    break;
-                  case AppointmentServicesChangeSuccess:
-                    services = state.services;
-                    break;
-                  case AppointmentDateTimeChangeFailure:
-                    SASnackBar.show(
-                      context: ctx,
-                      message: dateTimeChangeFailure(
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Center(
+              child: BlocConsumer<AppointmentBloc, AppointmentState>(
+                listener: (ctx, state) {
+                  switch (state.runtimeType) {
+                    case AppointmentInitializeSuccess:
+                      user ??= state.user;
+                      break;
+                    case AppointmentDateTimeChangeSuccess:
+                      dateTime = state.date;
+                      startTime = state.startTime;
+                      endTime = state.endTime;
+                      break;
+                    case AppointmentServicesChangeSuccess:
+                      services = state.services;
+                      break;
+                    case AppointmentDateTimeChangeFailure:
+                      SASnackBar.show(
+                        context: ctx,
+                        message: dateTimeChangeFailure(
+                          context,
+                          state.error!,
+                        ),
+                        isSuccess: false,
+                      );
+                      break;
+                    case AppointmentAddInProgress:
+                      loadingIndicator.show(
+                        context: ctx,
+                        height: indicatorHeight,
+                      );
+                      break;
+                    case AppointmentAddSuccess:
+                    case AppointmentEditSuccess:
+                      loadingIndicator.hide(ctx);
+
+                      SASnackBar.show(
+                        context: context,
+                        message: isNew ? l10n.addSuccess : l10n.updateSuccess,
+                        isSuccess: true,
+                      );
+
+                      Navigator.push(
                         context,
-                        state.error!,
-                      ),
-                      isSuccess: false,
-                    );
-                    break;
-                  case AppointmentAddInProgress:
-                    loadingIndicator.show(
-                      context: ctx,
-                      height: indicatorHeight,
-                    );
-                    break;
-                  case AppointmentAddSuccess:
-                  case AppointmentEditSuccess:
-                    loadingIndicator.hide(ctx);
-
-                    SASnackBar.show(
-                      context: context,
-                      message: isNew ? l10n.addSuccess : l10n.updateSuccess,
-                      isSuccess: true,
-                    );
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AppointmentScreen(
-                          focusedDay: dateTime,
-                        ),
-                      ),
-                    );
-                    break;
-                  case AppointmentInitializeFailure:
-                  case AppointmentAddFailure:
-                    SASnackBar.show(
-                      context: context,
-                      message: state.error!,
-                      isSuccess: false,
-                    );
-                    break;
-                }
-              },
-              builder: (context, state) {
-                return SizedBox(
-                  height: screenHeight - keyboardHeight,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 12),
-                        Text(
-                          user?.name ?? '',
-                          style: textTheme.titleLarge!.copyWith(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w500,
+                        MaterialPageRoute(
+                          builder: (context) => AppointmentScreen(
+                            focusedDay: dateTime,
                           ),
                         ),
-                        const SizedBox(height: 12),
-                        DatePicker(
-                          dateTime: dateTime,
-                          onPressed: () async {
-                            final DateTime? date = await showDatePicker(
-                              context: context,
-                              initialDate: dateTime,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(dateTime.year + 5),
-                            );
-                            if (date != null && date != dateTime) {
-                              context.read<AppointmentBloc>().add(
-                                    AppointmentDateTimeChanged(
-                                      date: date,
-                                      startTime: getTime(startTime),
-                                      endTime: getTime(endTime),
-                                    ),
-                                  );
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        TimePicker(
-                          startTime: startTime,
-                          endTime: endTime,
-                          onStartTimePressed: () async {
-                            final TimeOfDay? time = await showTimePicker(
-                              context: context,
-                              initialTime: getTime(startTime),
-                            );
-                            if (time != null && time != getTime(startTime)) {
-                              context.read<AppointmentBloc>().add(
-                                    AppointmentDateTimeChanged(
-                                      date: dateTime,
-                                      startTime: time,
-                                      endTime: getTime(
-                                        autoAddHalfHour(
-                                          setDateTime(dateTime, time),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                            }
-                          },
-                          onEndTimePressed: () async {
-                            final TimeOfDay? time = await showTimePicker(
-                              context: context,
-                              initialTime: getTime(endTime),
-                            );
-                            if (time != null && time != getTime(endTime)) {
-                              context.read<AppointmentBloc>().add(
-                                    AppointmentDateTimeChanged(
-                                      date: dateTime,
-                                      startTime: getTime(startTime),
-                                      endTime: time,
-                                    ),
-                                  );
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        Dropdown(
-                          items: allServices,
-                          hint: l10n.servicesDropdownHint,
-                          style: textTheme.labelSmall!.copyWith(
-                            color: colorScheme.onSurface,
-                          ),
-                          selectedValue: services,
-                          onChanged: (value) {
-                            context.read<AppointmentBloc>().add(
-                                  AppointmentServicesChanged(
-                                    services: value!,
-                                  ),
-                                );
-                          },
-                        ),
-                        const SizedBox(height: 12),
-                        Input(
-                          controller: descpController,
-                          text: l10n.description,
-                          focusNode: descpFocusNode,
-                          onEditCompleted: () {
-                            FocusScope.of(context).unfocus();
-                          },
-                          color: colorScheme.onSurface,
-                          maxLines: 4,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              width: 1,
+                      );
+                      break;
+                    case AppointmentInitializeFailure:
+                    case AppointmentAddFailure:
+                      SASnackBar.show(
+                        context: context,
+                        message: state.error!,
+                        isSuccess: false,
+                      );
+                      break;
+                  }
+                },
+                builder: (context, state) {
+                  return SizedBox(
+                    height: screenHeight - keyboardHeight,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 12),
+                          Text(
+                            user?.name ?? '',
+                            style: textTheme.titleLarge!.copyWith(
                               color: colorScheme.onSurface,
+                              fontWeight: FontWeight.w500,
                             ),
-                            borderRadius: BorderRadius.circular(8),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          height: 44,
-                          width: double.infinity,
-                          child: SAButton.elevated(
+                          const SizedBox(height: 12),
+                          DatePicker(
+                            dateTime: dateTime,
                             onPressed: () async {
-                              final appointments =
-                                  await appointmentRepo.getAllAppointments();
-
-                              if (isFullAppointments(
-                                appointments,
-                                startTime,
-                                endTime,
-                              )) {
-                                SASnackBar.show(
-                                  context: context,
-                                  message: l10n.fullAppointmentsError,
-                                  isSuccess: false,
-                                );
-                              } else if (services == null) {
-                                SASnackBar.show(
-                                  context: context,
-                                  message: l10n.emptyServicesError,
-                                  isSuccess: false,
-                                );
-                              } else {
+                              final DateTime? date = await showDatePicker(
+                                context: context,
+                                initialDate: dateTime,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(dateTime.year + 5),
+                              );
+                              if (date != null && date != dateTime) {
                                 context.read<AppointmentBloc>().add(
-                                      isNew
-                                          ? AppointmentAdded(
-                                              appointment: Appointment(
-                                                userId: user!.id,
-                                                date: dateTime,
-                                                startTime: startTime,
-                                                endTime: endTime,
-                                                services: services!,
-                                                description: description(l10n),
-                                              ),
-                                            )
-                                          : AppointmentEdited(
-                                              appointment:
-                                                  widget.appointment!.copyWith(
-                                                date: dateTime,
-                                                startTime: startTime,
-                                                endTime: endTime,
-                                                services: services,
-                                                description: description(l10n),
-                                              ),
-                                            ),
+                                      AppointmentDateTimeChanged(
+                                        date: date,
+                                        startTime: getTime(startTime),
+                                        endTime: getTime(endTime),
+                                      ),
                                     );
                               }
                             },
-                            child: Text(
-                              isNew
-                                  ? l10n.createAppointmentButton
-                                  : l10n.editAppointmentButton,
+                          ),
+                          const SizedBox(height: 12),
+                          TimePicker(
+                            startTime: startTime,
+                            endTime: endTime,
+                            onStartTimePressed: () async {
+                              final TimeOfDay? time = await showTimePicker(
+                                context: context,
+                                initialTime: getTime(startTime),
+                              );
+                              if (time != null && time != getTime(startTime)) {
+                                context.read<AppointmentBloc>().add(
+                                      AppointmentDateTimeChanged(
+                                        date: dateTime,
+                                        startTime: time,
+                                        endTime: getTime(
+                                          autoAddHalfHour(
+                                            setDateTime(dateTime, time),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                              }
+                            },
+                            onEndTimePressed: () async {
+                              final TimeOfDay? time = await showTimePicker(
+                                context: context,
+                                initialTime: getTime(endTime),
+                              );
+                              if (time != null && time != getTime(endTime)) {
+                                context.read<AppointmentBloc>().add(
+                                      AppointmentDateTimeChanged(
+                                        date: dateTime,
+                                        startTime: getTime(startTime),
+                                        endTime: time,
+                                      ),
+                                    );
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          Dropdown(
+                            items: allServices,
+                            hint: l10n.servicesDropdownHint,
+                            style: textTheme.labelSmall!.copyWith(
+                              color: colorScheme.onSurface,
+                            ),
+                            selectedValue: services,
+                            onChanged: (value) {
+                              context.read<AppointmentBloc>().add(
+                                    AppointmentServicesChanged(
+                                      services: value!,
+                                    ),
+                                  );
+                            },
+                          ),
+                          const SizedBox(height: 12),
+                          Input(
+                            controller: descpController,
+                            text: l10n.description,
+                            focusNode: descpFocusNode,
+                            onEditCompleted: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                            color: colorScheme.onSurface,
+                            maxLines: 4,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: colorScheme.onSurface,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            height: 44,
+                            width: double.infinity,
+                            child: SAButton.elevated(
+                              onPressed: () async {
+                                final appointments = await context
+                                    .read<AppointmentRepository>()
+                                    .getAllAppointments();
+
+                                if (isFullAppointments(
+                                  appointments,
+                                  startTime,
+                                  endTime,
+                                )) {
+                                  SASnackBar.show(
+                                    context: context,
+                                    message: l10n.fullAppointmentsError,
+                                    isSuccess: false,
+                                  );
+                                } else if (services == null) {
+                                  SASnackBar.show(
+                                    context: context,
+                                    message: l10n.emptyServicesError,
+                                    isSuccess: false,
+                                  );
+                                } else {
+                                  context.read<AppointmentBloc>().add(
+                                        isNew
+                                            ? AppointmentAdded(
+                                                appointment: Appointment(
+                                                  userId: user!.id,
+                                                  date: dateTime,
+                                                  startTime: startTime,
+                                                  endTime: endTime,
+                                                  services: services!,
+                                                  description: description(
+                                                    l10n,
+                                                  ),
+                                                ),
+                                              )
+                                            : AppointmentEdited(
+                                                appointment: widget.appointment!
+                                                    .copyWith(
+                                                  date: dateTime,
+                                                  startTime: startTime,
+                                                  endTime: endTime,
+                                                  services: services,
+                                                  description: description(
+                                                    l10n,
+                                                  ),
+                                                ),
+                                              ),
+                                      );
+                                }
+                              },
+                              child: Text(
+                                isNew
+                                    ? l10n.createAppointmentButton
+                                    : l10n.editAppointmentButton,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
         ),
