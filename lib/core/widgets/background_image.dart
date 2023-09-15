@@ -1,22 +1,33 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../theme/theme.dart';
 
 class BackgroundImage extends StatelessWidget {
-  const BackgroundImage({super.key});
+  const BackgroundImage({
+    this.bgColor,
+    this.bgImage,
+    super.key,
+  });
+
+  final Color? bgColor;
+  final ImageProvider<Object>? bgImage;
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData themeData = Theme.of(context);
 
     return Container(
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: Assets.bgImage,
+          image: bgImage ?? Assets.bgImage,
           colorFilter: ColorFilter.mode(
-            colorScheme.primary.withOpacity(0.5),
+            bgColor ??
+                themeData.colorScheme.primary.withOpacity(
+                  themeData.bgImageFilterOpacity,
+                ),
             BlendMode.multiply,
           ),
           fit: BoxFit.cover,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
+import '../theme/theme.dart';
 import 'widgets.dart';
 
 class Dropdown extends StatelessWidget {
@@ -9,6 +10,7 @@ class Dropdown extends StatelessWidget {
     required this.selectedValue,
     required this.onChanged,
     required this.hint,
+    this.style,
     this.height = 44,
     this.width = double.infinity,
     super.key,
@@ -17,13 +19,15 @@ class Dropdown extends StatelessWidget {
   final List<String> items;
   final String hint;
   final String? selectedValue;
+  final TextStyle? style;
   final double? height;
   final double? width;
   final Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData themeData = Theme.of(context);
+    final ColorScheme colorScheme = themeData.colorScheme;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -33,27 +37,37 @@ class Dropdown extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: colorScheme.onPrimary.withOpacity(0.235),
+        color: colorScheme.onPrimary.withOpacity(
+          themeData.fillColorOpacity,
+        ),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: colorScheme.onSurface,
         ),
       ),
       child: DropdownButton<String>(
-        hint: Text(hint),
+        hint: Text(
+          hint,
+          style: style,
+        ),
         value: selectedValue,
         onChanged: onChanged,
         items: items
             .map<DropdownMenuItem<String>>(
               (value) => DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(
+                  value,
+                  style: style,
+                ),
               ),
             )
             .toList(),
-        icon: const SAIcons(
+        icon: SAIcons(
           icon: Assets.dropdownIcon,
+          color: colorScheme.onSurface,
         ),
+        dropdownColor: colorScheme.surface,
         underline: const SizedBox(),
         isExpanded: true,
       ),

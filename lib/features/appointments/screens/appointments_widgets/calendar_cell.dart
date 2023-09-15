@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/theme/theme.dart';
 import '../../../../core/utils/common.dart';
 import '../../../../core/widgets/widgets.dart';
 
@@ -22,13 +23,13 @@ class CalendarCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final ThemeData themeData = Theme.of(context);
 
     return Container(
       width: double.infinity,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: colorScheme.primary,
+        color: themeData.colorScheme.primary,
         gradient: gradient,
         borderRadius: borderRadius(day),
         shape: BoxShape.rectangle,
@@ -38,11 +39,14 @@ class CalendarCell extends StatelessWidget {
         children: [
           SAText.weekCalendarCell(
             text: dayOfWeekFormat.format(day),
-            color: dayOfWeekColor ?? colorScheme.onPrimary.withOpacity(0.6429),
+            color: dayOfWeekColor ??
+                themeData.colorScheme.onPrimary.withOpacity(
+                  themeData.calendarCellTextOpacity,
+                ),
           ),
           SAText.weekCalendarCell(
             text: day.day.toString(),
-            color: dayColor ?? colorScheme.onPrimary,
+            color: dayColor ?? themeData.colorScheme.onPrimary,
           ),
         ],
       ),

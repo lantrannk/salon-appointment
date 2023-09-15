@@ -149,6 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         text: l10n.loginButton,
                         style: textTheme.labelMedium!.copyWith(
                           color: colorScheme.onPrimary,
+                          letterSpacing: -0.24,
                         ),
                       ),
                       onPressed: () {

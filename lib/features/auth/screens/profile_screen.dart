@@ -97,9 +97,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Expanded(
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            color: colorScheme.primary.withOpacity(0.1),
                           ),
                           child: SAButton.icon(
                             child: Icon(
@@ -128,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   );
                 }
-                return Container();
+                return const SizedBox.shrink();
               },
             ),
           ),

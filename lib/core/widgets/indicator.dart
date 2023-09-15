@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/theme.dart';
+
 class SAIndicator extends StatelessWidget {
   const SAIndicator({
     this.height,
@@ -35,6 +37,9 @@ class LoadingIndicator {
       return;
     }
     isLoading = true;
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final double barrierColorOpacity = Theme.of(context).barrierColorOpacity;
+
     showDialog(
       context: context,
       builder: (context) => Container(
@@ -43,8 +48,12 @@ class LoadingIndicator {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.05),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.05),
+              colorScheme.primary.withOpacity(
+                barrierColorOpacity,
+              ),
+              colorScheme.secondary.withOpacity(
+                barrierColorOpacity,
+              ),
             ],
           ),
         ),
