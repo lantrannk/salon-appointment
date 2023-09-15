@@ -22,10 +22,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final TextTheme textTheme = Theme.of(context).textTheme;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final l10n = S.of(context);
-    final UserRepository userRepo = UserRepository();
 
     return BlocProvider(
-      create: (context) => AuthBloc(userRepo)..add(const UserLoad()),
+      create: (context) => AuthBloc(
+        context.read<UserRepository>(),
+      )..add(const UserLoad()),
       child: MainLayout(
         title: l10n.profileAppBarTitle,
         currentIndex: 3,
