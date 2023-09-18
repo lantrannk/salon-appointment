@@ -134,36 +134,22 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
 
     emit(const AppointmentDateTimeBeforeChange(error: ''));
 
-    if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
+    final String? error = _checkDateTime(startTime, endTime);
+
+    if (error != null) {
       emit(
-        const AppointmentDateTimeChangeFailure(
-          error: ErrorMessage.beforeNow,
-        ),
-      );
-    } else if (!isAfterStartTime(startTime, endTime)) {
-      emit(
-        const AppointmentDateTimeChangeFailure(
-          error: ErrorMessage.differentTime,
-        ),
-      );
-    } else if (isBreakTime(startTime) || isBreakTime(endTime)) {
-      emit(
-        const AppointmentDateTimeChangeFailure(
-          error: ErrorMessage.breakConflict,
-        ),
-      );
-    } else if (isClosedTime(startTime) || isClosedTime(endTime)) {
-      emit(
-        const AppointmentDateTimeChangeFailure(
-          error: ErrorMessage.closedConflict,
+        AppointmentDateTimeChangeFailure(
+          error: error,
         ),
       );
     } else {
-      emit(AppointmentDateTimeChangeSuccess(
-        date: date,
-        startTime: startTime,
-        endTime: endTime,
-      ));
+      emit(
+        AppointmentDateTimeChangeSuccess(
+          date: date,
+          startTime: startTime,
+          endTime: endTime,
+        ),
+      );
     }
   }
 
@@ -174,5 +160,24 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     emit(AppointmentServicesChangeSuccess(
       services: event.services,
     ));
+  }
+
+  String? _checkDateTime(
+    DateTime startTime,
+    DateTime endTime,
+  ) {
+    if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
+      return ErrorMessage.beforeNow;
+    }
+    if (!isAfterStartTime(startTime, endTime)) {
+      return ErrorMessage.differentTime;
+    }
+    if (isBreakTime(startTime) || isBreakTime(endTime)) {
+      return ErrorMessage.breakConflict;
+    }
+    if (isClosedTime(startTime) || isClosedTime(endTime)) {
+      return ErrorMessage.closedConflict;
+    }
+    return null;
   }
 }
