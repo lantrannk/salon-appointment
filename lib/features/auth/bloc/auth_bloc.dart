@@ -14,6 +14,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginEvent>(_handleLoginEvent);
     on<LogoutEvent>(_handleLogOutEvent);
     on<UserLoad>(_getUser);
+    on<LoginPhoneNumberChanged>(_changePhoneNumber);
+    on<LoginPasswordChanged>(_changePassword);
   }
 
   final UserRepository userRepo;
@@ -78,5 +80,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  void _changePhoneNumber(
+    LoginPhoneNumberChanged event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(LoginInformationBeforeChange());
+    emit(
+      LoginPhoneNumberOnChange(
+        phoneNumber: event.phoneNumber,
+        phoneNumberErrorText: FormValidation.isValidPhoneNumber(
+          event.phoneNumber,
+        ),
+      ),
+    );
+  }
+
+  void _changePassword(
+    LoginPasswordChanged event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(LoginInformationBeforeChange());
+    emit(
+      LoginPasswordOnChange(
+        password: event.password,
+        passwordErrorText: FormValidation.isValidPassword(
+          event.password,
+        ),
+      ),
+    );
   }
 }
