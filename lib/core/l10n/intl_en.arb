@@ -38,7 +38,7 @@
   "breakTimeConflictError": "This is the break time of Salon. You must pick another time not between 12 pm and 3:20 pm.",
   "closedTimeError": "Salon is already closed. Please schedule an appointment after 8 am the after day.",
   "emptyServicesError": "You must choose a service.",
-  "unableEditError": "You cannot edit appointments in less than 24 hours.",
+  "unableEditError": "You cannot edit appointments in the current day.",
   "invalidEndTimeError": "The end time must be after the start time of at least 30 minutes.",
   "invalidStartTimeError": "You cannot choose a time before now.",
   "fullAppointmentsError": "This time is full of appointments. Please pick another time.",

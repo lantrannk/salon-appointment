@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Select Services"),
         "toText": MessageLookupByLibrary.simpleMessage("To:"),
         "unableEditError": MessageLookupByLibrary.simpleMessage(
-            "You cannot edit appointments in less than 24 hours."),
+            "You cannot edit appointments in the current day."),
         "unknownError":
             MessageLookupByLibrary.simpleMessage("Something went wrong."),
         "updateSuccess":

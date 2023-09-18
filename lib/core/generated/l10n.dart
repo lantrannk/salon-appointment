@@ -440,10 +440,10 @@ class S {
     );
   }
 
-  /// `You cannot edit appointments in less than 24 hours.`
+  /// `You cannot edit appointments in the current day.`
   String get unableEditError {
     return Intl.message(
-      'You cannot edit appointments in less than 24 hours.',
+      'You cannot edit appointments in the current day.',
       name: 'unableEditError',
       desc: '',
       args: [],
