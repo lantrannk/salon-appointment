@@ -51,11 +51,9 @@ void main() {
     );
 
     haveAppointmentsCellWidget = Scaffold(
-      body: Scaffold(
-        body: MonthCalendarCell(
-          day: DateTime(2023, 08, 15),
-          events: MockDataAppointment.sortedAppointmentsOfDay,
-        ),
+      body: MonthCalendarCell(
+        day: DateTime(2023, 08, 15),
+        events: MockDataAppointment.sortedAppointmentsOfDay,
       ),
     );
   });

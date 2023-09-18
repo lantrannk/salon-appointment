@@ -34,12 +34,10 @@ void main() {
     );
 
     timeWidget = Scaffold(
-      body: Scaffold(
-        body: Time(
-          startTime: DateTime(2023, 08, 15, 10, 0),
-          endTime: DateTime(2023, 08, 15, 10, 30),
-          text: 'Beauty Salon',
-        ),
+      body: Time(
+        startTime: DateTime(2023, 08, 15, 10, 0),
+        endTime: DateTime(2023, 08, 15, 10, 30),
+        text: 'Beauty Salon',
       ),
     );
   });

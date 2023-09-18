@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/constants/assets.dart';
+import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
 import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart'
     as widget;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,6 +29,9 @@ void main() {
   late List<int> editLog;
   late List<int> removeLog;
 
+  const user = MockDataUser.adminUser;
+  final appointment = MockDataAppointment.appointment;
+
   setUp(() {
     editLog = [];
     removeLog = [];
@@ -40,17 +44,17 @@ void main() {
     onRemovePressed = () => removeLog.add(0);
 
     timeFinder = find.widgetWithText(
-      widget.Time,
+      Time,
       '10:00 - 10:30',
     );
 
     customerNameFinder = find.widgetWithText(
-      widget.Customer,
+      Customer,
       'Lan Tran',
     );
 
     serviceFinder = find.widgetWithText(
-      widget.Service,
+      Service,
       'Non-Invasive Body Contouring',
     );
 
@@ -70,15 +74,12 @@ void main() {
     );
 
     appointmentCardWidget = Scaffold(
-      body: Scaffold(
-        body: widget.AppointmentCard(
-          appointment: MockDataAppointment.appointment,
-          name: 'Lan Tran',
-          avatar:
-              'https://www.google.com/imgres?imgurl=https%3A%2F%2Ft3.ftcdn.net%2Fjpg%2F03%2F14%2F36%2F24%2F360_F_314362441_Tx4djxQlxSSRutWEbaWP40jFvbvW0P3J.jpg&tbnid=fxJ8HNBgf3StGM&vet=12ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg..i&imgrefurl=https%3A%2F%2Fstock.adobe.com%2Fsearch%3Fk%3Dbeauty&docid=sLPERW_WHMMG4M&w=540&h=360&q=beauty%20image&ved=2ahUKEwiDq4vIj9SAAxWJfXAKHaSTDR0QMygFegUIARCBAg',
-          onEditPressed: onEditPressed,
-          onRemovePressed: onRemovePressed,
-        ),
+      body: AppointmentCard(
+        appointment: appointment,
+        name: user.name,
+        avatar: user.avatar,
+        onEditPressed: onEditPressed,
+        onRemovePressed: onRemovePressed,
       ),
     );
   });

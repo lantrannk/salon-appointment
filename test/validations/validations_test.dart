@@ -4,9 +4,14 @@ import 'package:salon_appointment/core/validations/validations.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 import 'package:salon_appointment/features/auth/model/user.dart';
 
+import '../constants/mock_data/mock_data.dart';
+
 class MockUser extends Mock implements UserApi {}
 
 void main() {
+  const String phoneNumberErrorText = 'Invalid phone number.';
+  const String passwordErrorText = 'Invalid password.';
+
   group('test form validations -', () {
     test('phone number is blank then return an error string', () {
       const String phoneNumber = '';
@@ -23,7 +28,7 @@ void main() {
 
       expect(
         FormValidation.isValidPhoneNumber(phoneNumber),
-        'Phone number must have 10 digits.',
+        phoneNumberErrorText,
       );
     });
 
@@ -33,17 +38,18 @@ void main() {
 
       expect(
         FormValidation.isValidPhoneNumber(phoneNumber),
-        'Phone number must have 10 digits.',
+        phoneNumberErrorText,
       );
     });
 
-    test('phone number is not a string of digits then return an error string',
+    test(
+        'phone number has special character (except +) then return an error string',
         () {
-      const String phoneNumber = '415465463s';
+      const String phoneNumber = '0905-123-123';
 
       expect(
         FormValidation.isValidPhoneNumber(phoneNumber),
-        'Phone number must be a string of digits.',
+        phoneNumberErrorText,
       );
     });
 
@@ -56,12 +62,49 @@ void main() {
       );
     });
 
-    test('password has less than 6 digits then return an error string', () {
-      const String password = '12345';
+    test('password has less than 8 digits then return an error string', () {
+      const String password = '123456';
 
       expect(
         FormValidation.isValidPassword(password),
-        'Password must be at least 6 characters.',
+        passwordErrorText,
+      );
+    });
+
+    test('password has no Uppercase then return an error string', () {
+      const String password = 'qwe123!@#';
+
+      expect(
+        FormValidation.isValidPassword(password),
+        passwordErrorText,
+      );
+    });
+
+    test('password has no lowercase then return an error string', () {
+      const String password = 'QWE123!@#';
+
+      expect(
+        FormValidation.isValidPassword(password),
+        passwordErrorText,
+      );
+    });
+
+    test('password has no numeric character then return an error string', () {
+      const String password = 'QWEqwe!@#';
+
+      expect(
+        FormValidation.isValidPassword(password),
+        passwordErrorText,
+      );
+    });
+
+    test('password has no allow special character then return an error string',
+        () {
+      const String password = 'QWEqwe123';
+
+      expect(
+        FormValidation.isValidPassword(password),
+        passwordErrorText,
       );
     });
   });
@@ -77,7 +120,7 @@ void main() {
     });
 
     test('password is valid then return null', () {
-      const String password = '123456';
+      const String password = 'qwQW12!@';
 
       expect(
         FormValidation.isValidPassword(password),
@@ -86,29 +129,13 @@ void main() {
     });
   });
 
-  group('test user login -', () {
+  group('test incorrect user login -', () {
     late List<User> users;
 
     setUpAll(() {
       users = [
-        const User(
-          id: '1',
-          name: 'Lan Tran',
-          phoneNumber: '0794542105',
-          avatar:
-              'https://bazaarvietnam.vn/wp-content/uploads/2020/02/selena-gomez-rare-beauty-launch-03-09-2020-00-thumb.jpg',
-          password: '123456',
-          isAdmin: true,
-        ),
-        const User(
-          id: '2',
-          name: 'Carol Williams',
-          phoneNumber: '0905999222',
-          avatar:
-              'https://assets.vogue.in/photos/611cf20c8733032148fe1b06/2:3/w_2560%2Cc_limit/Slide%25201.jpg',
-          password: '123456',
-          isAdmin: false,
-        ),
+        MockDataUser.adminUser,
+        MockDataUser.customerUser,
       ];
     });
 
@@ -138,7 +165,7 @@ void main() {
 
     test('phone number and password are correct then return a boolean', () {
       const String phoneNumber = '0905999222';
-      const String password = '123456';
+      const String password = 'qwQW12!@';
 
       expect(
         FormValidation.isLoginSuccess(users, phoneNumber, password),

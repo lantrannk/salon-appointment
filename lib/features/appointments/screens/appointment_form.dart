@@ -109,18 +109,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
                   case AppointmentInitializeSuccess:
                     user ??= state.user;
                     break;
-                  case AppointmentInitializeFailure:
-                    Navigator.pop(ctx);
-                    SASnackBar.show(
-                      context: context,
-                      message: state.error!,
-                      isSuccess: false,
-                    );
-                    break;
                   case AppointmentDateTimeChangeSuccess:
                     dateTime = state.date;
                     startTime = state.startTime;
                     endTime = state.endTime;
+                    break;
+                  case AppointmentServicesChangeSuccess:
+                    services = state.services;
                     break;
                   case AppointmentDateTimeChangeFailure:
                     SASnackBar.show(
@@ -157,6 +152,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       ),
                     );
                     break;
+                  case AppointmentInitializeFailure:
                   case AppointmentAddFailure:
                     SASnackBar.show(
                       context: context,
@@ -248,9 +244,11 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                           selectedValue: services,
                           onChanged: (value) {
-                            setState(() {
-                              services = value;
-                            });
+                            context.read<AppointmentBloc>().add(
+                                  AppointmentServicesChanged(
+                                    services: value!,
+                                  ),
+                                );
                           },
                         ),
                         const SizedBox(height: 12),

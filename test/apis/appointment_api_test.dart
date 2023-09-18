@@ -5,9 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 
-import '../constants/api_error_message.dart';
-import '../constants/api_url.dart';
-import '../constants/mock_data/mock_data.dart';
+import '../constants/constants.dart';
 
 class MockClient extends Mock implements http.Client {}
 
@@ -19,11 +17,6 @@ void main() {
 
   late String appointmentEncoded;
 
-  late http.Response notModifiedError;
-  late http.Response badRequestError;
-  late http.Response notFoundError;
-  late http.Response gatewayTimeoutError;
-
   setUp(() {
     client = MockClient();
     appointmentApi = AppointmentApi(client);
@@ -31,30 +24,6 @@ void main() {
 
   setUpAll(() {
     appointmentEncoded = json.encode(MockDataAppointment.appointment);
-
-    notModifiedError = http.Response(
-      ApiErrorMessage.notModified,
-      304,
-      headers: headers,
-    );
-
-    badRequestError = http.Response(
-      ApiErrorMessage.badRequest,
-      400,
-      headers: headers,
-    );
-
-    notFoundError = http.Response(
-      ApiErrorMessage.notFound,
-      404,
-      headers: headers,
-    );
-
-    gatewayTimeoutError = http.Response(
-      ApiErrorMessage.gatewayTimeout,
-      504,
-      headers: headers,
-    );
   });
 
   group('test appointment api get request -', () {
@@ -86,7 +55,7 @@ void main() {
         when(
           () => client.get(allAppointmentsUrl),
         ).thenAnswer(
-          (_) async => notModifiedError,
+          (_) async => ApiError.notModifiedError,
         );
 
         expect(
@@ -103,7 +72,7 @@ void main() {
         when(
           () => client.get(allAppointmentsUrl),
         ).thenAnswer(
-          (_) async => badRequestError,
+          (_) async => ApiError.badRequestError,
         );
 
         expect(
@@ -120,7 +89,7 @@ void main() {
         when(
           () => client.get(allAppointmentsUrl),
         ).thenAnswer(
-          (_) async => notFoundError,
+          (_) async => ApiError.notFoundError,
         );
 
         expect(
@@ -137,7 +106,7 @@ void main() {
         when(
           () => client.get(allAppointmentsUrl),
         ).thenAnswer(
-          (_) async => gatewayTimeoutError,
+          (_) async => ApiError.gatewayTimeoutError,
         );
 
         expect(
@@ -185,7 +154,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => notModifiedError,
+          (_) async => ApiError.notModifiedError,
         );
 
         expect(
@@ -206,7 +175,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => badRequestError,
+          (_) async => ApiError.badRequestError,
         );
 
         expect(
@@ -227,7 +196,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => notFoundError,
+          (_) async => ApiError.notFoundError,
         );
 
         expect(
@@ -248,7 +217,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => gatewayTimeoutError,
+          (_) async => ApiError.gatewayTimeoutError,
         );
 
         expect(
@@ -298,7 +267,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => notModifiedError,
+          (_) async => ApiError.notModifiedError,
         );
 
         expect(
@@ -321,7 +290,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => badRequestError,
+          (_) async => ApiError.badRequestError,
         );
 
         expect(
@@ -344,7 +313,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => notFoundError,
+          (_) async => ApiError.notFoundError,
         );
 
         expect(
@@ -367,7 +336,7 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => gatewayTimeoutError,
+          (_) async => ApiError.gatewayTimeoutError,
         );
 
         expect(
@@ -409,7 +378,7 @@ void main() {
         when(
           () => client.delete(appointmentUrl),
         ).thenAnswer(
-          (_) async => notModifiedError,
+          (_) async => ApiError.notModifiedError,
         );
 
         expect(
@@ -426,7 +395,7 @@ void main() {
         when(
           () => client.delete(appointmentUrl),
         ).thenAnswer(
-          (_) async => badRequestError,
+          (_) async => ApiError.badRequestError,
         );
 
         expect(
@@ -443,7 +412,7 @@ void main() {
         when(
           () => client.delete(appointmentUrl),
         ).thenAnswer(
-          (_) async => notFoundError,
+          (_) async => ApiError.notFoundError,
         );
 
         expect(
@@ -460,7 +429,7 @@ void main() {
         when(
           () => client.delete(appointmentUrl),
         ).thenAnswer(
-          (_) async => gatewayTimeoutError,
+          (_) async => ApiError.gatewayTimeoutError,
         );
 
         expect(
