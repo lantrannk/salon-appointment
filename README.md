@@ -32,8 +32,7 @@ samples, guidance on mobile development, and a full API reference.
 - [x] UI Login Screen
 - [x] UI Calendar Screen
 - [x] UI Appointment Screen
-- [x] UI New Appointment Screen
-- [x] UI Edit Appointment Screen
+- [x] UI Appointment Form
 - [x] UI Profile Screen
 
 ## Features
@@ -50,19 +49,19 @@ samples, guidance on mobile development, and a full API reference.
 1. Clone the repository:
 
    ```
-   git clone https://github.com/lantrannk/salon-appointment.git
+   git clone https://gitlab.asoft-python.com/lan.tran/salon-appointment.git
    ```
 
 2. Checkout branch:
 
    ```
-   git checkout -b stable
+   git checkout -b flutter_practice
    ```
 
 3. Pull origin branch:
 
    ```
-   git pull origin stable
+   git pull origin flutter_practice
    ```
 
 ## How to run
