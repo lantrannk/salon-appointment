@@ -138,8 +138,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                       ),
-                      leftChevronPadding: EdgeInsets.zero,
-                      rightChevronPadding: EdgeInsets.zero,
+                      leftChevronPadding: const EdgeInsets.only(
+                        left: 12,
+                      ),
+                      rightChevronPadding: const EdgeInsets.only(
+                        right: 12,
+                      ),
                       leftChevronMargin: EdgeInsets.zero,
                       rightChevronMargin: EdgeInsets.zero,
                       leftChevronIcon: CalendarChevronText(
