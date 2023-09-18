@@ -49,8 +49,8 @@ bool isClosedTime(DateTime time) {
 bool isBeforeNow(DateTime time) => time.isBefore(DateTime.now());
 
 /// Returns [bool] that date of [appointment] is less than 24 hours from now
-bool isLessThan24HoursFromNow(Appointment appointment) =>
-    appointment.startTime.difference(DateTime.now()).inHours < 24;
+bool isCurrentDay(Appointment appointment) =>
+    appointment.startTime.difference(DateTime.now()).inDays < 1;
 
 /// Returns [bool] that [end] is after [start] 30 minutes
 bool isAfterStartTime(DateTime start, DateTime end) => end.isAfter(
