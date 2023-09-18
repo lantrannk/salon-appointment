@@ -132,10 +132,16 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     headerStyle: HeaderStyle(
                       titleCentered: true,
                       formatButtonVisible: false,
-                      headerPadding: EdgeInsets.zero,
+                      headerPadding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                      ),
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                       ),
+                      leftChevronPadding: EdgeInsets.zero,
+                      rightChevronPadding: EdgeInsets.zero,
+                      leftChevronMargin: EdgeInsets.zero,
+                      rightChevronMargin: EdgeInsets.zero,
                       leftChevronIcon: CalendarChevronText(
                         focusedDay: DateTime(
                           _focusedDay.year,
@@ -277,9 +283,10 @@ class CalendarChevronText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
+    final screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      width: 110,
+      width: screenWidth / 3,
       child: Text(
         calendarTitleFormat.format(focusedDay),
         textAlign: textAlign,
