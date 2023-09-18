@@ -191,8 +191,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         ),
                       );
                     case AppointmentLoadSuccess:
-                      final List<Appointment> events =
-                          groupByDate(state.appointments!, _selectedDay!);
+                      final List<Appointment> events = groupByDate(
+                        state.appointments!,
+                        _selectedDay!,
+                      );
+
                       if (events.isNotEmpty) {
                         return Expanded(
                           child: ListView(
@@ -235,9 +238,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           child: Center(
                             child: Text(
                               l10n.emptyAppointments,
-                              style: textTheme.bodyLarge!.copyWith(
-                                color: colorScheme.primaryContainer,
-                              ),
+                              style: textTheme.bodyLarge,
                             ),
                           ),
                         );
@@ -247,10 +248,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         child: Center(
                           child: Text(
                             state.error!,
-                            style: textTheme.bodyLarge!.copyWith(
-                              color: colorScheme.primaryContainer,
-                            ),
-                            textAlign: TextAlign.center,
+                            style: textTheme.bodyLarge,
                           ),
                         ),
                       );

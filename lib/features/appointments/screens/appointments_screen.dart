@@ -263,25 +263,22 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                           ),
                         );
                       } else {
-                        return ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxHeight: indicatorHeight,
-                          ),
+                        return Expanded(
                           child: Center(
                             child: Text(
                               l10n.emptyAppointments,
-                              style: textTheme.bodyLarge!.copyWith(
-                                color: colorScheme.primaryContainer,
-                              ),
+                              style: textTheme.bodyLarge,
                             ),
                           ),
                         );
                       }
                     case AppointmentLoadFailure:
                       return Expanded(
-                        child: Text(
-                          state.error!,
-                          style: textTheme.bodyLarge,
+                        child: Center(
+                          child: Text(
+                            state.error!,
+                            style: textTheme.bodyLarge,
+                          ),
                         ),
                       );
                   }
