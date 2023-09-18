@@ -21,6 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final phoneNumberFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
 
+  String? phoneNumberErrorText;
+  String? passwordErrorText;
+
   @override
   void dispose() {
     phoneNumberController.dispose();
@@ -62,33 +65,44 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              BlocBuilder<AuthBloc, AuthState>(
-                buildWhen: (previous, current) =>
-                    previous.phoneNumberErrorText !=
-                    current.phoneNumberErrorText,
-                builder: (context, state) {
-                  return Input.phoneNumber(
-                    text: l10n.phoneNumber,
-                    controller: phoneNumberController,
-                    focusNode: phoneNumberFocusNode,
-                    onEditCompleted: () {
-                      FocusScope.of(context).nextFocus();
-                    },
-                    errorText: state.phoneNumberErrorText,
-                    onChanged: (value) {
-                      context.read<AuthBloc>().add(
-                            LoginPhoneNumberChanged(
-                              phoneNumber: value,
-                            ),
-                          );
-                    },
-                  );
+              BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  switch (state.runtimeType) {
+                    case LoginPhoneNumberOnChange:
+                      phoneNumberErrorText = state.phoneNumberErrorText;
+                      break;
+                    case LoginPasswordOnChange:
+                      passwordErrorText = state.passwordErrorText;
+                      break;
+                  }
                 },
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  buildWhen: (previous, current) =>
+                      previous.phoneNumber != current.phoneNumber,
+                  builder: (context, state) {
+                    return Input.phoneNumber(
+                      text: l10n.phoneNumber,
+                      controller: phoneNumberController,
+                      focusNode: phoneNumberFocusNode,
+                      onEditCompleted: () {
+                        FocusScope.of(context).nextFocus();
+                      },
+                      errorText: phoneNumberErrorText,
+                      onChanged: (value) {
+                        context.read<AuthBloc>().add(
+                              LoginPhoneNumberChanged(
+                                phoneNumber: value,
+                              ),
+                            );
+                      },
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 16),
               BlocBuilder<AuthBloc, AuthState>(
                 buildWhen: (previous, current) =>
-                    previous.passwordErrorText != current.passwordErrorText,
+                    previous.password != current.password,
                 builder: (context, state) {
                   return Input.password(
                     text: l10n.password,
@@ -97,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onEditCompleted: () {
                       FocusScope.of(context).unfocus();
                     },
-                    errorText: state.passwordErrorText,
+                    errorText: passwordErrorText,
                     onChanged: (value) {
                       context.read<AuthBloc>().add(
                             LoginPasswordChanged(
@@ -123,29 +137,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     if (state is LoginFailure) {
                       loadingIndicator.hide(context);
-                      switch (state.error) {
-                        case ErrorMessage.invalidAccount:
-                          SASnackBar.show(
-                            context: context,
-                            message: l10n.invalidAccountError,
-                            isSuccess: false,
-                          );
-                          break;
-                        case ErrorMessage.incorrectAccount:
-                          SASnackBar.show(
-                            context: context,
-                            message: l10n.incorrectAccountError,
-                            isSuccess: false,
-                          );
-                          break;
-                        default:
-                          SASnackBar.show(
-                            context: context,
-                            message: state.error,
-                            isSuccess: false,
-                          );
-                          break;
-                      }
+                      SASnackBar.show(
+                        context: context,
+                        message: loginError(
+                          l10n,
+                          state.error,
+                        ),
+                        isSuccess: false,
+                      );
                     }
                   },
                   builder: (ctx, state) {
