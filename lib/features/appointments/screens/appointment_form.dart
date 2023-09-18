@@ -121,7 +121,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       SASnackBar.show(
                         context: ctx,
                         message: dateTimeChangeFailure(
-                          context,
+                          l10n,
                           state.error!,
                         ),
                         isSuccess: false,

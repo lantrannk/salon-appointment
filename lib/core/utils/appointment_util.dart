@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
-
 import '../../features/appointments/model/appointment.dart';
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
 
-String dateTimeChangeFailure(BuildContext context, String error) {
-  final l10n = S.of(context);
-
+String dateTimeChangeFailure(S l10n, String error) {
   switch (error) {
     case ErrorMessage.beforeNow:
       return l10n.invalidStartTimeError;
