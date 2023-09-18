@@ -136,7 +136,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
                     case AppointmentAddSuccess:
                     case AppointmentEditSuccess:
                       loadingIndicator.hide(ctx);
-
                       SASnackBar.show(
                         context: context,
                         message: isNew ? l10n.addSuccess : l10n.updateSuccess,
@@ -154,6 +153,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                       break;
                     case AppointmentInitializeFailure:
                     case AppointmentAddFailure:
+                      Navigator.of(context).pop();
                       SASnackBar.show(
                         context: context,
                         message: state.error!,
@@ -280,7 +280,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
                                     .read<AppointmentRepository>()
                                     .getAllAppointments();
 
-                                if (isFullAppointments(
+                                if (services == null) {
+                                  SASnackBar.show(
+                                    context: context,
+                                    message: l10n.emptyServicesError,
+                                    isSuccess: false,
+                                  );
+                                } else if (isFullAppointments(
                                   appointments,
                                   startTime,
                                   endTime,
@@ -288,12 +294,6 @@ class _AppointmentFormState extends State<AppointmentForm> {
                                   SASnackBar.show(
                                     context: context,
                                     message: l10n.fullAppointmentsError,
-                                    isSuccess: false,
-                                  );
-                                } else if (services == null) {
-                                  SASnackBar.show(
-                                    context: context,
-                                    message: l10n.emptyServicesError,
                                     isSuccess: false,
                                   );
                                 } else {
