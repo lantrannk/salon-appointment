@@ -170,7 +170,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                       );
                       break;
                     case AppointmentRemoveSuccess:
-                      Navigator.of(context).pop();
                       loadingIndicator.hide(ctx);
                       SASnackBar.show(
                         context: ctx,
