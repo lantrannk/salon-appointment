@@ -5,6 +5,10 @@ abstract class AuthEvent extends Equatable {
 
   @override
   List<Object> get props => [];
+
+  String get phoneNumber => '';
+
+  String get password => '';
 }
 
 class LoginEvent extends AuthEvent {
@@ -13,7 +17,10 @@ class LoginEvent extends AuthEvent {
     required this.password,
   });
 
+  @override
   final String phoneNumber;
+
+  @override
   final String password;
 }
 
@@ -23,4 +30,22 @@ class LogoutEvent extends AuthEvent {
 
 class UserLoad extends AuthEvent {
   const UserLoad();
+}
+
+class LoginPhoneNumberChanged extends AuthEvent {
+  const LoginPhoneNumberChanged({
+    required this.phoneNumber,
+  });
+
+  @override
+  final String phoneNumber;
+}
+
+class LoginPasswordChanged extends AuthEvent {
+  const LoginPasswordChanged({
+    required this.password,
+  });
+
+  @override
+  final String password;
 }
