@@ -25,6 +25,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
     on<AppointmentEdited>(_editAppointment);
     on<AppointmentDateTimeChanged>(_changeDateTime);
     on<AppointmentInitialize>(_getUser);
+    on<AppointmentServicesChanged>(_changeServices);
   }
 
   final AppointmentRepository appointmentRepository;
@@ -164,5 +165,14 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         endTime: endTime,
       ));
     }
+  }
+
+  void _changeServices(
+    AppointmentServicesChanged event,
+    Emitter<AppointmentState> emit,
+  ) {
+    emit(AppointmentServicesChangeSuccess(
+      services: event.services,
+    ));
   }
 }

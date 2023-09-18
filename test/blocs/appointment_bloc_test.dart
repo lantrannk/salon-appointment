@@ -25,12 +25,15 @@ void main() {
 
   late String appointmentEncoded;
   late Appointment appointment;
+  late List<Appointment> appointments;
+  late List<Appointment> appointmentsOfUser;
 
   late AppointmentRepository appointmentRepo;
   late UserRepository userRepo;
   late SharedPreferences prefs;
   late User adminUser;
   late User customerUser;
+  late List<User> users;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
@@ -39,17 +42,45 @@ void main() {
     appointmentRepo = MockAppointmentRepo();
     userRepo = MockUserRepository();
 
-    appointmentEncoded = json.encode(MockDataAppointment.appointment);
     appointment = MockDataAppointment.appointment;
+    appointmentEncoded = json.encode(appointment);
+    appointments = MockDataAppointment.allAppointments;
+    appointmentsOfUser = MockDataAppointment.appointmentsOfUser;
+
     adminUser = MockDataUser.adminUser;
     customerUser = MockDataUser.customerUser;
+    users = MockDataUser.allUsers;
 
     when(
       () => userRepo.getUsers(),
     ).thenAnswer(
-      (_) async => MockDataUser.allUsers,
+      (_) async => users,
     );
   });
+
+  setUp(
+    () async {
+      when(() => userRepo.setUser(adminUser)).thenAnswer(
+        (_) async => Future.value(),
+      );
+
+      when(() => userRepo.getUser()).thenAnswer(
+        (_) async => adminUser,
+      );
+    },
+  );
+
+  Future<void> addAppointment() {
+    return appointmentRepo.addAppointment(appointment);
+  }
+
+  Future<void> editAppointment() {
+    return appointmentRepo.editAppointment(appointment);
+  }
+
+  Future<void> removeAppointment() {
+    return appointmentRepo.removeAppointment(appointment.id!);
+  }
 
   group('test load appointments bloc -', () {
     tearDown(() async {
@@ -57,24 +88,37 @@ void main() {
     });
 
     blocTest<AppointmentBloc, AppointmentState>(
-      'load appointments successful by admin',
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.adminUserJson,
+      'load appointments failure',
+      build: () {
+        when(
+          () => appointmentRepo.loadAllAppointments(adminUser),
+        ).thenThrow(
+          Exception('Not found any appointments.'),
+        );
+
+        return AppointmentBloc(
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
         );
       },
+      act: (bloc) => bloc.add(
+        AppointmentLoad(),
+      ),
+      expect: () => <AppointmentState>[
+        AppointmentLoadInProgress(),
+        const AppointmentLoadFailure(
+          error: 'Exception: Not found any appointments.',
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'load appointments successful by admin',
       build: () {
         when(
           () => appointmentRepo.loadAllAppointments(adminUser),
         ).thenAnswer(
-          (_) async => MockDataAppointment.allAppointments,
-        );
-
-        when(
-          () => userRepo.getUser(),
-        ).thenAnswer(
-          (_) async => adminUser,
+          (_) async => appointments,
         );
 
         return AppointmentBloc(
@@ -88,25 +132,19 @@ void main() {
       expect: () => <AppointmentState>[
         AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
-          users: MockDataUser.allUsers,
-          appointments: MockDataAppointment.allAppointments,
+          users: users,
+          appointments: appointments,
         ),
       ],
     );
 
     blocTest<AppointmentBloc, AppointmentState>(
       'load appointments successful by customer',
-      setUp: () async {
-        await prefs.setString(
-          'user',
-          MockDataUser.customerUserJson,
-        );
-      },
       build: () {
         when(
           () => appointmentRepo.loadAllAppointments(customerUser),
         ).thenAnswer(
-          (_) async => MockDataAppointment.appointmentsOfUser,
+          (_) async => appointmentsOfUser,
         );
 
         when(
@@ -126,26 +164,19 @@ void main() {
       expect: () => <AppointmentState>[
         AppointmentLoadInProgress(),
         AppointmentLoadSuccess(
-          users: MockDataUser.allUsers,
-          appointments: MockDataAppointment.appointmentsOfUser,
+          users: users,
+          appointments: appointmentsOfUser,
         ),
       ],
     );
   });
 
   group('test add appointment bloc -', () {
-    setUp(() async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    });
-
     blocTest<AppointmentBloc, AppointmentState>(
       'add appointment successful',
       build: () {
         when(
-          () => appointmentRepo.addAppointment(appointment),
+          () => addAppointment(),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
@@ -155,7 +186,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -167,7 +198,7 @@ void main() {
       'add appointment with not modified error',
       build: () {
         when(
-          () => appointmentRepo.addAppointment(appointment),
+          () => addAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
@@ -177,7 +208,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -191,7 +222,7 @@ void main() {
       'add appointment with bad request error',
       build: () {
         when(
-          () => appointmentRepo.addAppointment(appointment),
+          () => addAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
@@ -201,7 +232,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -215,7 +246,7 @@ void main() {
       'add appointment with not found error',
       build: () {
         when(
-          () => appointmentRepo.addAppointment(appointment),
+          () => addAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
@@ -225,7 +256,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: MockDataAppointment.appointment),
+        AppointmentAdded(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -237,18 +268,11 @@ void main() {
   });
 
   group('test edit appointment bloc -', () {
-    setUp(() async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    });
-
     blocTest<AppointmentBloc, AppointmentState>(
       'update appointment successful',
       build: () {
         when(
-          () => appointmentRepo.editAppointment(appointment),
+          () => editAppointment(),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
@@ -258,7 +282,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -270,7 +294,7 @@ void main() {
       'update appointment with not modified error',
       build: () {
         when(
-          () => appointmentRepo.editAppointment(appointment),
+          () => editAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
@@ -280,7 +304,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -294,7 +318,7 @@ void main() {
       'update appointment with bad request error',
       build: () {
         when(
-          () => appointmentRepo.editAppointment(appointment),
+          () => editAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
@@ -304,7 +328,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -318,7 +342,7 @@ void main() {
       'update appointment with not found error',
       build: () {
         when(
-          () => appointmentRepo.editAppointment(appointment),
+          () => editAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
@@ -328,7 +352,7 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: MockDataAppointment.appointment),
+        AppointmentEdited(appointment: appointment),
       ),
       expect: () => <AppointmentState>[
         AppointmentAddInProgress(),
@@ -340,18 +364,11 @@ void main() {
   });
 
   group('test remove appointment bloc -', () {
-    setUp(() async {
-      await prefs.setString(
-        'user',
-        MockDataUser.adminUserJson,
-      );
-    });
-
     blocTest<AppointmentBloc, AppointmentState>(
       'remove appointment successful',
       build: () {
         when(
-          () => appointmentRepo.removeAppointment(appointment.id!),
+          () => removeAppointment(),
         ).thenAnswer(
           (_) async => appointmentEncoded,
         );
@@ -362,7 +379,7 @@ void main() {
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
-          appointmentId: MockDataAppointment.appointment.id!,
+          appointmentId: appointment.id!,
         ),
       ),
       expect: () => <AppointmentState>[
@@ -375,7 +392,7 @@ void main() {
       'remove appointment with not modified error',
       build: () {
         when(
-          () => appointmentRepo.removeAppointment(appointment.id!),
+          () => removeAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notModified),
         );
@@ -386,7 +403,7 @@ void main() {
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
-          appointmentId: MockDataAppointment.appointment.id!,
+          appointmentId: appointment.id!,
         ),
       ),
       expect: () => <AppointmentState>[
@@ -401,7 +418,7 @@ void main() {
       'remove appointment with bad request error',
       build: () {
         when(
-          () => appointmentRepo.removeAppointment(appointment.id!),
+          () => removeAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.badRequest),
         );
@@ -412,7 +429,7 @@ void main() {
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
-          appointmentId: MockDataAppointment.appointment.id!,
+          appointmentId: appointment.id!,
         ),
       ),
       expect: () => <AppointmentState>[
@@ -427,7 +444,7 @@ void main() {
       'remove appointment with not found error',
       build: () {
         when(
-          () => appointmentRepo.removeAppointment(appointment.id!),
+          () => removeAppointment(),
         ).thenThrow(
           http.ClientException(ApiErrorMessage.notFound),
         );
@@ -438,7 +455,7 @@ void main() {
       },
       act: (bloc) => bloc.add(
         AppointmentRemoved(
-          appointmentId: MockDataAppointment.appointment.id!,
+          appointmentId: appointment.id!,
         ),
       ),
       expect: () => <AppointmentState>[

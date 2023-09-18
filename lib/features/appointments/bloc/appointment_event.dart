@@ -45,3 +45,11 @@ class AppointmentDateTimeChanged extends AppointmentEvent {
 
   final TimeOfDay endTime;
 }
+
+class AppointmentServicesChanged extends AppointmentEvent {
+  const AppointmentServicesChanged({
+    required this.services,
+  });
+
+  final String services;
+}

@@ -1,32 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 
+import '../constants/constants.dart';
+
 void main() {
   late Appointment appointment;
   late Map<String, dynamic> appointmentJson;
 
   setUp(() {
-    appointment = Appointment(
-      id: '1',
-      userId: '1',
-      date: DateTime(2023, 8, 15),
-      startTime: DateTime(2023, 8, 15, 10, 0),
-      endTime: DateTime(2023, 8, 15, 10, 30),
-      services: 'Shoulder & Neck',
-      description: 'Anything',
-      isCompleted: false,
-    );
-
-    appointmentJson = {
-      'date': '2023-08-15T00:00:00.000',
-      'startTime': '2023-08-15T10:00:00.000',
-      'endTime': '2023-08-15T10:30:00.000',
-      'userId': '1',
-      'services': 'Shoulder & Neck',
-      'description': 'Anything',
-      'isCompleted': false,
-      'id': '1'
-    };
+    appointment = MockDataAppointment.appointment;
+    appointmentJson = MockDataAppointment.appointmentToJson;
   });
 
   test('test appointment model - fromJson', () {

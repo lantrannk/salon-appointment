@@ -52,12 +52,10 @@ void main() {
     );
 
     calendarScheduleWidget = Scaffold(
-      body: Scaffold(
-        body: CalendarSchedule(
-          appointment: MockDataAppointment.appointment,
-          countOfAppointments: 4,
-          onPressed: onPressed,
-        ),
+      body: CalendarSchedule(
+        appointment: MockDataAppointment.appointment,
+        countOfAppointments: 4,
+        onPressed: onPressed,
       ),
     );
   });
