@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/common_layout.dart';
+import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -173,19 +174,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  String loginError(
-    S l10n,
-    String errorMessage,
-  ) {
-    switch (errorMessage) {
-      case ErrorMessage.invalidAccount:
-        return l10n.invalidAccountError;
-      case ErrorMessage.incorrectAccount:
-        return l10n.incorrectAccountError;
-      default:
-        return errorMessage;
-    }
   }
 }
