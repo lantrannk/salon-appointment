@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/constants.dart';
-import '../../../../core/generated/l10n.dart';
-import '../../../../core/widgets/widgets.dart';
-import '../../model/appointment.dart';
-import 'appointments_widgets.dart';
+import '../../../../../core/constants/constants.dart';
+import '../../../../../core/generated/l10n.dart';
+import '../../../../../core/widgets/widgets.dart';
+import '../../../model/appointment.dart';
+import 'appointment_card/appointment_card.dart';
 
 class AppointmentCard extends StatelessWidget {
   const AppointmentCard({
