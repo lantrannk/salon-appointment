@@ -12,7 +12,7 @@ import '../../auth/repository/user_repository.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
-import '../screens/appointments_screen.dart';
+import 'appointment/appointments_screen.dart';
 import 'appointments_widgets/appointments_widgets.dart';
 
 class CalendarScreen extends StatefulWidget {
