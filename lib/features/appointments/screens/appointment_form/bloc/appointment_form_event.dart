@@ -7,38 +7,72 @@ class AppointmentFormEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AppointmentAdded extends AppointmentFormEvent {
-  const AppointmentAdded({
-    required this.appointment,
+class AppointmentFormInitialized extends AppointmentFormEvent {
+  const AppointmentFormInitialized({
+    this.appointment,
   });
 
-  final Appointment appointment;
+  final Appointment? appointment;
 }
 
-class AppointmentEdited extends AppointmentFormEvent {
-  const AppointmentEdited({
-    required this.appointment,
+class AppointmentFormAdded extends AppointmentFormEvent {
+  const AppointmentFormAdded({
+    this.date,
+    this.startTime,
+    this.endTime,
+    this.services,
+    this.description,
   });
 
-  final Appointment appointment;
+  final DateTime? date;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final String? services;
+  final String? description;
 }
 
-class AppointmentDateTimeChanged extends AppointmentFormEvent {
-  const AppointmentDateTimeChanged({
+class AppointmentFormEdited extends AppointmentFormEvent {
+  const AppointmentFormEdited({
+    this.date,
+    this.startTime,
+    this.endTime,
+    this.services,
+    this.description,
+  });
+
+  final DateTime? date;
+  final DateTime? startTime;
+  final DateTime? endTime;
+  final String? services;
+  final String? description;
+}
+
+class AppointmentFormDateChanged extends AppointmentFormEvent {
+  const AppointmentFormDateChanged({
     required this.date,
+  });
+
+  final DateTime? date;
+}
+
+class AppointmentFormStartTimeChanged extends AppointmentFormEvent {
+  const AppointmentFormStartTimeChanged({
     required this.startTime,
+  });
+
+  final TimeOfDay? startTime;
+}
+
+class AppointmentFormEndTimeChanged extends AppointmentFormEvent {
+  const AppointmentFormEndTimeChanged({
     required this.endTime,
   });
 
-  final DateTime date;
-
-  final TimeOfDay startTime;
-
-  final TimeOfDay endTime;
+  final TimeOfDay? endTime;
 }
 
-class AppointmentServicesChanged extends AppointmentFormEvent {
-  const AppointmentServicesChanged({
+class AppointmentFormServicesChanged extends AppointmentFormEvent {
+  const AppointmentFormServicesChanged({
     required this.services,
   });
 
