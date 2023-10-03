@@ -7,9 +7,9 @@ import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../../auth/model/user.dart';
 import '../../auth/repository/user_repository.dart';
-import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
+import '../screens/appointment_form/bloc/appointment_form_bloc.dart';
 import '../screens/appointments_screen.dart';
 
 class AppointmentForm extends StatefulWidget {
@@ -31,29 +31,10 @@ class AppointmentForm extends StatefulWidget {
 class _AppointmentFormState extends State<AppointmentForm> {
   final descpController = TextEditingController();
 
-  final nameFocusNode = FocusNode();
   final descpFocusNode = FocusNode();
-
-  late DateTime dateTime = widget.appointment?.date ??
-      setDateTime(
-        widget.selectedDay,
-        getTime(DateTime.now()),
-      );
-  late DateTime startTime = widget.appointment?.startTime ??
-      setDateTime(
-        widget.selectedDay,
-        getTime(DateTime.now()),
-      );
-  late DateTime endTime =
-      widget.appointment?.endTime ?? autoAddHalfHour(startTime);
-
-  late String? services = widget.appointment?.services;
-  late User? user;
 
   @override
   void initState() {
-    descpController.text = widget.appointment?.description ?? '';
-    user = widget.user;
     super.initState();
   }
 
@@ -74,11 +55,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
     return RepositoryProvider(
       create: (context) => AppointmentRepository(),
-      child: BlocProvider<AppointmentBloc>(
-        create: (context) => AppointmentBloc(
+      child: BlocProvider<AppointmentFormBloc>(
+        create: (context) => AppointmentFormBloc(
           appointmentRepository: context.read<AppointmentRepository>(),
           userRepository: context.read<UserRepository>(),
-        )..add(AppointmentInitialize()),
+        )..add(
+            AppointmentFormInitialized(
+              appointment: widget.appointment,
+            ),
+          ),
         child: Scaffold(
           appBar: AppBar(
             title: Text(
@@ -103,21 +88,12 @@ class _AppointmentFormState extends State<AppointmentForm> {
           body: Padding(
             padding: const EdgeInsets.all(15),
             child: Center(
-              child: BlocConsumer<AppointmentBloc, AppointmentState>(
+              child: BlocConsumer<AppointmentFormBloc, AppointmentFormState>(
                 listener: (ctx, state) {
-                  switch (state.runtimeType) {
-                    case AppointmentInitializeSuccess:
-                      user ??= state.user;
-                      break;
-                    case AppointmentDateTimeChangeSuccess:
-                      dateTime = state.date;
-                      startTime = state.startTime;
-                      endTime = state.endTime;
-                      break;
-                    case AppointmentServicesChangeSuccess:
-                      services = state.services;
-                      break;
-                    case AppointmentDateTimeChangeFailure:
+                  switch (state.status) {
+                    case AppointmentFormStatus.changeDateFailure:
+                    case AppointmentFormStatus.changeStartTimeFailure:
+                    case AppointmentFormStatus.changeEndTimeFailure:
                       SASnackBar.show(
                         context: ctx,
                         message: dateTimeChangeFailure(
@@ -127,14 +103,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         isSuccess: false,
                       );
                       break;
-                    case AppointmentAddInProgress:
+                    case AppointmentFormStatus.addInProgress:
+                    case AppointmentFormStatus.editInProgress:
                       loadingIndicator.show(
                         context: ctx,
                         height: indicatorHeight,
                       );
                       break;
-                    case AppointmentAddSuccess:
-                    case AppointmentEditSuccess:
+                    case AppointmentFormStatus.addSuccess:
+                    case AppointmentFormStatus.editSuccess:
                       loadingIndicator.hide(ctx);
                       SASnackBar.show(
                         context: context,
@@ -146,13 +123,13 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => AppointmentScreen(
-                            focusedDay: dateTime,
+                            focusedDay: state.date,
                           ),
                         ),
                       );
                       break;
-                    case AppointmentInitializeFailure:
-                    case AppointmentAddFailure:
+                    case AppointmentFormStatus.addFailure:
+                    case AppointmentFormStatus.editFailure:
                       Navigator.of(context).pop();
                       SASnackBar.show(
                         context: context,
@@ -160,9 +137,22 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         isSuccess: false,
                       );
                       break;
+                    default:
+                      SASnackBar.show(
+                        context: context,
+                        message: state.status.toString(),
+                        isSuccess: true,
+                      );
                   }
                 },
                 builder: (context, state) {
+                  if (state.status == AppointmentFormStatus.initInProgress) {
+                    return Center(
+                      child: SAIndicator(
+                        color: colorScheme.primary,
+                      ),
+                    );
+                  }
                   return SizedBox(
                     height: screenHeight - keyboardHeight,
                     child: SingleChildScrollView(
@@ -170,7 +160,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         children: [
                           const SizedBox(height: 12),
                           Text(
-                            user?.name ?? '',
+                            state.user?.name ?? '',
                             style: textTheme.titleLarge!.copyWith(
                               color: colorScheme.onSurface,
                               fontWeight: FontWeight.w500,
@@ -178,62 +168,49 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                           const SizedBox(height: 12),
                           DatePicker(
-                            dateTime: dateTime,
+                            dateTime: state.date!,
                             onPressed: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
-                                initialDate: dateTime,
+                                initialDate: state.date!,
                                 firstDate: DateTime.now(),
-                                lastDate: DateTime(dateTime.year + 5),
+                                lastDate: DateTime(state.date!.year + 5),
                               );
-                              if (date != null && date != dateTime) {
-                                context.read<AppointmentBloc>().add(
-                                      AppointmentDateTimeChanged(
-                                        date: date,
-                                        startTime: getTime(startTime),
-                                        endTime: getTime(endTime),
-                                      ),
-                                    );
-                              }
+
+                              context.read<AppointmentFormBloc>().add(
+                                    AppointmentFormDateChanged(
+                                      date: date,
+                                    ),
+                                  );
                             },
                           ),
                           const SizedBox(height: 12),
                           TimePicker(
-                            startTime: startTime,
-                            endTime: endTime,
+                            startTime: state.startTime!,
+                            endTime: state.endTime!,
                             onStartTimePressed: () async {
                               final TimeOfDay? time = await showTimePicker(
                                 context: context,
-                                initialTime: getTime(startTime),
+                                initialTime: getTime(state.startTime!),
                               );
-                              if (time != null && time != getTime(startTime)) {
-                                context.read<AppointmentBloc>().add(
-                                      AppointmentDateTimeChanged(
-                                        date: dateTime,
-                                        startTime: time,
-                                        endTime: getTime(
-                                          autoAddHalfHour(
-                                            setDateTime(dateTime, time),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                              }
+
+                              context.read<AppointmentFormBloc>().add(
+                                    AppointmentFormStartTimeChanged(
+                                      startTime: time,
+                                    ),
+                                  );
                             },
                             onEndTimePressed: () async {
                               final TimeOfDay? time = await showTimePicker(
                                 context: context,
-                                initialTime: getTime(endTime),
+                                initialTime: getTime(state.endTime!),
                               );
-                              if (time != null && time != getTime(endTime)) {
-                                context.read<AppointmentBloc>().add(
-                                      AppointmentDateTimeChanged(
-                                        date: dateTime,
-                                        startTime: getTime(startTime),
-                                        endTime: time,
-                                      ),
-                                    );
-                              }
+
+                              context.read<AppointmentFormBloc>().add(
+                                    AppointmentFormEndTimeChanged(
+                                      endTime: time,
+                                    ),
+                                  );
                             },
                           ),
                           const SizedBox(height: 12),
@@ -243,10 +220,10 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             style: textTheme.labelSmall!.copyWith(
                               color: colorScheme.onSurface,
                             ),
-                            selectedValue: services,
+                            selectedValue: state.services,
                             onChanged: (value) {
-                              context.read<AppointmentBloc>().add(
-                                    AppointmentServicesChanged(
+                              context.read<AppointmentFormBloc>().add(
+                                    AppointmentFormServicesChanged(
                                       services: value!,
                                     ),
                                   );
@@ -255,7 +232,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           const SizedBox(height: 12),
                           Input(
                             controller: descpController,
-                            text: l10n.description,
+                            text: state.description ?? l10n.description,
                             focusNode: descpFocusNode,
                             onEditCompleted: () {
                               FocusScope.of(context).unfocus();
@@ -275,56 +252,28 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             height: 44,
                             width: double.infinity,
                             child: SAButton.elevated(
-                              onPressed: () async {
-                                final appointments = await context
-                                    .read<AppointmentRepository>()
-                                    .getAllAppointments();
-
-                                if (services == null) {
-                                  SASnackBar.show(
-                                    context: context,
-                                    message: l10n.emptyServicesError,
-                                    isSuccess: false,
-                                  );
-                                } else if (isFullAppointments(
-                                  appointments,
-                                  startTime,
-                                  endTime,
-                                )) {
-                                  SASnackBar.show(
-                                    context: context,
-                                    message: l10n.fullAppointmentsError,
-                                    isSuccess: false,
-                                  );
-                                } else {
-                                  context.read<AppointmentBloc>().add(
-                                        isNew
-                                            ? AppointmentAdded(
-                                                appointment: Appointment(
-                                                  userId: user!.id,
-                                                  date: dateTime,
-                                                  startTime: startTime,
-                                                  endTime: endTime,
-                                                  services: services!,
-                                                  description: description(
-                                                    l10n,
-                                                  ),
-                                                ),
-                                              )
-                                            : AppointmentEdited(
-                                                appointment: widget.appointment!
-                                                    .copyWith(
-                                                  date: dateTime,
-                                                  startTime: startTime,
-                                                  endTime: endTime,
-                                                  services: services,
-                                                  description: description(
-                                                    l10n,
-                                                  ),
-                                                ),
+                              onPressed: () {
+                                context.read<AppointmentFormBloc>().add(
+                                      isNew
+                                          ? AppointmentFormAdded(
+                                              date: state.date,
+                                              startTime: state.startTime,
+                                              endTime: state.endTime,
+                                              services: state.services,
+                                              description: description(
+                                                l10n,
                                               ),
-                                      );
-                                }
+                                            )
+                                          : AppointmentFormEdited(
+                                              date: state.date,
+                                              startTime: state.startTime,
+                                              endTime: state.endTime,
+                                              services: state.services,
+                                              description: description(
+                                                l10n,
+                                              ),
+                                            ),
+                                    );
                               },
                               child: Text(
                                 isNew
