@@ -35,9 +35,14 @@ class AppointmentFormBloc
     Emitter<AppointmentFormState> emit,
   ) async {
     try {
+      /// Get a list of all users
       final users = await userRepository.getUsers();
 
+      emit(state.copyWith(status: AppointmentFormStatus.initInProgress));
+
+      /// If have an appointment to edit
       if (event.appointment != null) {
+        /// Init appointment's properties from event
         emit(
           state.copyWith(
             user: users.singleWhere((e) => e.id == event.appointment!.userId),
@@ -50,13 +55,15 @@ class AppointmentFormBloc
         );
       } else {
         final user = await userRepository.getUser();
+        DateTime initDateTime = _initDateTime(DateTime.now());
 
+        /// Init new appointment's properties
         emit(
           state.copyWith(
             user: user,
-            date: today,
-            startTime: today,
-            endTime: autoAddHalfHour(today),
+            date: initDateTime,
+            startTime: initDateTime,
+            endTime: autoAddHalfHour(initDateTime),
           ),
         );
       }
@@ -81,26 +88,55 @@ class AppointmentFormBloc
     Emitter<AppointmentFormState> emit,
   ) async {
     try {
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.addInProgress,
-        ),
-      );
-      await appointmentRepository.addAppointment(
-        Appointment(
-          userId: state.user!.id,
-          date: event.date!,
-          startTime: event.startTime!,
-          endTime: event.endTime!,
-          services: event.services!,
-          description: event.description!,
-        ),
-      );
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.addSuccess,
-        ),
-      );
+      /// Get a list of all appointments
+      final appointments = await appointmentRepository.getAllAppointments();
+
+      /// Check if [services] is empty
+      if (event.services == null) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addFailure,
+            error: ErrorMessage.emptyServices,
+          ),
+        );
+
+        /// Check if full appointments during [startTime] to [endTime]
+      } else if (isFullAppointments(
+        appointments,
+        event.startTime!,
+        event.endTime!,
+      )) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addFailure,
+            error: ErrorMessage.fullAppointments,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addInProgress,
+          ),
+        );
+
+        /// Wait for adding an appointment
+        await appointmentRepository.addAppointment(
+          Appointment(
+            userId: state.user!.id,
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
+          ),
+        );
+
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addSuccess,
+          ),
+        );
+      }
     } on Exception catch (e) {
       emit(
         state.copyWith(
@@ -116,26 +152,49 @@ class AppointmentFormBloc
     Emitter<AppointmentFormState> emit,
   ) async {
     try {
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.editInProgress,
-        ),
-      );
-      await appointmentRepository.editAppointment(
-        Appointment(
-          userId: state.user!.id,
-          date: event.date!,
-          startTime: event.startTime!,
-          endTime: event.endTime!,
-          services: event.services!,
-          description: event.description!,
-        ),
-      );
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.editSuccess,
-        ),
-      );
+      final appointments = await appointmentRepository.getAllAppointments();
+
+      if (event.services == null) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editFailure,
+            error: ErrorMessage.emptyServices,
+          ),
+        );
+      } else if (isFullAppointments(
+        appointments,
+        event.startTime!,
+        event.endTime!,
+      )) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editFailure,
+            error: ErrorMessage.fullAppointments,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editInProgress,
+          ),
+        );
+
+        await appointmentRepository.editAppointment(
+          Appointment(
+            userId: state.user!.id,
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
+          ),
+        );
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editSuccess,
+          ),
+        );
+      }
     } on Exception catch (e) {
       emit(
         state.copyWith(
@@ -151,6 +210,7 @@ class AppointmentFormBloc
     Emitter<AppointmentFormState> emit,
   ) {
     if (event.date != null && event.date != state.date) {
+      /// Define variables [date], [startTime], [endTime] from date in event
       final date = event.date!;
       final startTime = setDateTime(
         date,
@@ -168,19 +228,20 @@ class AppointmentFormBloc
         ),
       );
 
-      final String? error = _checkDateTime(startTime, endTime);
+      /// Check if [startTime], [endTime] have any errors
+      final String? error = _checkTime(startTime, endTime);
 
       if (error != null) {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeDateFailure,
+            status: AppointmentFormStatus.changeFailure,
             error: error,
           ),
         );
       } else {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeDateSuccess,
+            status: AppointmentFormStatus.changeSuccess,
             date: date,
             startTime: startTime,
             endTime: endTime,
@@ -196,6 +257,7 @@ class AppointmentFormBloc
   ) {
     if (event.startTime != null &&
         event.startTime != getTime(state.startTime!)) {
+      /// Define variables [startTime], [endTime] from [startTime] in event
       final startTime = setDateTime(
         state.date!,
         event.startTime!,
@@ -209,19 +271,20 @@ class AppointmentFormBloc
         ),
       );
 
-      final String? error = _checkDateTime(startTime, endTime);
+      /// Check if [startTime], [endTime] have any errors
+      final String? error = _checkTime(startTime, endTime);
 
       if (error != null) {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeStartTimeFailure,
+            status: AppointmentFormStatus.changeFailure,
             error: error,
           ),
         );
       } else {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeStartTimeSuccess,
+            status: AppointmentFormStatus.changeSuccess,
             startTime: startTime,
             endTime: endTime,
           ),
@@ -235,6 +298,7 @@ class AppointmentFormBloc
     Emitter<AppointmentFormState> emit,
   ) {
     if (event.endTime != null && event.endTime != getTime(state.endTime!)) {
+      /// Define variables [endTime] from [endTime] in event
       final endTime = setDateTime(
         state.date!,
         event.endTime!,
@@ -247,19 +311,20 @@ class AppointmentFormBloc
         ),
       );
 
-      final String? error = _checkDateTime(state.startTime!, endTime);
+      /// Check if [startTime], [endTime] have any errors
+      final String? error = _checkTime(state.startTime!, endTime);
 
       if (error != null) {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeEndTimeFailure,
+            status: AppointmentFormStatus.changeFailure,
             error: error,
           ),
         );
       } else {
         emit(
           state.copyWith(
-            status: AppointmentFormStatus.changeEndTimeSuccess,
+            status: AppointmentFormStatus.changeSuccess,
             endTime: endTime,
           ),
         );
@@ -274,15 +339,17 @@ class AppointmentFormBloc
     emit(
       state.copyWith(
         services: event.services,
-        status: AppointmentFormStatus.changeServicesSuccess,
+        status: AppointmentFormStatus.changeSuccess,
       ),
     );
   }
 
-  String? _checkDateTime(
+  /// Check [startTime] and [endTime] conditions
+  String? _checkTime(
     DateTime startTime,
     DateTime endTime,
   ) {
+    /// If have any errors, return an error [String]
     if (isBeforeNow(startTime) || isBeforeNow(endTime)) {
       return ErrorMessage.beforeNow;
     }
@@ -295,21 +362,38 @@ class AppointmentFormBloc
     if (isClosedTime(startTime) || isClosedTime(endTime)) {
       return ErrorMessage.closedConflict;
     }
+
+    /// If not have any errors, return null
     return null;
   }
 
-  Future<bool> _checkAllInformationFilled(
-    String? services,
-    DateTime startTime,
-    DateTime endTime,
-  ) async {
-    final appointments = await appointmentRepository.getAllAppointments();
+  /// Check current time is in break time or closed time
+  DateTime _initDateTime(DateTime dateTime) {
+    final initEndTime = autoAddHalfHour(dateTime);
 
-    return services == null ||
-        isFullAppointments(
-          appointments,
-          startTime,
-          endTime,
-        );
+    /// If in break time, set the time to 3:20 PM
+    if (isBreakTime(dateTime) || isBreakTime(initEndTime)) {
+      return DateTime(
+          dateTime.year, dateTime.month, dateTime.day, 15, 20, 0, 0, 0);
+    }
+
+    /// If in closed time, set the time to 8:00 AM next day
+    if (isClosedTime(dateTime) || isClosedTime(initEndTime)) {
+      return dateTime.add(
+        Duration(
+          days: dateTime.hour >= 22 ? 1 : 0,
+          hours: 7 - dateTime.hour,
+          minutes: dateTime.minute != 0 ? (59 - dateTime.minute) : 0,
+          seconds: dateTime.second != 0 ? (59 - dateTime.second) : 0,
+          milliseconds:
+              dateTime.millisecond != 0 ? (999 - dateTime.millisecond) : 0,
+          microseconds:
+              dateTime.microsecond != 0 ? (1000 - dateTime.microsecond) : 0,
+        ),
+      );
+    }
+
+    /// If not have any time conflicts, set the time to current time
+    return dateTime;
   }
 }

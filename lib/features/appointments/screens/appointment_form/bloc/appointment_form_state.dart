@@ -72,11 +72,6 @@ enum AppointmentFormStatus {
   editSuccess,
   editFailure,
   beforeChange,
-  changeDateFailure,
-  changeDateSuccess,
-  changeStartTimeFailure,
-  changeStartTimeSuccess,
-  changeEndTimeFailure,
-  changeEndTimeSuccess,
-  changeServicesSuccess,
+  changeFailure,
+  changeSuccess,
 }
