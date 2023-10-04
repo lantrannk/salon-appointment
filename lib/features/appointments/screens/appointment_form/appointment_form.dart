@@ -1,28 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../core/constants/constants.dart';
-import '../../../core/generated/l10n.dart';
-import '../../../core/utils/common.dart';
-import '../../../core/widgets/widgets.dart';
-import '../../auth/model/user.dart';
-import '../../auth/repository/user_repository.dart';
-import '../model/appointment.dart';
-import '../repository/appointment_repository.dart';
-import '../screens/appointment_form/bloc/appointment_form_bloc.dart';
-import '../screens/appointments_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/generated/l10n.dart';
+import '../../../../core/utils/common.dart';
+import '../../../../core/widgets/widgets.dart';
+import '../../../auth/repository/user_repository.dart';
+import '../../model/appointment.dart';
+import '../../repository/appointment_repository.dart';
+import '../appointments_screen.dart';
+import 'bloc/appointment_form_bloc.dart';
 
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({
-    required this.selectedDay,
-    this.user,
     this.appointment,
     super.key,
   });
 
-  final User? user;
   final Appointment? appointment;
-  final DateTime selectedDay;
 
   @override
   State<AppointmentForm> createState() => _AppointmentFormState();
@@ -35,6 +30,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
 
   @override
   void initState() {
+    descpController.text = widget.appointment?.description ?? '';
     super.initState();
   }
 
@@ -91,14 +87,15 @@ class _AppointmentFormState extends State<AppointmentForm> {
               child: BlocConsumer<AppointmentFormBloc, AppointmentFormState>(
                 listener: (ctx, state) {
                   switch (state.status) {
-                    case AppointmentFormStatus.changeDateFailure:
-                    case AppointmentFormStatus.changeStartTimeFailure:
-                    case AppointmentFormStatus.changeEndTimeFailure:
+                    case AppointmentFormStatus.changeFailure:
+                    case AppointmentFormStatus.addFailure:
+                    case AppointmentFormStatus.editFailure:
+                    case AppointmentFormStatus.initFailure:
                       SASnackBar.show(
                         context: ctx,
-                        message: dateTimeChangeFailure(
+                        message: appointmentFormFailure(
                           l10n,
-                          state.error!,
+                          state.error,
                         ),
                         isSuccess: false,
                       );
@@ -128,21 +125,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         ),
                       );
                       break;
-                    case AppointmentFormStatus.addFailure:
-                    case AppointmentFormStatus.editFailure:
-                      Navigator.of(context).pop();
-                      SASnackBar.show(
-                        context: context,
-                        message: state.error!,
-                        isSuccess: false,
-                      );
-                      break;
                     default:
-                      SASnackBar.show(
-                        context: context,
-                        message: state.status.toString(),
-                        isSuccess: true,
-                      );
+                      return;
                   }
                 },
                 builder: (context, state) {
@@ -152,6 +136,9 @@ class _AppointmentFormState extends State<AppointmentForm> {
                         color: colorScheme.primary,
                       ),
                     );
+                  }
+                  if (state.status == AppointmentFormStatus.initFailure) {
+                    return const SizedBox.shrink();
                   }
                   return SizedBox(
                     height: screenHeight - keyboardHeight,
@@ -168,7 +155,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                           const SizedBox(height: 12),
                           DatePicker(
-                            dateTime: state.date!,
+                            dateTime: state.date ?? today,
                             onPressed: () async {
                               final DateTime? date = await showDatePicker(
                                 context: context,
@@ -186,8 +173,8 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                           const SizedBox(height: 12),
                           TimePicker(
-                            startTime: state.startTime!,
-                            endTime: state.endTime!,
+                            startTime: state.startTime ?? today,
+                            endTime: state.endTime ?? today,
                             onStartTimePressed: () async {
                               final TimeOfDay? time = await showTimePicker(
                                 context: context,
@@ -232,7 +219,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           const SizedBox(height: 12),
                           Input(
                             controller: descpController,
-                            text: state.description ?? l10n.description,
+                            text: l10n.description,
                             focusNode: descpFocusNode,
                             onEditCompleted: () {
                               FocusScope.of(context).unfocus();
