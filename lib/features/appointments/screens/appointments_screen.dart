@@ -13,7 +13,7 @@ import '../../auth/repository/user_repository.dart';
 import '../bloc/appointment_bloc.dart';
 import '../model/appointment.dart';
 import '../repository/appointment_repository.dart';
-import 'appointment_form.dart';
+import 'appointment_form/appointment_form.dart';
 import 'appointments_widgets/appointments_widgets.dart';
 
 class AppointmentScreen extends StatefulWidget {
@@ -232,8 +232,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                           value: ctx.read<AppointmentBloc>(),
                                           child: AppointmentForm(
                                             appointment: events[index],
-                                            user: user,
-                                            selectedDay: _selectedDay!,
                                           ),
                                         ),
                                       ),
