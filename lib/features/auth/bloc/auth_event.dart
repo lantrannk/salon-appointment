@@ -9,12 +9,18 @@ abstract class AuthEvent extends Equatable {
   String get phoneNumber => '';
 
   String get password => '';
+
+  String? get phoneNumberErrorText => null;
+
+  String? get passwordErrorText => null;
 }
 
 class LoginEvent extends AuthEvent {
   const LoginEvent({
     required this.phoneNumber,
     required this.password,
+    this.phoneNumberErrorText,
+    this.passwordErrorText,
   });
 
   @override
@@ -22,6 +28,12 @@ class LoginEvent extends AuthEvent {
 
   @override
   final String password;
+
+  @override
+  final String? phoneNumberErrorText;
+
+  @override
+  final String? passwordErrorText;
 }
 
 class LogoutEvent extends AuthEvent {

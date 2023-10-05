@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/common_layout.dart';
+import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -65,44 +66,43 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              BlocListener<AuthBloc, AuthState>(
+              BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
-                  switch (state.runtimeType) {
-                    case LoginPhoneNumberOnChange:
-                      phoneNumberErrorText = state.phoneNumberErrorText;
-                      break;
-                    case LoginPasswordOnChange:
-                      passwordErrorText = state.passwordErrorText;
-                      break;
+                  if (state is LoginPhoneNumberOnChange) {
+                    phoneNumberErrorText = state.phoneNumberErrorText;
                   }
                 },
-                child: BlocBuilder<AuthBloc, AuthState>(
-                  buildWhen: (previous, current) =>
-                      previous.phoneNumber != current.phoneNumber,
-                  builder: (context, state) {
-                    return Input.phoneNumber(
-                      text: l10n.phoneNumber,
-                      controller: phoneNumberController,
-                      focusNode: phoneNumberFocusNode,
-                      onEditCompleted: () {
-                        FocusScope.of(context).nextFocus();
-                      },
-                      errorText: phoneNumberErrorText,
-                      onChanged: (value) {
-                        context.read<AuthBloc>().add(
-                              LoginPhoneNumberChanged(
-                                phoneNumber: value,
-                              ),
-                            );
-                      },
-                    );
-                  },
-                ),
+                buildWhen: (previous, current) =>
+                    previous.phoneNumberErrorText !=
+                    current.phoneNumberErrorText,
+                builder: (context, state) {
+                  return Input.phoneNumber(
+                    text: l10n.phoneNumber,
+                    controller: phoneNumberController,
+                    focusNode: phoneNumberFocusNode,
+                    onEditCompleted: () {
+                      FocusScope.of(context).nextFocus();
+                    },
+                    errorText: phoneNumberErrorText,
+                    onChanged: (value) {
+                      context.read<AuthBloc>().add(
+                            LoginPhoneNumberChanged(
+                              phoneNumber: value,
+                            ),
+                          );
+                    },
+                  );
+                },
               ),
               const SizedBox(height: 16),
-              BlocBuilder<AuthBloc, AuthState>(
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is LoginPasswordOnChange) {
+                    passwordErrorText = state.passwordErrorText;
+                  }
+                },
                 buildWhen: (previous, current) =>
-                    previous.password != current.password,
+                    previous.passwordErrorText != current.passwordErrorText,
                 builder: (context, state) {
                   return Input.password(
                     text: l10n.password,
@@ -161,6 +161,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               LoginEvent(
                                 phoneNumber: phoneNumberController.text,
                                 password: passwordController.text,
+                                phoneNumberErrorText: phoneNumberErrorText,
+                                passwordErrorText: passwordErrorText,
                               ),
                             );
                       },
@@ -173,19 +175,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  String loginError(
-    S l10n,
-    String errorMessage,
-  ) {
-    switch (errorMessage) {
-      case ErrorMessage.invalidAccount:
-        return l10n.invalidAccountError;
-      case ErrorMessage.incorrectAccount:
-        return l10n.incorrectAccountError;
-      default:
-        return errorMessage;
-    }
   }
 }
