@@ -42,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         emit(const LoginFailure(ErrorMessage.incorrectAccount));
       }
-    } on Exception catch (e) {
+    } catch (e) {
       emit(
         LoginFailure(e.toString()),
       );
@@ -71,7 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           user.avatar,
         ),
       );
-    } on Exception catch (e) {
+    } catch (e) {
       emit(
         UserLoadFailure(
           error: e.toString(),

@@ -49,7 +49,7 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
           appointments: appointments,
         ),
       );
-    } on Exception catch (e) {
+    } catch (e) {
       emit(AppointmentLoadFailure(error: e.toString()));
     }
   }
