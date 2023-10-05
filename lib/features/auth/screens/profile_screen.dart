@@ -63,13 +63,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               builder: (context, state) {
+                if (state is UserLoadFailure) {
+                  return Center(
+                    child: SAText(
+                      text: state.error!,
+                      style: textTheme.bodySmall,
+                    ),
+                  );
+                }
                 if (state is UserLoadSuccess) {
                   return Column(
                     children: [
                       Expanded(
                         child: Container(
-                          width: 150,
-                          height: 150,
+                          width: 170,
+                          height: 170,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: colorScheme.onPrimary,
@@ -78,6 +86,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               image: NetworkImage(state.avatar),
                             ),
                           ),
+                          // child: Image.network(
+                          //   state.avatar,
+                          //   height: 150,
+                          //   width: 150,
+                          //   fit: BoxFit.cover,
+                          //   errorBuilder: (context, error, stackTrace) {
+                          //     return Icon(
+                          //       Icons.account_circle_rounded,
+                          //       size: 150,
+                          //       color: colorScheme.secondaryContainer,
+                          //     );
+                          //   },
+                          // ),
                         ),
                       ),
                       const SizedBox(
