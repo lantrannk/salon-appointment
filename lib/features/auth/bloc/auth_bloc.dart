@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/validations/validations.dart';
-import '../model/user.dart';
 import '../repository/user_repository.dart';
 
 part 'auth_event.dart';
@@ -26,19 +25,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(LoginInProgress());
     try {
-      final List<User> users = await userRepo.getUsers();
-      if (FormValidation.isValidPassword(event.password) != null ||
-          FormValidation.isValidPhoneNumber(event.phoneNumber) != null) {
+      if (event.phoneNumberErrorText != null ||
+          event.passwordErrorText != null) {
         emit(const LoginFailure(ErrorMessage.invalidAccount));
         return;
       }
-      if (FormValidation.isLoginSuccess(
-          users, event.phoneNumber, event.password)) {
-        final user = users
-            .where((e) =>
-                e.phoneNumber == event.phoneNumber &&
-                e.password == event.password)
-            .first;
+
+      final user = await userRepo.login(
+        event.phoneNumber,
+        event.password,
+      );
+
+      if (user != null) {
         await userRepo.setUser(user);
         emit(LoginSuccess());
       } else {
