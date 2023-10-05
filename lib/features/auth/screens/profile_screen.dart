@@ -63,8 +63,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               builder: (context, state) {
-                final String userName = state.name;
-                final String userAvatar = state.avatar;
                 if (state is UserLoadSuccess) {
                   return Column(
                     children: [
@@ -77,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             color: colorScheme.onPrimary,
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(userAvatar),
+                              image: NetworkImage(state.avatar),
                             ),
                           ),
                         ),
@@ -87,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       SizedBox(
                         child: SAText(
-                          text: userName,
+                          text: state.name,
                           style: textTheme.displaySmall!.copyWith(
                             color: colorScheme.onPrimary,
                           ),

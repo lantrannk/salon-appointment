@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../../../core/storage/user_storage.dart';
+import '../../../core/validations/validations.dart';
 import '../api/user_api.dart';
 import '../model/user.dart';
 
@@ -40,5 +41,15 @@ class UserRepository {
 
   Future<void> clearStorage() async {
     await userStorage.clear();
+  }
+
+  Future<User?> login(String phoneNumber, String password) async {
+    final users = await getUsers();
+    if (FormValidation.isLoginSuccess(users, phoneNumber, password)) {
+      return users
+          .where((e) => e.phoneNumber == phoneNumber && e.password == password)
+          .first;
+    }
+    return null;
   }
 }
