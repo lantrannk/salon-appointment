@@ -379,18 +379,7 @@ class AppointmentFormBloc
 
     /// If in closed time, set the time to 8:00 AM next day
     if (isClosedTime(dateTime) || isClosedTime(initEndTime)) {
-      return dateTime.add(
-        Duration(
-          days: dateTime.hour >= 22 ? 1 : 0,
-          hours: 7 - dateTime.hour,
-          minutes: dateTime.minute != 0 ? (59 - dateTime.minute) : 0,
-          seconds: dateTime.second != 0 ? (59 - dateTime.second) : 0,
-          milliseconds:
-              dateTime.millisecond != 0 ? (999 - dateTime.millisecond) : 0,
-          microseconds:
-              dateTime.microsecond != 0 ? (1000 - dateTime.microsecond) : 0,
-        ),
-      );
+      return initOpenTime(dateTime);
     }
 
     /// If not have any time conflicts, set the time to current time
