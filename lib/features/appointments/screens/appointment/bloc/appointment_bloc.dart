@@ -41,16 +41,20 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         ),
       );
 
-      final user = await userRepository.getUser();
-      final getAllData = await waitConcurrently(
-        userRepository.getUsers(),
-        appointmentRepository.loadAllAppointments(user!),
-      );
+      late List<User> users;
+      late List<Appointment> appointments;
+
+      await Future.wait([
+        userRepository.getUsers().then((value) => users = value),
+        appointmentRepository
+            .loadAllAppointments()
+            .then((value) => appointments = value),
+      ]);
 
       emit(
         state.copyWith(
-          users: getAllData.$1,
-          appointments: getAllData.$2,
+          users: users,
+          appointments: appointments,
           status: Status.loadSuccess,
         ),
       );
