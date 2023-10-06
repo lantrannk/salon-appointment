@@ -75,34 +75,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   return Column(
                     children: [
                       Expanded(
-                        child: Container(
-                          width: 170,
-                          height: 170,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colorScheme.onPrimary,
-                            image: DecorationImage(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(90),
+                          child: Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 170,
+                              minWidth: 170,
+                              maxHeight: 170,
+                              maxWidth: 170,
+                            ),
+                            child: FadeInImage.assetNetwork(
+                              placeholder: unknownUserImagePath,
+                              image: state.avatar,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.account_circle_rounded,
+                                  size: 170,
+                                  color: colorScheme.secondaryContainer,
+                                );
+                              },
                               fit: BoxFit.cover,
-                              image: NetworkImage(state.avatar),
+                              height: 170,
+                              width: 170,
                             ),
                           ),
-                          // child: Image.network(
-                          //   state.avatar,
-                          //   height: 150,
-                          //   width: 150,
-                          //   fit: BoxFit.cover,
-                          //   errorBuilder: (context, error, stackTrace) {
-                          //     return Icon(
-                          //       Icons.account_circle_rounded,
-                          //       size: 150,
-                          //       color: colorScheme.secondaryContainer,
-                          //     );
-                          //   },
-                          // ),
                         ),
                       ),
                       const SizedBox(
-                        height: 12,
+                        height: 24,
                       ),
                       SizedBox(
                         child: SAText(
