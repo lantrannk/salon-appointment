@@ -40,3 +40,5 @@ class CalendarState extends Equatable {
     );
   }
 }
+
+enum LoadStatus { loadInProgress, loadSuccess, loadFailure }

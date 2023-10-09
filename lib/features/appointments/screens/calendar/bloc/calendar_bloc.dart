@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../../core/constants/constants.dart';
 import '../../../../../core/utils/common.dart';
 import '../../../../auth/repository/user_repository.dart';
 import '../../../model/appointment.dart';
@@ -32,9 +31,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     Emitter<CalendarState> emit,
   ) async {
     try {
-      final user = await userRepository.getUser();
-      final appointments =
-          await appointmentRepository.loadAllAppointments(user!);
+      final appointments = await appointmentRepository.loadAllAppointments();
 
       emit(
         state.copyWith(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/widgets.dart';
+import '../../../../../../core/widgets/widgets.dart';
 
 class Description extends StatefulWidget {
   const Description({
