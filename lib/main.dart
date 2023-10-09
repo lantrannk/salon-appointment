@@ -8,7 +8,7 @@ import 'core/generated/l10n.dart';
 import 'core/theme/theme.dart';
 import 'core/theme/theme_provider.dart';
 import 'features/appointments/screens/appointments_screen.dart';
-import 'features/appointments/screens/calendar_screen.dart';
+import 'features/appointments/screens/calendar/calendar_screen.dart';
 import 'features/auth/bloc/auth_bloc.dart';
 import 'features/auth/repository/user_repository.dart';
 import 'features/auth/screens/login_screen.dart';
