@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/constants/constants.dart';
-import '../../../../core/utils/common.dart';
-import '../../../../core/widgets/widgets.dart';
-import '../../model/appointment.dart';
+import '../../../../../core/constants/constants.dart';
+import '../../../../../core/utils/common.dart';
+import '../../../../../core/widgets/widgets.dart';
+import '../../../model/appointment.dart';
 
 class CalendarSchedule extends StatelessWidget {
   const CalendarSchedule({
