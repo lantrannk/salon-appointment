@@ -2,19 +2,26 @@ import '../../features/appointments/model/appointment.dart';
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
 
-String dateTimeChangeFailure(S l10n, String error) {
-  switch (error) {
-    case ErrorMessage.beforeNow:
-      return l10n.invalidStartTimeError;
-    case ErrorMessage.differentTime:
-      return l10n.invalidEndTimeError;
-    case ErrorMessage.breakConflict:
-      return l10n.breakTimeConflictError;
-    case ErrorMessage.closedConflict:
-      return l10n.closedTimeError;
-    default:
-      return l10n.unknownError;
+String appointmentFormFailure(S l10n, String? error) {
+  if (error != null) {
+    switch (error) {
+      case ErrorMessage.beforeNow:
+        return l10n.invalidStartTimeError;
+      case ErrorMessage.differentTime:
+        return l10n.invalidEndTimeError;
+      case ErrorMessage.breakConflict:
+        return l10n.breakTimeConflictError;
+      case ErrorMessage.closedConflict:
+        return l10n.closedTimeError;
+      case ErrorMessage.emptyServices:
+        return l10n.emptyServicesError;
+      case ErrorMessage.fullAppointments:
+        return l10n.fullAppointmentsError;
+      default:
+        return '[ERROR] $error';
+    }
   }
+  return l10n.unknownError;
 }
 
 /// Returns [bool] that [appointments] in period [startTime] to [endTime] is not full

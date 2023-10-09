@@ -11,5 +11,9 @@ class ErrorMessage {
 
   static const String incorrectAccount = 'incorrect-account';
 
+  static const String emptyServices = 'empty-services';
+
+  static const String fullAppointments = 'full-appointments';
+
   static const String unknownUser = 'unknown-user';
 }

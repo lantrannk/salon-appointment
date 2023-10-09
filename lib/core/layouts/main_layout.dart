@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../features/appointments/screens/appointment_form.dart';
+import '../../features/appointments/screens/appointment_form/appointment_form.dart';
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
 import '../theme/theme_provider.dart';
-import '../utils/common.dart';
 import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {
@@ -94,11 +93,7 @@ class _MainLayoutState extends State<MainLayout> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AppointmentForm(
-                selectedDay: isBeforeNow(widget.selectedDay)
-                    ? DateTime.now()
-                    : widget.selectedDay,
-              ),
+              builder: (context) => const AppointmentForm(),
             ),
           );
         },
