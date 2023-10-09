@@ -21,8 +21,8 @@ class AppointmentState extends Equatable {
   List<Object?> get props => [
         users,
         appointments,
-        focusedDay,
-        selectedDay,
+        dateFormat.format(focusedDay!),
+        dateFormat.format(selectedDay!),
         error,
         status,
       ];
