@@ -12,7 +12,7 @@ import '../../../auth/model/user.dart';
 import '../../../auth/repository/user_repository.dart';
 import '../../model/appointment.dart';
 import '../../repository/appointment_repository.dart';
-import '../appointment_form.dart';
+import '../appointment_form/appointment_form.dart';
 import 'bloc/appointment_bloc.dart';
 import 'ui/appointment_ui.dart';
 
@@ -232,8 +232,6 @@ class _AppointmentScreenState extends State<AppointmentScreen> {
                                                   ctx.read<AppointmentBloc>(),
                                               child: AppointmentForm(
                                                 appointment: events[index],
-                                                user: user,
-                                                selectedDay: state.selectedDay!,
                                               ),
                                             ),
                                           ),
