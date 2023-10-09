@@ -11,7 +11,7 @@ import '../../../../core/widgets/widgets.dart';
 import '../../../auth/repository/user_repository.dart';
 import '../../model/appointment.dart';
 import '../../repository/appointment_repository.dart';
-import '../appointments_screen.dart';
+import '../appointment/appointments_screen.dart';
 import 'bloc/calendar_bloc.dart';
 import 'ui/calendar_ui.dart';
 
