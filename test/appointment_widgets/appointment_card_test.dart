@@ -3,8 +3,8 @@ import 'dart:io' as io;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:salon_appointment/core/constants/assets.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart'
+import 'package:salon_appointment/features/appointments/screens/appointment/ui/appointment_ui.dart';
+import 'package:salon_appointment/features/appointments/screens/appointment/ui/appointment_ui.dart'
     as widget;
 import 'package:shared_preferences/shared_preferences.dart';
 
