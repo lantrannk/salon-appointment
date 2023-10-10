@@ -5,15 +5,14 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
+import 'package:salon_appointment/features/appointments/screens/appointment/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/auth/model/user.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/api_error_message.dart';
-import '../constants/mock_data/mock_data.dart';
+import '../constants/constants.dart';
 
 class MockAppointmentRepo extends Mock implements AppointmentRepository {}
 
@@ -34,6 +33,10 @@ void main() {
   late User adminUser;
   late User customerUser;
   late List<User> users;
+
+  late AppointmentState removeInProgressAppointmentState = MockDataState
+      .initialAppointmentState
+      .copyWith(status: Status.removeInProgress);
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
@@ -70,14 +73,6 @@ void main() {
     },
   );
 
-  Future<void> addAppointment() {
-    return appointmentRepo.addAppointment(appointment);
-  }
-
-  Future<void> editAppointment() {
-    return appointmentRepo.editAppointment(appointment);
-  }
-
   Future<void> removeAppointment() {
     return appointmentRepo.removeAppointment(appointment.id!);
   }
@@ -88,10 +83,10 @@ void main() {
     });
 
     blocTest<AppointmentBloc, AppointmentState>(
-      'load appointments failure',
+      'load appointments failure when can not get list of appointments',
       build: () {
         when(
-          () => appointmentRepo.loadAllAppointments(adminUser),
+          () => appointmentRepo.loadAllAppointments(),
         ).thenThrow(
           Exception('Not found any appointments.'),
         );
@@ -102,12 +97,39 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentLoad(),
+        const AppointmentLoaded(),
       ),
       expect: () => <AppointmentState>[
-        AppointmentLoadInProgress(),
-        const AppointmentLoadFailure(
+        MockDataState.initialAppointmentState,
+        MockDataState.initialAppointmentState.copyWith(
           error: 'Exception: Not found any appointments.',
+          status: Status.loadFailure,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'load appointments failure when can not get list of users from storage',
+      build: () {
+        when(
+          () => userRepo.getUsers(),
+        ).thenThrow(
+          Exception('Not found any users.'),
+        );
+
+        return AppointmentBloc(
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
+        );
+      },
+      act: (bloc) => bloc.add(
+        const AppointmentLoaded(),
+      ),
+      expect: () => <AppointmentState>[
+        MockDataState.initialAppointmentState,
+        MockDataState.initialAppointmentState.copyWith(
+          error: 'Exception: Not found any users.',
+          status: Status.loadFailure,
         ),
       ],
     );
@@ -116,7 +138,7 @@ void main() {
       'load appointments successful by admin',
       build: () {
         when(
-          () => appointmentRepo.loadAllAppointments(adminUser),
+          () => appointmentRepo.loadAllAppointments(),
         ).thenAnswer(
           (_) async => appointments,
         );
@@ -127,13 +149,46 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentLoad(),
+        const AppointmentLoaded(),
       ),
       expect: () => <AppointmentState>[
-        AppointmentLoadInProgress(),
-        AppointmentLoadSuccess(
+        MockDataState.initialAppointmentState,
+        MockDataState.initialAppointmentState.copyWith(
           users: users,
           appointments: appointments,
+          status: Status.loadSuccess,
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'load appointments successful when have input date time',
+      build: () {
+        when(
+          () => appointmentRepo.loadAllAppointments(),
+        ).thenAnswer(
+          (_) async => appointments,
+        );
+
+        return AppointmentBloc(
+          appointmentRepository: appointmentRepo,
+          userRepository: userRepo,
+        );
+      },
+      act: (bloc) => bloc.add(
+        AppointmentLoaded(focusedDay: DateTime(2023, 10, 3)),
+      ),
+      expect: () => <AppointmentState>[
+        MockDataState.initialAppointmentState.copyWith(
+          focusedDay: DateTime(2023, 10, 3),
+          selectedDay: DateTime(2023, 10, 3),
+        ),
+        MockDataState.initialAppointmentState.copyWith(
+          users: users,
+          appointments: appointments,
+          focusedDay: DateTime(2023, 10, 3),
+          selectedDay: DateTime(2023, 10, 3),
+          status: Status.loadSuccess,
         ),
       ],
     );
@@ -142,7 +197,7 @@ void main() {
       'load appointments successful by customer',
       build: () {
         when(
-          () => appointmentRepo.loadAllAppointments(customerUser),
+          () => appointmentRepo.loadAllAppointments(),
         ).thenAnswer(
           (_) async => appointmentsOfUser,
         );
@@ -159,205 +214,14 @@ void main() {
         );
       },
       act: (bloc) => bloc.add(
-        AppointmentLoad(),
+        const AppointmentLoaded(),
       ),
       expect: () => <AppointmentState>[
-        AppointmentLoadInProgress(),
-        AppointmentLoadSuccess(
+        MockDataState.initialAppointmentState,
+        MockDataState.initialAppointmentState.copyWith(
           users: users,
           appointments: appointmentsOfUser,
-        ),
-      ],
-    );
-  });
-
-  group('test add appointment bloc -', () {
-    blocTest<AppointmentBloc, AppointmentState>(
-      'add appointment successful',
-      build: () {
-        when(
-          () => addAppointment(),
-        ).thenAnswer(
-          (_) async => appointmentEncoded,
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        AppointmentAddSuccess(),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'add appointment with not modified error',
-      build: () {
-        when(
-          () => addAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.notModified),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.notModified,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'add appointment with bad request error',
-      build: () {
-        when(
-          () => addAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.badRequest),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.badRequest,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'add appointment with not found error',
-      build: () {
-        when(
-          () => addAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.notFound),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentAdded(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.notFound,
-        ),
-      ],
-    );
-  });
-
-  group('test edit appointment bloc -', () {
-    blocTest<AppointmentBloc, AppointmentState>(
-      'update appointment successful',
-      build: () {
-        when(
-          () => editAppointment(),
-        ).thenAnswer(
-          (_) async => appointmentEncoded,
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        AppointmentEditSuccess(),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'update appointment with not modified error',
-      build: () {
-        when(
-          () => editAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.notModified),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.notModified,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'update appointment with bad request error',
-      build: () {
-        when(
-          () => editAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.badRequest),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.badRequest,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentBloc, AppointmentState>(
-      'update appointment with not found error',
-      build: () {
-        when(
-          () => editAppointment(),
-        ).thenThrow(
-          http.ClientException(ApiErrorMessage.notFound),
-        );
-        return AppointmentBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentEdited(appointment: appointment),
-      ),
-      expect: () => <AppointmentState>[
-        AppointmentAddInProgress(),
-        const AppointmentAddFailure(
-          error: ApiErrorMessage.notFound,
+          status: Status.loadSuccess,
         ),
       ],
     );
@@ -383,8 +247,10 @@ void main() {
         ),
       ),
       expect: () => <AppointmentState>[
-        AppointmentRemoveInProgress(),
-        AppointmentRemoveSuccess(),
+        removeInProgressAppointmentState,
+        removeInProgressAppointmentState.copyWith(
+          status: Status.removeSuccess,
+        ),
       ],
     );
 
@@ -407,9 +273,10 @@ void main() {
         ),
       ),
       expect: () => <AppointmentState>[
-        AppointmentRemoveInProgress(),
-        const AppointmentRemoveFailure(
+        removeInProgressAppointmentState,
+        removeInProgressAppointmentState.copyWith(
           error: ApiErrorMessage.notModified,
+          status: Status.removeFailure,
         ),
       ],
     );
@@ -433,9 +300,10 @@ void main() {
         ),
       ),
       expect: () => <AppointmentState>[
-        AppointmentRemoveInProgress(),
-        const AppointmentRemoveFailure(
+        removeInProgressAppointmentState,
+        removeInProgressAppointmentState.copyWith(
           error: ApiErrorMessage.badRequest,
+          status: Status.removeFailure,
         ),
       ],
     );
@@ -459,9 +327,69 @@ void main() {
         ),
       ),
       expect: () => <AppointmentState>[
-        AppointmentRemoveInProgress(),
-        const AppointmentRemoveFailure(
+        removeInProgressAppointmentState,
+        removeInProgressAppointmentState.copyWith(
           error: ApiErrorMessage.notFound,
+          status: Status.removeFailure,
+        ),
+      ],
+    );
+  });
+
+  group('test select calendar day bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'select calendar day successful',
+      build: () => AppointmentBloc(
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
+      ),
+      act: (bloc) => bloc.add(
+        AppointmentCalendarDaySelected(
+          focusedDay: DateTime(2023, 10, 3),
+          selectedDay: DateTime(2023, 10, 3),
+        ),
+      ),
+      expect: () => <AppointmentState>[
+        MockDataState.initialAppointmentState.copyWith(
+          focusedDay: DateTime(2023, 10, 3),
+          selectedDay: DateTime(2023, 10, 3),
+        ),
+      ],
+    );
+
+    blocTest<AppointmentBloc, AppointmentState>(
+      'select calendar day failure when'
+      'the selected day input is the same as the selected day in state',
+      build: () => AppointmentBloc(
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
+      ),
+      act: (bloc) => bloc.add(
+        AppointmentCalendarDaySelected(
+          focusedDay: DateTime.now(),
+          selectedDay: DateTime.now(),
+        ),
+      ),
+      expect: () => <AppointmentState>[],
+    );
+  });
+
+  group('test change calendar page bloc -', () {
+    blocTest<AppointmentBloc, AppointmentState>(
+      'change calendar page successful',
+      build: () => AppointmentBloc(
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
+      ),
+      act: (bloc) => bloc.add(
+        AppointmentCalendarPageChanged(
+          focusedDay: DateTime(2023, 10, 3),
+        ),
+      ),
+      expect: () => <AppointmentState>[
+        MockDataState.initialAppointmentState.copyWith(
+          focusedDay: DateTime(2023, 10, 3),
+          selectedDay: DateTime(2023, 10, 3),
         ),
       ],
     );
