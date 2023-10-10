@@ -18,8 +18,8 @@ class CalendarState extends Equatable {
   @override
   List<Object?> get props => [
         appointments,
-        focusedDay,
-        selectedDay,
+        dateFormat.format(focusedDay),
+        dateFormat.format(selectedDay),
         status,
         error,
       ];

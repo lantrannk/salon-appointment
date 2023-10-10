@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../../core/constants/constants.dart';
 import '../../../../../core/utils/common.dart';
 import '../../../../auth/repository/user_repository.dart';
 import '../../../model/appointment.dart';
