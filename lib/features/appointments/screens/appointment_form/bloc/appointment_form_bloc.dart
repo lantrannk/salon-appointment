@@ -187,6 +187,11 @@ class AppointmentFormBloc
 
         emit(
           state.copyWith(
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
             status: AppointmentFormStatus.editSuccess,
           ),
         );
