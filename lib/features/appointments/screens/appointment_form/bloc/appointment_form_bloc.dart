@@ -97,25 +97,18 @@ class AppointmentFormBloc
       /// Get a list of all appointments
       final appointments = await appointmentRepository.getAllAppointments();
 
-      /// Check if [services] is empty
-      if (event.services?.isEmpty ?? true) {
-        emit(
-          state.copyWith(
-            status: AppointmentFormStatus.addFailure,
-            error: ErrorMessage.emptyServices,
-          ),
-        );
-
-        /// Check if full appointments during [startTime] to [endTime]
-      } else if (isFullAppointments(
+      final error = _checkAppointment(
+        event.services,
         appointments,
         event.startTime!,
         event.endTime!,
-      )) {
+      );
+
+      if (error != null) {
         emit(
           state.copyWith(
             status: AppointmentFormStatus.addFailure,
-            error: ErrorMessage.fullAppointments,
+            error: error,
           ),
         );
       } else {
@@ -160,25 +153,18 @@ class AppointmentFormBloc
     try {
       final appointments = await appointmentRepository.getAllAppointments();
 
-      /// Check if [services] is empty
-      if (event.services?.isEmpty ?? true) {
-        emit(
-          state.copyWith(
-            status: AppointmentFormStatus.editFailure,
-            error: ErrorMessage.emptyServices,
-          ),
-        );
-
-        /// Check if full appointments during [startTime] to [endTime]
-      } else if (isFullAppointments(
+      final error = _checkAppointment(
+        event.services,
         appointments,
         event.startTime!,
         event.endTime!,
-      )) {
+      );
+
+      if (error != null) {
         emit(
           state.copyWith(
             status: AppointmentFormStatus.editFailure,
-            error: ErrorMessage.fullAppointments,
+            error: error,
           ),
         );
       } else {
@@ -375,6 +361,22 @@ class AppointmentFormBloc
 
     /// If not have any errors, return null
     return null;
+  }
+
+  String? _checkAppointment(
+    String? services,
+    List<Appointment> appointments,
+    DateTime startTime,
+    DateTime endTime,
+  ) {
+    /// Check if [services] is empty
+    return services?.isEmpty ?? true
+        ? ErrorMessage.emptyServices
+
+        /// Check if full appointments during [startTime] to [endTime]
+        : isFullAppointments(appointments, startTime, endTime)
+            ? ErrorMessage.fullAppointments
+            : null;
   }
 
   /// Check current time is in break time or closed time
