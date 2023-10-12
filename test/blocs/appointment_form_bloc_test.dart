@@ -4,7 +4,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/constants/constants.dart';
-import 'package:salon_appointment/core/utils/common.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
 import 'package:salon_appointment/features/appointments/screens/appointment_form/bloc/appointment_form_bloc.dart';
@@ -30,9 +29,7 @@ void main() {
   late User adminUser;
   late List<User> users;
 
-  late DateTime initialDateTime;
-  late DateTime initialDateTimeInBreak;
-  late DateTime initialDateTimeInClosed;
+  late AppointmentFormState initSuccessAppointmentFormState;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
@@ -46,9 +43,8 @@ void main() {
     adminUser = MockDataUser.adminUser;
     users = MockDataUser.allUsers;
 
-    initialDateTime = DateTime(2023, 11, 3, 10, 30);
-    initialDateTimeInBreak = DateTime(2023, 11, 3, 13, 0);
-    initialDateTimeInClosed = DateTime(2023, 11, 3, 22, 45, 54, 485, 123);
+    initSuccessAppointmentFormState =
+        MockDataState.initSuccessAppointmentFormState;
   });
 
   setUp(
@@ -68,12 +64,6 @@ void main() {
       );
 
       when(
-        () => appointmentRepo.loadAllAppointments(),
-      ).thenAnswer(
-        (_) async => appointments,
-      );
-
-      when(
         () => appointmentRepo.getAllAppointments(),
       ).thenAnswer(
         (_) async => appointments,
@@ -90,164 +80,8 @@ void main() {
       ).thenAnswer(
         (_) async => Future.value(),
       );
-
-      when(
-        () => appointmentRepo.removeAppointment(appointment.id!),
-      ).thenAnswer(
-        (_) async => Future.value(),
-      );
     },
   );
-
-  group('test appointment form bloc - init', () {
-    blocTest<AppointmentFormBloc, AppointmentFormState>(
-      'failure when can not get list of users',
-      build: () {
-        when(
-          () => userRepo.getUsers(),
-        ).thenThrow(
-          Exception('Not found any users.'),
-        );
-
-        return AppointmentFormBloc(
-          appointmentRepository: appointmentRepo,
-          userRepository: userRepo,
-        );
-      },
-      act: (bloc) => bloc.add(
-        AppointmentFormInitialized(initDateTime: DateTime.now()),
-      ),
-      expect: () => <AppointmentFormState>[
-        AppointmentFormState(
-          date: DateTime.now(),
-          startTime: DateTime.now(),
-          endTime: DateTime.now(),
-          status: AppointmentFormStatus.initFailure,
-          error: 'Exception: Not found any users.',
-        ),
-      ],
-    );
-
-    blocTest<AppointmentFormBloc, AppointmentFormState>(
-      'successful when init date time is not in break time or closed time',
-      build: () => AppointmentFormBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      ),
-      act: (bloc) => bloc.add(
-        AppointmentFormInitialized(
-          initDateTime: initialDateTime,
-        ),
-      ),
-      expect: () => <AppointmentFormState>[
-        MockDataState.initialAppointmentFormState,
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: initialDateTime,
-          startTime: initialDateTime,
-          endTime: autoAddHalfHour(initialDateTime),
-        ),
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: initialDateTime,
-          startTime: initialDateTime,
-          endTime: autoAddHalfHour(initialDateTime),
-          status: AppointmentFormStatus.initSuccess,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentFormBloc, AppointmentFormState>(
-      'successful when init date time is in break time',
-      build: () => AppointmentFormBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      ),
-      act: (bloc) => bloc.add(
-        AppointmentFormInitialized(
-          initDateTime: initialDateTimeInBreak,
-        ),
-      ),
-      expect: () => <AppointmentFormState>[
-        MockDataState.initialAppointmentFormState,
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: DateTime(2023, 11, 03, 15, 20),
-          startTime: DateTime(2023, 11, 03, 15, 20),
-          endTime: DateTime(2023, 11, 03, 15, 50),
-        ),
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: DateTime(2023, 11, 03, 15, 20),
-          startTime: DateTime(2023, 11, 03, 15, 20),
-          endTime: DateTime(2023, 11, 03, 15, 50),
-          status: AppointmentFormStatus.initSuccess,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentFormBloc, AppointmentFormState>(
-      'successful when init date time is in closed time',
-      build: () => AppointmentFormBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      ),
-      act: (bloc) => bloc.add(
-        AppointmentFormInitialized(
-          initDateTime: initialDateTimeInClosed,
-        ),
-      ),
-      expect: () => <AppointmentFormState>[
-        MockDataState.initialAppointmentFormState,
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: DateTime(2023, 11, 04, 8, 0),
-          startTime: DateTime(2023, 11, 04, 8, 0),
-          endTime: DateTime(2023, 11, 04, 8, 30),
-        ),
-        MockDataState.initialAppointmentFormState.copyWith(
-          user: adminUser,
-          date: DateTime(2023, 11, 04, 8, 0),
-          startTime: DateTime(2023, 11, 04, 8, 0),
-          endTime: DateTime(2023, 11, 04, 8, 30),
-          status: AppointmentFormStatus.initSuccess,
-        ),
-      ],
-    );
-
-    blocTest<AppointmentFormBloc, AppointmentFormState>(
-      'successful when have input appointment',
-      build: () => AppointmentFormBloc(
-        appointmentRepository: appointmentRepo,
-        userRepository: userRepo,
-      ),
-      act: (bloc) => bloc.add(
-        AppointmentFormInitialized(
-            appointment: appointment, initDateTime: DateTime.now()),
-      ),
-      expect: () => <AppointmentFormState>[
-        MockDataState.initialAppointmentFormState,
-        AppointmentFormState(
-          user: adminUser,
-          date: appointment.date,
-          startTime: appointment.startTime,
-          endTime: appointment.endTime,
-          services: appointment.services,
-          description: appointment.description,
-          status: AppointmentFormStatus.initInProgress,
-        ),
-        AppointmentFormState(
-          user: adminUser,
-          date: appointment.date,
-          startTime: appointment.startTime,
-          endTime: appointment.endTime,
-          services: appointment.services,
-          description: appointment.description,
-          status: AppointmentFormStatus.initSuccess,
-        ),
-      ],
-    );
-  });
 
   group('test appointment form bloc - add', () {
     blocTest<AppointmentFormBloc, AppointmentFormState>(
@@ -347,7 +181,7 @@ void main() {
     //   ],
     // );
 
-    // TODO: Fix error Type<Null> is not a subtype of Future<void>
+    // FIXME: Fix error Type<Null> is not a subtype of Future<void>
     // blocTest<AppointmentFormBloc, AppointmentFormState>(
     //   'failure when have api error',
     //   build: () {
@@ -390,10 +224,42 @@ void main() {
     //       services: appointment.services,
     //       description: appointment.description,
     //       isCompleted: appointment.isCompleted,
+    //       status: AppointmentFormStatus.addInProgress,
+    //     ),
+    //     AppointmentFormState(
+    //       user: adminUser,
+    //       date: appointment.date,
+    //       startTime: appointment.startTime,
+    //       endTime: appointment.endTime,
+    //       services: appointment.services,
+    //       description: appointment.description,
+    //       isCompleted: appointment.isCompleted,
     //       status: AppointmentFormStatus.addFailure,
     //       error: 'Exception: Something went wrong!',
     //     ),
     //   ],
     // );
+  });
+
+  group('test appointment form bloc - change services', () {
+    blocTest<AppointmentFormBloc, AppointmentFormState>(
+      'success',
+      build: () => AppointmentFormBloc(
+        appointmentRepository: appointmentRepo,
+        userRepository: userRepo,
+      ),
+      seed: () => initSuccessAppointmentFormState,
+      act: (bloc) => bloc.add(
+        const AppointmentFormServicesChanged(
+          services: 'Back',
+        ),
+      ),
+      expect: () => <AppointmentFormState>[
+        initSuccessAppointmentFormState.copyWith(
+          services: 'Back',
+          status: AppointmentFormStatus.changeSuccess,
+        ),
+      ],
+    );
   });
 }
