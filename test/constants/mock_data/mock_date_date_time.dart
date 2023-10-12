@@ -7,4 +7,6 @@ class MockDataDateTime {
       DateTime(2023, 11, 3, 22, 45, 54, 485, 123);
 
   static final initSuccessDateTime = DateTime(2023, 10, 21, 9, 30);
+
+  static final fullAppointmentsDateTime = DateTime(2023, 8, 15, 19, 0);
 }
