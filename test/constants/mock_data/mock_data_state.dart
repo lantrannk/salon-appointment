@@ -39,4 +39,23 @@ class MockDataState {
     description: MockDataAppointment.appointment.description,
     status: AppointmentFormStatus.initSuccess,
   );
+  static final editInitialAppointmentFormState = AppointmentFormState(
+    user: MockDataUser.adminUser,
+    date: MockDataAppointment.appointment.date,
+    startTime: MockDataAppointment.appointment.startTime,
+    endTime: MockDataAppointment.appointment.endTime,
+    services: MockDataAppointment.appointment.services,
+    description: MockDataAppointment.appointment.description,
+    status: AppointmentFormStatus.initInProgress,
+  );
+
+  static final fullAppointmentsAppointmentFormState =
+      initSuccessAppointmentFormState
+        ..copyWith(
+          date: MockDataDateTime.fullAppointmentsDateTime,
+          startTime: MockDataDateTime.fullAppointmentsDateTime,
+          endTime: autoAddHalfHour(
+            MockDataDateTime.fullAppointmentsDateTime,
+          ),
+        );
 }

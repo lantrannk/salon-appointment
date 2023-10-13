@@ -28,6 +28,7 @@ void main() {
   late UserRepository userRepo;
 
   late AppointmentFormState initSuccessAppointmentFormState;
+  late AppointmentFormState fullAppointmentsAppointmentFormState;
   late DateTime initSuccessDateTime;
   late DateTime fullAppointmentsDateTime;
 
@@ -42,6 +43,9 @@ void main() {
 
     initSuccessAppointmentFormState =
         MockDataState.initSuccessAppointmentFormState;
+    fullAppointmentsAppointmentFormState =
+        MockDataState.fullAppointmentsAppointmentFormState;
+
     initSuccessDateTime = MockDataDateTime.initSuccessDateTime;
     fullAppointmentsDateTime = MockDataDateTime.fullAppointmentsDateTime;
   });
@@ -77,6 +81,7 @@ void main() {
           userRepository: userRepo,
         );
       },
+      seed: () => initSuccessAppointmentFormState,
       act: (bloc) => bloc.add(
         AppointmentFormAdded(
           date: appointment.date,
@@ -85,10 +90,7 @@ void main() {
         ),
       ),
       expect: () => <AppointmentFormState>[
-        AppointmentFormState(
-          date: DateTime.now(),
-          startTime: DateTime.now(),
-          endTime: DateTime.now(),
+        initSuccessAppointmentFormState.copyWith(
           status: AppointmentFormStatus.addFailure,
           error: 'Exception: Not found any appointments.',
         ),
@@ -101,6 +103,7 @@ void main() {
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
       ),
+      seed: () => initSuccessAppointmentFormState,
       act: (bloc) => bloc.add(
         AppointmentFormAdded(
           date: appointment.date,
@@ -109,10 +112,7 @@ void main() {
         ),
       ),
       expect: () => <AppointmentFormState>[
-        AppointmentFormState(
-          date: DateTime.now(),
-          startTime: DateTime.now(),
-          endTime: DateTime.now(),
+        initSuccessAppointmentFormState.copyWith(
           status: AppointmentFormStatus.addFailure,
           error: ErrorMessage.emptyServices,
         ),
@@ -125,11 +125,7 @@ void main() {
         appointmentRepository: appointmentRepo,
         userRepository: userRepo,
       ),
-      seed: () => initSuccessAppointmentFormState.copyWith(
-        date: fullAppointmentsDateTime,
-        startTime: fullAppointmentsDateTime,
-        endTime: autoAddHalfHour(fullAppointmentsDateTime),
-      ),
+      seed: () => fullAppointmentsAppointmentFormState,
       act: (bloc) => bloc.add(
         AppointmentFormAdded(
           date: fullAppointmentsDateTime,
@@ -140,10 +136,7 @@ void main() {
         ),
       ),
       expect: () => <AppointmentFormState>[
-        initSuccessAppointmentFormState.copyWith(
-          date: fullAppointmentsDateTime,
-          startTime: fullAppointmentsDateTime,
-          endTime: autoAddHalfHour(fullAppointmentsDateTime),
+        fullAppointmentsAppointmentFormState.copyWith(
           status: AppointmentFormStatus.addFailure,
           error: ErrorMessage.fullAppointments,
         ),

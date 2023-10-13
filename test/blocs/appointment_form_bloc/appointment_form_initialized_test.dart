@@ -186,26 +186,14 @@ void main() {
       ),
       act: (bloc) => bloc.add(
         AppointmentFormInitialized(
-            appointment: appointment, initDateTime: DateTime.now()),
+          appointment: appointment,
+          initDateTime: DateTime.now(),
+        ),
       ),
       expect: () => <AppointmentFormState>[
         MockDataState.initialAppointmentFormState,
-        AppointmentFormState(
-          user: adminUser,
-          date: appointment.date,
-          startTime: appointment.startTime,
-          endTime: appointment.endTime,
-          services: appointment.services,
-          description: appointment.description,
-          status: AppointmentFormStatus.initInProgress,
-        ),
-        AppointmentFormState(
-          user: adminUser,
-          date: appointment.date,
-          startTime: appointment.startTime,
-          endTime: appointment.endTime,
-          services: appointment.services,
-          description: appointment.description,
+        MockDataState.editInitialAppointmentFormState,
+        MockDataState.editInitialAppointmentFormState.copyWith(
           status: AppointmentFormStatus.initSuccess,
         ),
       ],
