@@ -13,10 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/constants.dart';
 
-class MockAppointmentRepo extends Mock implements AppointmentRepository {}
-
-class MockUserRepository extends Mock implements UserRepository {}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;

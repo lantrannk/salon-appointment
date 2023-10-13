@@ -2,7 +2,6 @@ import 'dart:io' as io;
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/constants/constants.dart';
 import 'package:salon_appointment/core/utils/common.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
@@ -12,10 +11,6 @@ import 'package:salon_appointment/features/auth/repository/user_repository.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../constants/constants.dart';
-
-class MockAppointmentRepo extends Mock implements AppointmentRepository {}
-
-class MockUserRepository extends Mock implements UserRepository {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
