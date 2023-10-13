@@ -113,7 +113,7 @@ class _PhoneNumberInput extends Input {
         ),
       ),
       onEditingComplete: onEditCompleted,
-      validator: FormValidation.isValidPhoneNumber,
+      validator: (value) => FormValidation.isValidPhoneNumber(value ?? ''),
       textInputAction: TextInputAction.next,
       onChanged: onChanged,
     );
@@ -157,7 +157,7 @@ class _PasswordInput extends Input {
         ),
       ),
       onEditingComplete: onEditCompleted,
-      validator: FormValidation.isValidPassword,
+      validator: (value) => FormValidation.isValidPassword(value ?? ''),
       onChanged: onChanged,
     );
   }
