@@ -6,23 +6,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:salon_appointment/core/constants/assets.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
-import 'package:salon_appointment/features/appointments/screens/appointment_form.dart';
+import 'package:salon_appointment/features/appointments/screens/appointment_form/appointment_form.dart';
+import 'package:salon_appointment/features/appointments/screens/appointment_form/bloc/appointment_form_bloc.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../constants/mock_data/mock_data.dart';
 import '../helpers/pump_app.dart';
 
-class MockAppointmentBloc extends Mock implements AppointmentBloc {}
+class MockAppointmentBloc extends Mock implements AppointmentFormBloc {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late AppointmentBloc appointmentBloc;
+  late AppointmentFormBloc appointmentBloc;
   late Widget appointmentForm;
-  late List<AppointmentState> expectedStates;
+  late List<AppointmentFormState> expectedStates;
 
   late Finder editTitleTextFinder;
   late Finder closeButtonFinder;
@@ -56,16 +56,14 @@ void main() {
     await userRepository.setUser(user);
 
     expectedStates = [
-      AppointmentInitializeInProgress(),
-      const AppointmentInitializeSuccess(
-        user: MockDataUser.adminUser,
-      ),
+      MockDataState.initialAppointmentFormState,
+      MockDataState.initSuccessAppointmentFormState,
     ];
 
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: AppointmentInitializeInProgress(),
+      initialState: MockDataState.initialAppointmentFormState,
     );
   });
 
@@ -74,9 +72,7 @@ void main() {
       appointmentForm = BlocProvider.value(
         value: appointmentBloc,
         child: AppointmentForm(
-          selectedDay: DateTime(2023, 10, 15),
           appointment: appointment,
-          user: user,
         ),
       );
 
@@ -263,9 +259,7 @@ void main() {
     setUpAll(() {
       appointmentForm = BlocProvider.value(
         value: appointmentBloc,
-        child: AppointmentForm(
-          selectedDay: DateTime(2023, 10, 15),
-        ),
+        child: const AppointmentForm(),
       );
 
       newTitleTextFinder = find.text('New Appointment');

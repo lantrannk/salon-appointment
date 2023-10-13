@@ -7,10 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_appointment/core/theme/theme_provider.dart';
-import 'package:salon_appointment/features/appointments/bloc/appointment_bloc.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
-import 'package:salon_appointment/features/appointments/screens/appointments_widgets/appointments_widgets.dart';
-import 'package:salon_appointment/features/appointments/screens/calendar_screen.dart';
+import 'package:salon_appointment/features/appointments/screens/calendar/bloc/calendar_bloc.dart';
+import 'package:salon_appointment/features/appointments/screens/calendar/calendar_screen.dart';
+import 'package:salon_appointment/features/appointments/screens/calendar/ui/calendar_ui.dart';
 import 'package:salon_appointment/features/auth/repository/user_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -18,15 +18,15 @@ import 'package:table_calendar/table_calendar.dart';
 import '../constants/mock_data/mock_data.dart';
 import '../helpers/pump_app.dart';
 
-class MockAppointmentBloc extends Mock implements AppointmentBloc {}
+class MockCalendarBloc extends Mock implements CalendarBloc {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   io.HttpOverrides.global = null;
 
-  late AppointmentBloc appointmentBloc;
+  late CalendarBloc appointmentBloc;
   late Widget calendarScreen;
-  late List<AppointmentState> expectedStates;
+  late List<CalendarState> expectedStates;
 
   late Finder calendarTitleTextFinder;
   late Finder monthCalendarFinder;
@@ -37,29 +37,27 @@ void main() {
 
   final appointments = MockDataAppointment.allAppointments;
 
-  final users = MockDataUser.allUsers;
   const user = MockDataUser.adminUser;
 
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
 
-    appointmentBloc = MockAppointmentBloc();
+    appointmentBloc = MockCalendarBloc();
 
     final UserRepository userRepository = UserRepository();
     await userRepository.setUser(user);
 
     expectedStates = [
-      AppointmentLoadInProgress(),
-      AppointmentLoadSuccess(
+      MockDataState.initialCalendarState,
+      MockDataState.initialCalendarState.copyWith(
         appointments: appointments,
-        users: users,
       ),
     ];
 
     whenListen(
       appointmentBloc,
       Stream.fromIterable(expectedStates),
-      initialState: AppointmentLoadInProgress(),
+      initialState: MockDataState.initialCalendarState,
     );
 
     calendarScreen = ChangeNotifierProvider<ThemeProvider>(

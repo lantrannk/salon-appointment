@@ -9,7 +9,7 @@ void main() {
     late List<Appointment> appointments;
 
     setUpAll(() {
-      appointments = MockDataAppointment.fullAppointments;
+      appointments = MockDataAppointment.allAppointments;
     });
 
     tearDownAll(() => appointments = []);

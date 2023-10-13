@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,9 +18,14 @@ import 'splash_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider<ThemeProvider>(
-      create: (_) => ThemeProvider(),
-      child: const MyApp(),
+    DevicePreview(
+      enabled: true,
+      builder: (context) {
+        return ChangeNotifierProvider<ThemeProvider>(
+          create: (_) => ThemeProvider(),
+          child: const MyApp(),
+        );
+      },
     ),
   );
 }
