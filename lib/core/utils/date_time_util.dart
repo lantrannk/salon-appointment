@@ -79,17 +79,9 @@ TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
 
 /// Add duration to set to 8:00 AM from [dateTime]
 DateTime initOpenTime(DateTime dateTime) {
-  return dateTime.add(
-    Duration(
-      days: dateTime.hour >= 22 ? 1 : 0,
-      hours: 7 - dateTime.hour,
-      minutes: dateTime.minute != 0 ? (59 - dateTime.minute) : 0,
-      seconds: dateTime.second != 0 ? (59 - dateTime.second) : 0,
-      milliseconds:
-          dateTime.millisecond != 0 ? (999 - dateTime.millisecond) : 0,
-      microseconds:
-          dateTime.microsecond != 0 ? (1000 - dateTime.microsecond) : 0,
-    ),
+  return setDateTime(
+    dateTime.add(Duration(days: dateTime.hour >= 22 ? 1 : 0)),
+    const TimeOfDay(hour: 8, minute: 0),
   );
 }
 
