@@ -42,15 +42,13 @@ class AppointmentBloc extends Bloc<AppointmentEvent, AppointmentState> {
         ),
       );
 
-      late List<User> users;
-      late List<Appointment> appointments;
+      final List<User> users;
+      final List<Appointment> appointments;
 
-      await Future.wait([
-        userRepository.getUsers().then((value) => users = value),
-        appointmentRepository
-            .loadAllAppointments()
-            .then((value) => appointments = value),
-      ]);
+      (users, appointments) = await (
+        userRepository.getUsers(),
+        appointmentRepository.loadAllAppointments(),
+      ).wait;
 
       emit(
         state.copyWith(

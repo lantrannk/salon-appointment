@@ -9,10 +9,12 @@ class AppointmentFormEvent extends Equatable {
 
 class AppointmentFormInitialized extends AppointmentFormEvent {
   const AppointmentFormInitialized({
+    required this.initDateTime,
     this.appointment,
   });
 
   final Appointment? appointment;
+  final DateTime initDateTime;
 }
 
 class AppointmentFormAdded extends AppointmentFormEvent {

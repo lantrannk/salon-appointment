@@ -25,9 +25,9 @@ class AppointmentFormState extends Equatable {
 
   @override
   List<Object?> get props => [
-        date,
-        startTime,
-        endTime,
+        dateTimeFormat.format(date!),
+        dateTimeFormat.format(startTime!),
+        dateTimeFormat.format(endTime!),
         user,
         services,
         description,

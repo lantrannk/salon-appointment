@@ -58,6 +58,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
         )..add(
             AppointmentFormInitialized(
               appointment: widget.appointment,
+              initDateTime: DateTime.now(),
             ),
           ),
         child: Scaffold(

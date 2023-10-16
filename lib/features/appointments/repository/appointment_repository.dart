@@ -15,20 +15,20 @@ class AppointmentRepository {
 
   /// Get a list of appointments
   Future<List<Appointment>> loadAllAppointments() async {
-    late List<Appointment> appointments;
-    late User user;
+    final List<Appointment> appointments;
+    final User? user;
 
     /// Wait concurrently to get a list of appointments and get a user
-    await Future.wait([
-      getAllAppointments().then((value) => appointments = value),
-      userRepository.getUser().then((value) => user = value!)
-    ]);
+    (appointments, user) = await (
+      getAllAppointments(),
+      userRepository.getUser(),
+    ).wait;
 
-    return (user.isAdmin)
+    return (user!.isAdmin)
         // If [user] is admin, returns a list of all appointments
         ? appointments
         // If [user] is not admin, returns a list of user's appointments
-        : appointments.where((e) => e.userId == user.id).toList();
+        : appointments.where((e) => e.userId == user!.id).toList();
   }
 
   /// Get a list of all appointments from API

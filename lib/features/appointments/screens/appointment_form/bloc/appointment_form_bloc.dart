@@ -17,7 +17,13 @@ class AppointmentFormBloc
   AppointmentFormBloc({
     required this.appointmentRepository,
     required this.userRepository,
-  }) : super(const AppointmentFormState()) {
+  }) : super(
+          AppointmentFormState(
+            date: DateTime.now(),
+            startTime: DateTime.now(),
+            endTime: DateTime.now(),
+          ),
+        ) {
     on<AppointmentFormInitialized>(_initAppointmentForm);
     on<AppointmentFormAdded>(_addAppointment);
     on<AppointmentFormEdited>(_editAppointment);
@@ -55,7 +61,7 @@ class AppointmentFormBloc
         );
       } else {
         final user = await userRepository.getUser();
-        DateTime initDateTime = _initDateTime(DateTime.now());
+        DateTime initDateTime = _initDateTime(event.initDateTime);
 
         /// Init new appointment's properties
         emit(
@@ -91,41 +97,46 @@ class AppointmentFormBloc
       /// Get a list of all appointments
       final appointments = await appointmentRepository.getAllAppointments();
 
-      /// Check if [services] is empty
-      (event.services?.isEmpty ?? true)
-          ? emit(state.copyWith(
-              status: AppointmentFormStatus.addFailure,
-              error: ErrorMessage.emptyServices,
-            ))
-
-          /// Check if full appointments during [startTime] to [endTime]
-          : isFullAppointments(appointments, event.startTime!, event.endTime!)
-              ? emit(state.copyWith(
-                  status: AppointmentFormStatus.addFailure,
-                  error: ErrorMessage.fullAppointments,
-                ))
-              : emit(state.copyWith(
-                  status: AppointmentFormStatus.addInProgress,
-                ));
-
-      /// Wait for adding an appointment
-      await appointmentRepository.addAppointment(
-        Appointment(
-          userId: state.user!.id,
-          date: event.date!,
-          startTime: event.startTime!,
-          endTime: event.endTime!,
-          services: event.services!,
-          description: event.description!,
-        ),
+      final error = _checkAppointment(
+        event.services,
+        appointments,
+        event.startTime!,
+        event.endTime!,
       );
 
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.addSuccess,
-        ),
-      );
-    } on Exception catch (e) {
+      if (error != null) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addFailure,
+            error: error,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addInProgress,
+          ),
+        );
+
+        /// Wait for adding an appointment
+        await appointmentRepository.addAppointment(
+          Appointment(
+            userId: state.user!.id,
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
+          ),
+        );
+
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.addSuccess,
+          ),
+        );
+      }
+    } catch (e) {
       emit(
         state.copyWith(
           status: AppointmentFormStatus.addFailure,
@@ -142,40 +153,50 @@ class AppointmentFormBloc
     try {
       final appointments = await appointmentRepository.getAllAppointments();
 
-      /// Check if [services] is empty
-      (event.services?.isEmpty ?? true)
-          ? emit(state.copyWith(
-              status: AppointmentFormStatus.editFailure,
-              error: ErrorMessage.emptyServices,
-            ))
-
-          /// Check if full appointments during [startTime] to [endTime]
-          : isFullAppointments(appointments, event.startTime!, event.endTime!)
-              ? emit(state.copyWith(
-                  status: AppointmentFormStatus.editFailure,
-                  error: ErrorMessage.fullAppointments,
-                ))
-              : emit(state.copyWith(
-                  status: AppointmentFormStatus.editInProgress,
-                ));
-
-      await appointmentRepository.editAppointment(
-        Appointment(
-          userId: state.user!.id,
-          date: event.date!,
-          startTime: event.startTime!,
-          endTime: event.endTime!,
-          services: event.services!,
-          description: event.description!,
-        ),
+      final error = _checkAppointment(
+        event.services,
+        appointments,
+        event.startTime!,
+        event.endTime!,
       );
 
-      emit(
-        state.copyWith(
-          status: AppointmentFormStatus.editSuccess,
-        ),
-      );
-    } on Exception catch (e) {
+      if (error != null) {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editFailure,
+            error: error,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            status: AppointmentFormStatus.editInProgress,
+          ),
+        );
+
+        await appointmentRepository.editAppointment(
+          Appointment(
+            userId: state.user!.id,
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
+          ),
+        );
+
+        emit(
+          state.copyWith(
+            date: event.date!,
+            startTime: event.startTime!,
+            endTime: event.endTime!,
+            services: event.services!,
+            description: event.description!,
+            status: AppointmentFormStatus.editSuccess,
+          ),
+        );
+      }
+    } catch (e) {
       emit(
         state.copyWith(
           status: AppointmentFormStatus.editFailure,
@@ -345,6 +366,22 @@ class AppointmentFormBloc
 
     /// If not have any errors, return null
     return null;
+  }
+
+  String? _checkAppointment(
+    String? services,
+    List<Appointment> appointments,
+    DateTime startTime,
+    DateTime endTime,
+  ) {
+    /// Check if [services] is empty
+    return services?.isEmpty ?? true
+        ? ErrorMessage.emptyServices
+
+        /// Check if full appointments during [startTime] to [endTime]
+        : isFullAppointments(appointments, startTime, endTime)
+            ? ErrorMessage.fullAppointments
+            : null;
   }
 
   /// Check current time is in break time or closed time
