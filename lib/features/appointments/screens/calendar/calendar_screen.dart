@@ -161,7 +161,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     daysOfWeekHeight: 44,
-                    rowHeight: 56,
+                    rowHeight: 52,
                     pageJumpingEnabled: true,
                     onDaySelected: (selectedDay, focusedDay) {
                       context.read<CalendarBloc>().add(

@@ -53,7 +53,7 @@ class MonthCalendarCell extends StatelessWidget {
                       size: 12,
                     )
                   : const SizedBox(),
-              const SizedBox(width: 12),
+              const SizedBox(width: 5),
               Flexible(
                 child: SizedBox(
                   width: 15,
