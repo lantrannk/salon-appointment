@@ -59,40 +59,45 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     calendarFormat: CalendarFormat.month,
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     calendarBuilders: CalendarBuilders(
-                      todayBuilder: (context, day, focusedDay) {
+                      markerBuilder: (context, day, _) {
                         final events = groupByDate(state.appointments, day);
+                        return (events.isNotEmpty)
+                            ? CalendarMarker(
+                                events: events,
+                                iconColor: !isSameDay(day, state.selectedDay)
+                                    ? colorScheme.primary
+                                    : colorScheme.onPrimary,
+                                timeColor: !isSameDay(day, state.selectedDay)
+                                    ? colorScheme.primaryContainer
+                                    : colorScheme.onPrimary,
+                              )
+                            : null;
+                      },
+                      todayBuilder: (context, day, _) {
                         return MonthCalendarCell(
                           day: day,
-                          events: events,
                           bgColor: colorScheme.primary.withOpacity(
                             themeData.todayBackgroundOpacity,
                           ),
                         );
                       },
-                      defaultBuilder: (context, day, focusedDay) {
-                        final events = groupByDate(state.appointments, day);
+                      defaultBuilder: (context, day, _) {
                         return MonthCalendarCell(
                           day: day,
-                          events: events,
                         );
                       },
-                      outsideBuilder: (context, day, focusedDay) {
-                        final events = groupByDate(state.appointments, day);
+                      outsideBuilder: (context, day, _) {
                         return MonthCalendarCell(
                           day: day,
-                          events: events,
                           iconColor: colorScheme.primary.withOpacity(
                             themeData.calendarCellTextOpacity,
                           ),
                           dayColor: colorScheme.primaryContainer,
-                          timeColor: colorScheme.primaryContainer,
                         );
                       },
-                      selectedBuilder: (context, day, focusedDay) {
-                        final events = groupByDate(state.appointments, day);
+                      selectedBuilder: (context, day, _) {
                         return MonthCalendarCell(
                           day: day,
-                          events: events,
                           gradient: LinearGradient(
                             colors: [
                               colorScheme.primary,
@@ -102,7 +107,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             end: Alignment.bottomCenter,
                           ),
                           dayColor: colorScheme.onPrimary,
-                          timeColor: colorScheme.onPrimary,
                           iconColor: colorScheme.onPrimary,
                         );
                       },
@@ -161,7 +165,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       ),
                     ),
                     daysOfWeekHeight: 44,
-                    rowHeight: 52,
                     pageJumpingEnabled: true,
                     onDaySelected: (selectedDay, focusedDay) {
                       context.read<CalendarBloc>().add(
