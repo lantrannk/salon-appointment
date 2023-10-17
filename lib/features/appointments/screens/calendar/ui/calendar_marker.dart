@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/constants.dart';
+import '../../../../../core/utils/common.dart';
 import '../../../../../core/widgets/widgets.dart';
 import '../../../model/appointment.dart';
 
@@ -39,7 +40,7 @@ class CalendarMarker extends StatelessWidget {
               size: 12,
             ),
           ),
-          const SizedBox(height: 4),
+          context.sizedBox(height: 4),
           Expanded(
             child: (events.length <= 2)
                 ? ListView.builder(

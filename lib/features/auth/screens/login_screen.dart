@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   );
                 },
               ),
-              const SizedBox(height: 24),
+              context.sizedBox(height: 24),
               SizedBox(
                 child: BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {

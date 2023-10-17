@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/generated/l10n.dart';
+import '../../../../../core/utils/common.dart';
 import '../../../../../core/widgets/widgets.dart';
 import '../../../model/appointment.dart';
 import 'appointment_card/appointment_card.dart';
@@ -69,9 +70,7 @@ class AppointmentCard extends StatelessWidget {
                       color: colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(
-                    width: 24,
-                  ),
+                  context.sizedBox(width: 24),
                   SAButton.icon(
                     onPressed: onRemovePressed,
                     child: SAIcons(

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/generated/l10n.dart';
 import '../../../core/layouts/main_layout.dart';
+import '../../../core/utils/common.dart';
 import '../../../core/widgets/widgets.dart';
 import '../bloc/auth_bloc.dart';
 import '../repository/user_repository.dart';
@@ -91,9 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 60,
-                      ),
+                      context.sizedBox(height: 60),
                       Expanded(
                         child: Container(
                           decoration: const BoxDecoration(

@@ -5,6 +5,7 @@ import '../../features/appointments/screens/appointment_form/appointment_form.da
 import '../constants/constants.dart';
 import '../generated/l10n.dart';
 import '../theme/theme_provider.dart';
+import '../utils/common.dart';
 import '../widgets/widgets.dart';
 
 class MainLayout extends StatefulWidget {
@@ -198,10 +199,8 @@ class CustomBottomAppBar extends StatelessWidget {
           ),
           label: l10n.calendarLabel,
         ),
-        const BottomNavigationBarItem(
-          icon: SizedBox(
-            width: 119,
-          ),
+        BottomNavigationBarItem(
+          icon: context.sizedBox(width: 119),
           label: '',
         ),
         BottomNavigationBarItem(
@@ -253,20 +252,15 @@ Widget _buildIcon({
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (!isActive)
-          const SizedBox(
-            height: 2,
-          )
-        else
-          SizedBox(
-            height: 2,
-            child: Divider(
-              thickness: 2,
-              indent: 29,
-              endIndent: 29,
-              color: topColor,
-            ),
-          ),
+        !isActive
+            ? const SizedBox(height: 2)
+            : Center(
+                child: Container(
+                  height: 2,
+                  width: size,
+                  color: topColor,
+                ),
+              ),
         SizedBox(
           height: bottomNavigationBarHeight - 4,
           child: GradientIcon(
