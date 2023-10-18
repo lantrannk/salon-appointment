@@ -390,8 +390,7 @@ class AppointmentFormBloc
 
     /// If in break time, set the time to 3:20 PM
     if (isBreakTime(dateTime) || isBreakTime(initEndTime)) {
-      return DateTime(
-          dateTime.year, dateTime.month, dateTime.day, 15, 20, 0, 0, 0);
+      return initAfterBreakTime(dateTime);
     }
 
     /// If in closed time, set the time to 8:00 AM next day

@@ -77,6 +77,13 @@ DateTime rangeEndDay(DateTime dateTime) => dateTime.add(
 
 TimeOfDay getTime(DateTime dateTime) => TimeOfDay.fromDateTime(dateTime);
 
+DateTime initAfterBreakTime(DateTime dateTime) {
+  return setDateTime(
+    dateTime,
+    const TimeOfDay(hour: 15, minute: 20),
+  );
+}
+
 /// Add duration to set to 8:00 AM from [dateTime]
 DateTime initOpenTime(DateTime dateTime) {
   return setDateTime(

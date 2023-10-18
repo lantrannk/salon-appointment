@@ -96,7 +96,14 @@ class _MainLayoutState extends State<MainLayout> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AppointmentForm(),
+              builder: (context) => AppointmentForm(
+                selectedDay: isBeforeNow(widget.selectedDay)
+                    ? DateTime.now()
+                    : setDateTime(
+                        widget.selectedDay,
+                        TimeOfDay.fromDateTime(DateTime.now()),
+                      ),
+              ),
             ),
           );
         },

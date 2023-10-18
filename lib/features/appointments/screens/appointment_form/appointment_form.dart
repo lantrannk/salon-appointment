@@ -14,10 +14,12 @@ import 'bloc/appointment_form_bloc.dart';
 class AppointmentForm extends StatefulWidget {
   const AppointmentForm({
     this.appointment,
+    this.selectedDay,
     super.key,
   });
 
   final Appointment? appointment;
+  final DateTime? selectedDay;
 
   @override
   State<AppointmentForm> createState() => _AppointmentFormState();
@@ -58,7 +60,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
         )..add(
             AppointmentFormInitialized(
               appointment: widget.appointment,
-              initDateTime: DateTime.now(),
+              initDateTime: widget.selectedDay ?? DateTime.now(),
             ),
           ),
         child: Scaffold(
@@ -237,7 +239,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                           ),
                           context.sizedBox(height: 24),
                           SizedBox(
-                            height: 44,
+                            height: context.getHeight(44),
                             width: double.infinity,
                             child: SAButton.elevated(
                               onPressed: () {
