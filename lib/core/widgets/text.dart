@@ -100,7 +100,7 @@ class _TimeCell extends SAText {
       style: textTheme.bodySmall!.copyWith(
         fontSize: 10,
         fontWeight: FontWeight.w400,
-        height: 12 / 10,
+        height: 1.2,
         color: color ?? colorScheme.onPrimary,
       ),
     );
