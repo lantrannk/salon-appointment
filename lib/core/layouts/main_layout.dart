@@ -90,6 +90,8 @@ class _MainLayoutState extends State<MainLayout> {
       ),
       body: widget.child,
       floatingActionButton: SAButton.floating(
+        height: context.imageSize(52),
+        width: context.imageSize(52),
         onPressed: () {
           Navigator.push(
             context,
@@ -172,12 +174,12 @@ class CustomBottomAppBar extends StatelessWidget {
       selectedFontSize: 0,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: _buildIcon(
+          icon: BottomBarIcon(
             icon: Assets.checkIcon,
             topColor: colorScheme.secondaryContainer,
             bottomColor: colorScheme.primaryContainer,
           ),
-          activeIcon: _buildIcon(
+          activeIcon: BottomBarIcon(
             icon: Assets.checkIcon,
             topColor: colorScheme.primary,
             bottomColor: colorScheme.secondary,
@@ -186,12 +188,12 @@ class CustomBottomAppBar extends StatelessWidget {
           label: l10n.appointmentsLabel,
         ),
         BottomNavigationBarItem(
-          icon: _buildIcon(
+          icon: BottomBarIcon(
             icon: Assets.scheduleIcon,
             topColor: colorScheme.secondaryContainer,
             bottomColor: colorScheme.primaryContainer,
           ),
-          activeIcon: _buildIcon(
+          activeIcon: BottomBarIcon(
             icon: Assets.scheduleIcon,
             topColor: colorScheme.primary,
             bottomColor: colorScheme.secondary,
@@ -204,12 +206,12 @@ class CustomBottomAppBar extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: _buildIcon(
+          icon: BottomBarIcon(
             icon: Assets.personIcon,
             topColor: colorScheme.secondaryContainer,
             bottomColor: colorScheme.primaryContainer,
           ),
-          activeIcon: _buildIcon(
+          activeIcon: BottomBarIcon(
             icon: Assets.personIcon,
             topColor: colorScheme.primary,
             bottomColor: colorScheme.secondary,
@@ -218,12 +220,12 @@ class CustomBottomAppBar extends StatelessWidget {
           label: l10n.profileLabel,
         ),
         BottomNavigationBarItem(
-          icon: _buildIcon(
+          icon: BottomBarIcon(
             icon: Assets.notificationsIcon,
             topColor: colorScheme.secondaryContainer,
             bottomColor: colorScheme.primaryContainer,
           ),
-          activeIcon: _buildIcon(
+          activeIcon: BottomBarIcon(
             icon: Assets.notificationsIcon,
             topColor: colorScheme.primary,
             bottomColor: colorScheme.secondary,
@@ -236,52 +238,65 @@ class CustomBottomAppBar extends StatelessWidget {
   }
 }
 
-Widget _buildIcon({
-  required IconData icon,
-  required Color topColor,
-  required Color bottomColor,
-  double size = 24,
-  double bottomNavigationBarHeight = 80,
-  bool isActive = false,
-}) {
-  return Container(
-    width: double.infinity,
-    height: bottomNavigationBarHeight,
-    margin: EdgeInsets.zero,
-    padding: EdgeInsets.zero,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        isActive
-            ? Center(
-                child: Container(
-                  height: 2,
-                  width: size,
-                  color: topColor,
-                ),
-              )
-            : const SizedBox(height: 2),
-        SizedBox(
-          height: bottomNavigationBarHeight - 4,
-          child: GradientIcon(
-            icon: icon,
-            size: size,
-            gradient: LinearGradient(
-              colors: [
-                topColor,
-                bottomColor,
-              ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              stops: const [
-                0.0,
-                0.7,
-              ],
-              tileMode: TileMode.mirror,
+class BottomBarIcon extends StatelessWidget {
+  const BottomBarIcon({
+    required this.icon,
+    required this.topColor,
+    required this.bottomColor,
+    this.size = 24,
+    this.bottomNavigationBarHeight = 80,
+    this.isActive = false,
+    super.key,
+  });
+
+  final IconData icon;
+  final Color topColor;
+  final Color bottomColor;
+  final double size;
+  final double bottomNavigationBarHeight;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: context.getHeight(bottomNavigationBarHeight),
+      margin: EdgeInsets.zero,
+      padding: EdgeInsets.zero,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          isActive
+              ? Center(
+                  child: Container(
+                    height: 2,
+                    width: size,
+                    color: topColor,
+                  ),
+                )
+              : const SizedBox(height: 2),
+          SizedBox(
+            height: context.getHeight(bottomNavigationBarHeight) - 4,
+            child: GradientIcon(
+              icon: icon,
+              size: size,
+              gradient: LinearGradient(
+                colors: [
+                  topColor,
+                  bottomColor,
+                ],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                stops: const [
+                  0.0,
+                  0.7,
+                ],
+                tileMode: TileMode.mirror,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }

@@ -138,10 +138,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                       ),
-                      leftChevronPadding: const EdgeInsets.only(
+                      leftChevronPadding: context.padding(
                         left: 12,
                       ),
-                      rightChevronPadding: const EdgeInsets.only(
+                      rightChevronPadding: context.padding(
                         right: 12,
                       ),
                       leftChevronMargin: EdgeInsets.zero,
@@ -166,7 +166,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         color: colorScheme.onPrimary,
                       ),
                     ),
-                    daysOfWeekHeight: 44,
+                    daysOfWeekHeight: context.getHeight(44),
+                    rowHeight: context.getHeight(52),
                     pageJumpingEnabled: true,
                     onDaySelected: (selectedDay, focusedDay) {
                       context.read<CalendarBloc>().add(

@@ -69,8 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       Expanded(
                         child: Container(
-                          width: 150,
-                          height: 150,
+                          width: context.imageSize(170),
+                          height: context.imageSize(170),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: colorScheme.onPrimary,
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       context.sizedBox(height: 60),
-                      Expanded(
+                      Flexible(
                         child: Container(
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,

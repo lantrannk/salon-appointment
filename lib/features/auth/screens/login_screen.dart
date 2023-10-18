@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: Container(
                   padding: EdgeInsets.only(
-                    bottom: keyboardHeight > 0 ? 40 : 140,
+                    bottom: context.getHeight(keyboardHeight > 0 ? 40 : 140),
                   ),
                   child: SAText(
                     text: l10n.logo,

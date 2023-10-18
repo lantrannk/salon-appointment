@@ -19,7 +19,6 @@ class CalendarMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextTheme textTheme = Theme.of(context).textTheme;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
@@ -37,18 +36,21 @@ class CalendarMarker extends StatelessWidget {
             child: SAIcons(
               icon: Assets.differentIcon,
               color: iconColor,
-              size: 12,
+              size: context.imageSize(12),
             ),
           ),
-          context.sizedBox(height: 4),
+          const SizedBox(height: 4),
           Expanded(
-            child: (events.length <= 2)
+            child: (events.length <= ((context.getHeight(52) >= 44) ? 2 : 1))
                 ? ListView.builder(
                     itemBuilder: (_, i) => Align(
                       alignment: Alignment.bottomRight,
-                      child: SAText.timeCell(
-                        text: timeFormat.format(events[i].startTime),
-                        color: timeColor,
+                      child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: SAText.timeCell(
+                          text: timeFormat.format(events[i].startTime),
+                          color: timeColor,
+                        ),
                       ),
                     ),
                     itemCount: events.length,
@@ -56,11 +58,10 @@ class CalendarMarker extends StatelessWidget {
                 : Align(
                     alignment: Alignment.bottomRight,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: context.padding(horizontal: 4),
                       color: colorScheme.primaryContainer,
-                      child: SAText(
+                      child: SAText.timeCell(
                         text: '${events.length}',
-                        style: textTheme.bodySmall,
                       ),
                     ),
                   ),
