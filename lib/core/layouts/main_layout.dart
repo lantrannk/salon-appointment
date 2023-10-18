@@ -252,15 +252,15 @@ Widget _buildIcon({
     child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        !isActive
-            ? const SizedBox(height: 2)
-            : Center(
+        isActive
+            ? Center(
                 child: Container(
                   height: 2,
                   width: size,
                   color: topColor,
                 ),
-              ),
+              )
+            : const SizedBox(height: 2),
         SizedBox(
           height: bottomNavigationBarHeight - 4,
           child: GradientIcon(
