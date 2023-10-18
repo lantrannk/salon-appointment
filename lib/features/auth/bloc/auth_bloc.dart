@@ -9,7 +9,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(this.userRepo) : super(LoginInProgress()) {
+  AuthBloc(this.userRepo) : super(LoginInitial()) {
     on<LoginEvent>(_handleLoginEvent);
     on<LogoutEvent>(_handleLogOutEvent);
     on<UserLoad>(_getUser);
