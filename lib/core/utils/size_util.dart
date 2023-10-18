@@ -8,9 +8,9 @@ const int designScreenWidth = 375;
 
 /// Responsive by device screen size
 extension Responsive on BuildContext {
-  double get screenHeight => MediaQuery.of(this).size.height;
+  double get screenHeight => MediaQuery.sizeOf(this).height;
 
-  double get screenWidth => MediaQuery.of(this).size.width;
+  double get screenWidth => MediaQuery.sizeOf(this).width;
 
   double getHeight(double height) => height * screenHeight / designScreenHeight;
 
