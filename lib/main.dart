@@ -20,6 +20,27 @@ void main() {
   runApp(
     DevicePreview(
       enabled: true,
+      devices: [
+        DeviceInfo.genericPhone(
+          platform: TargetPlatform.iOS,
+          id: 'iPhone7Plus',
+          name: 'iPhone 7 Plus',
+          screenSize: const Size(414, 736),
+        ),
+        DeviceInfo.genericPhone(
+          platform: TargetPlatform.iOS,
+          id: 'iPhone5',
+          name: 'iPhone 5',
+          screenSize: const Size(320, 568),
+        ),
+        DeviceInfo.genericPhone(
+          platform: TargetPlatform.android,
+          id: 'GooglePixel7Pro',
+          name: 'Google Pixel 7 Pro',
+          screenSize: const Size(412, 771),
+        ),
+        ...Devices.all,
+      ],
       builder: (context) {
         return ChangeNotifierProvider<ThemeProvider>(
           create: (_) => ThemeProvider(),
