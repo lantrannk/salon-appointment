@@ -235,7 +235,7 @@ class _AppointmentFormState extends State<AppointmentForm> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          context.sizedBox(height: 24),
                           SizedBox(
                             height: 44,
                             width: double.infinity,

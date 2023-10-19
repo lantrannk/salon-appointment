@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/constants.dart';
 import '../../../../../core/generated/l10n.dart';
+import '../../../../../core/utils/common.dart';
 import '../../../../../core/widgets/widgets.dart';
 import '../../../model/appointment.dart';
 import 'appointment_card/appointment_card.dart';
@@ -61,6 +62,7 @@ class AppointmentCard extends StatelessWidget {
                 text: S.of(context).beautySalonText,
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SAButton.icon(
                     onPressed: onEditPressed,
@@ -69,9 +71,7 @@ class AppointmentCard extends StatelessWidget {
                       color: colorScheme.onSurface,
                     ),
                   ),
-                  const SizedBox(
-                    width: 24,
-                  ),
+                  context.sizedBox(width: 8),
                   SAButton.icon(
                     onPressed: onRemovePressed,
                     child: SAIcons(
@@ -83,20 +83,20 @@ class AppointmentCard extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(height: 12),
+          context.sizedBox(height: 12),
           Customer(
             name: name,
             avatar: avatar,
           ),
-          const SizedBox(height: 12),
+          context.sizedBox(height: 12),
           Service(
             service: appointment.services,
           ),
-          const SizedBox(height: 12),
+          context.sizedBox(height: 12),
           Description(
             description: appointment.description,
           ),
-          const SizedBox(height: 12),
+          context.sizedBox(height: 12),
         ],
       ),
     );
