@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:salon_appointment/core/theme/theme.dart';
 import 'package:salon_appointment/widgetbook/buttons_widgetbook.dart';
+import 'package:salon_appointment/widgetbook/input_widgetbook.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 void main() {
@@ -44,7 +45,10 @@ class WidgetbookApp extends StatelessWidget {
           ),
         ),
       ],
-      directories: [buttonsWidgetComponent],
+      directories: [
+        buttonsWidgetComponent,
+        inputWidgetComponent,
+      ],
     );
   }
 }
