@@ -238,38 +238,36 @@ class _AppointmentFormState extends State<AppointmentForm> {
                             ),
                           ),
                           context.sizedBox(height: 24),
-                          SizedBox(
+                          SAButton.elevated(
                             height: context.getHeight(44),
                             width: double.infinity,
-                            child: SAButton.elevated(
-                              onPressed: () {
-                                context.read<AppointmentFormBloc>().add(
-                                      isNew
-                                          ? AppointmentFormAdded(
-                                              date: state.date,
-                                              startTime: state.startTime,
-                                              endTime: state.endTime,
-                                              services: state.services,
-                                              description: description(
-                                                l10n,
-                                              ),
-                                            )
-                                          : AppointmentFormEdited(
-                                              date: state.date,
-                                              startTime: state.startTime,
-                                              endTime: state.endTime,
-                                              services: state.services,
-                                              description: description(
-                                                l10n,
-                                              ),
+                            onPressed: () {
+                              context.read<AppointmentFormBloc>().add(
+                                    isNew
+                                        ? AppointmentFormAdded(
+                                            date: state.date,
+                                            startTime: state.startTime,
+                                            endTime: state.endTime,
+                                            services: state.services,
+                                            description: description(
+                                              l10n,
                                             ),
-                                    );
-                              },
-                              child: Text(
-                                isNew
-                                    ? l10n.createAppointmentButton
-                                    : l10n.editAppointmentButton,
-                              ),
+                                          )
+                                        : AppointmentFormEdited(
+                                            date: state.date,
+                                            startTime: state.startTime,
+                                            endTime: state.endTime,
+                                            services: state.services,
+                                            description: description(
+                                              l10n,
+                                            ),
+                                          ),
+                                  );
+                            },
+                            child: Text(
+                              isNew
+                                  ? l10n.createAppointmentButton
+                                  : l10n.editAppointmentButton,
                             ),
                           ),
                         ],
