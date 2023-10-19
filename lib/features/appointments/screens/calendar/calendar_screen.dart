@@ -62,15 +62,17 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       markerBuilder: (context, day, _) {
                         final events = groupByDate(state.appointments, day);
                         return (events.isNotEmpty)
-                            ? CalendarMarker(
-                                events: events,
-                                iconColor: !isSameDay(day, state.selectedDay)
-                                    ? colorScheme.primary
-                                    : colorScheme.onPrimary,
-                                timeColor: !isSameDay(day, state.selectedDay)
-                                    ? colorScheme.primaryContainer
-                                    : colorScheme.onPrimary,
-                              )
+                            ? isSameDay(day, state.selectedDay)
+                                ? CalendarMarker(
+                                    events: events,
+                                    iconColor: colorScheme.onPrimary,
+                                    timeColor: colorScheme.onPrimary,
+                                  )
+                                : CalendarMarker(
+                                    events: events,
+                                    iconColor: colorScheme.primary,
+                                    timeColor: colorScheme.primaryContainer,
+                                  )
                             : null;
                       },
                       todayBuilder: (context, day, _) {
@@ -136,10 +138,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       decoration: BoxDecoration(
                         color: colorScheme.primary,
                       ),
-                      leftChevronPadding: const EdgeInsets.only(
+                      leftChevronPadding: context.padding(
                         left: 12,
                       ),
-                      rightChevronPadding: const EdgeInsets.only(
+                      rightChevronPadding: context.padding(
                         right: 12,
                       ),
                       leftChevronMargin: EdgeInsets.zero,
@@ -164,7 +166,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         color: colorScheme.onPrimary,
                       ),
                     ),
-                    daysOfWeekHeight: 44,
+                    daysOfWeekHeight: context.getHeight(44),
+                    rowHeight: context.getHeight(52),
                     pageJumpingEnabled: true,
                     onDaySelected: (selectedDay, focusedDay) {
                       context.read<CalendarBloc>().add(

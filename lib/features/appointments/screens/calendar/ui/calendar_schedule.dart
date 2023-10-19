@@ -27,9 +27,10 @@ class CalendarSchedule extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.only(
+          padding: context.padding(
             top: 26,
             left: 27,
+            right: 4,
           ),
           child: SAIcons(
             icon: Assets.scheduleIcon,
@@ -39,44 +40,34 @@ class CalendarSchedule extends StatelessWidget {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(
-              left: 12,
-              right: 8,
+            padding: context.padding(
+              vertical: 22,
+              horizontal: 8,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
+            child: ListView(
               children: [
-                const SizedBox(height: 22),
-                Expanded(
-                  flex: 0,
-                  child: SAText.calendarSchedule(
-                    text: monthCharFormat.format(appointment.date),
-                    style: textTheme.labelLarge!,
+                SAText.calendarSchedule(
+                  text: monthCharFormat.format(appointment.date),
+                  style: textTheme.labelLarge!,
+                ),
+                context.sizedBox(height: 7),
+                SAText.calendarSchedule(
+                  text:
+                      '${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}',
+                  style: textTheme.bodyLarge!.copyWith(
+                    height: 1.7,
                   ),
                 ),
-                const SizedBox(height: 7),
-                Expanded(
-                  flex: 0,
-                  child: SAText.calendarSchedule(
-                    text:
-                        '${formatTime(appointment.startTime)} - ${formatTime(appointment.endTime)}',
-                    style: textTheme.bodyLarge!.copyWith(
-                      height: 24 / 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  flex: 0,
+                context.sizedBox(height: 12),
+                SingleChildScrollView(
                   child: SAText.calendarSchedule(
                     text: appointment.description,
                     style: textTheme.bodySmall!,
                     maxLines: 5,
                   ),
                 ),
-                Expanded(
-                  flex: 0,
+                Align(
+                  alignment: Alignment.centerLeft,
                   child: SAButton.text(
                     onPressed: onPressed,
                     style: TextButton.styleFrom(
