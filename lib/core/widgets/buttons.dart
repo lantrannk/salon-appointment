@@ -32,6 +32,7 @@ class SAButton extends StatelessWidget {
     VoidCallback? onPressed,
     double height,
     double width,
+    Color? outlinedColor,
   }) = _SAOutlinedButton;
 
   const factory SAButton.elevated({
@@ -59,10 +60,12 @@ class _SAOutlinedButton extends SAButton {
     super.onPressed,
     this.height = 44,
     this.width = double.infinity,
+    this.outlinedColor,
   });
 
   final double height;
   final double width;
+  final Color? outlinedColor;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,7 @@ class _SAOutlinedButton extends SAButton {
         style: OutlinedButton.styleFrom(
           side: BorderSide(
             width: 2,
-            color: colorScheme.onPrimary,
+            color: outlinedColor ?? colorScheme.onPrimary,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -128,27 +131,33 @@ class _SAElevatedButton extends SAButton {
   const _SAElevatedButton({
     required super.child,
     this.bgColor,
-    this.height,
-    this.width,
+    this.height = 44,
+    this.width = double.infinity,
     super.onPressed,
   });
 
   final Color? bgColor;
-  final double? height;
-  final double? width;
+  final double height;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      // style: ElevatedButton.styleFrom(
-      //   backgroundColor: bgColor,
-      //   alignment: Alignment.center,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.circular(8),
-      //   ),
-      // ),
-      onPressed: onPressed,
-      child: child,
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
+    return SizedBox(
+      height: height,
+      width: width,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: bgColor ?? colorScheme.primary,
+          alignment: Alignment.center,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        onPressed: onPressed,
+        child: child,
+      ),
     );
   }
 }
