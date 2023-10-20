@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/widgets/widgets.dart';
-import 'package:salon_appointment/widgetbook/code_visibility.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import '../core/constants/constants.dart';
+import '../core/widgets/widgets.dart';
+import 'code_visibility.dart';
 
 final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
   name: 'Buttons',
@@ -42,13 +42,13 @@ final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
           ),
           const SizedBox(height: 50),
           const SourceCodeVisibility(
-            sourceCode: 'SAButton.elevated({'
-                '\n\t\t\trequired Widget child,'
-                '\n\t\t\tVoidCallback? onPressed,'
-                '\n\t\t\tdouble? height,'
-                '\n\t\t\tdouble? width,'
-                '\n\t\t\tColor? bgColor,'
-                '\n})',
+            sourceCode: '''SAButton.elevated({
+  required Widget child,
+  void Function()? onPressed,
+  double height,
+  double width,
+  Color bgColor,
+})''',
           ),
         ],
       ),
@@ -87,13 +87,13 @@ final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
           ),
           const SizedBox(height: 50),
           const SourceCodeVisibility(
-            sourceCode: 'SAButton.outlined({'
-                '\n\t\t\trequired Widget child,'
-                '\n\t\t\tVoidCallback? onPressed,'
-                '\n\t\t\tdouble height,'
-                '\n\t\t\tdouble width,'
-                '\n\t\t\tColor? outlinedColor,'
-                '\n})',
+            sourceCode: '''SAButton.outlined({
+  required Widget child,
+  void Function()? onPressed,
+  double height,
+  double width,
+  Color? outlinedColor,
+})''',
           ),
         ],
       ),
@@ -120,10 +120,11 @@ final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
           ),
           const SizedBox(height: 50),
           const SourceCodeVisibility(
-            sourceCode: 'SAButton.text({'
-                '\n\t\t\trequired Widget child,'
-                '\n\t\t\tVoidCallback? onPressed,'
-                '\n})',
+            sourceCode: '''SAButton.text({
+  required Widget child,
+  void Function()? onPressed,
+  ButtonStyle style,
+})''',
           ),
         ],
       ),
@@ -158,10 +159,10 @@ final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
           ),
           const SizedBox(height: 50),
           const SourceCodeVisibility(
-            sourceCode: 'SAButton.icon({'
-                '\n\t\t\trequired Widget child,'
-                '\n\t\t\tVoidCallback? onPressed,'
-                '\n})',
+            sourceCode: '''SAButton.icon({
+  required Widget child,
+  void Function()? onPressed,
+})''',
           ),
         ],
       ),
@@ -191,14 +192,14 @@ final WidgetbookComponent buttonsWidgetComponent = WidgetbookComponent(
           ),
           const SizedBox(height: 50),
           const SourceCodeVisibility(
-            sourceCode: 'SAButton.floating({'
-                '\n\t\t\trequired Widget child,'
-                '\n\t\t\tVoidCallback? onPressed,'
-                '\n\t\t\tdouble height,'
-                '\n\t\t\tdouble width,'
-                '\n\t\t\tColor bgColor,'
-                '\n\t\t\tdouble elevation,'
-                '\n})',
+            sourceCode: '''SAButton.floating({
+  required Widget child,
+  void Function()? onPressed,
+  double height,
+  double width,
+  Color bgColor,
+  double elevation,
+})''',
           ),
         ],
       ),
