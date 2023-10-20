@@ -5,6 +5,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:salon_appointment/core/error_handle/exception_handler.dart';
 import 'package:salon_appointment/features/appointments/model/appointment.dart';
 import 'package:salon_appointment/features/appointments/repository/appointment_repository.dart';
 import 'package:salon_appointment/features/appointments/screens/appointment/bloc/appointment_bloc.dart';
@@ -49,16 +50,16 @@ void main() {
     adminUser = MockDataUser.adminUser;
     customerUser = MockDataUser.customerUser;
     users = MockDataUser.allUsers;
-
-    when(
-      () => userRepo.getUsers(),
-    ).thenAnswer(
-      (_) async => users,
-    );
   });
 
   setUp(
     () async {
+      when(
+        () => userRepo.getUsers(),
+      ).thenAnswer(
+        (_) async => users,
+      );
+
       when(() => userRepo.setUser(adminUser)).thenAnswer(
         (_) async => Future.value(),
       );
@@ -256,7 +257,7 @@ void main() {
         when(
           () => removeAppointment(),
         ).thenThrow(
-          http.ClientException(ApiErrorMessage.notModified),
+          http.ClientException(ResponseMessage.notModified),
         );
         return AppointmentBloc(
           appointmentRepository: appointmentRepo,
@@ -271,7 +272,7 @@ void main() {
       expect: () => <AppointmentState>[
         removeInProgressAppointmentState,
         removeInProgressAppointmentState.copyWith(
-          error: ApiErrorMessage.notModified,
+          error: ResponseMessage.notModified,
           status: Status.removeFailure,
         ),
       ],
@@ -283,7 +284,7 @@ void main() {
         when(
           () => removeAppointment(),
         ).thenThrow(
-          http.ClientException(ApiErrorMessage.badRequest),
+          http.ClientException(ResponseMessage.badRequest),
         );
         return AppointmentBloc(
           appointmentRepository: appointmentRepo,
@@ -298,7 +299,7 @@ void main() {
       expect: () => <AppointmentState>[
         removeInProgressAppointmentState,
         removeInProgressAppointmentState.copyWith(
-          error: ApiErrorMessage.badRequest,
+          error: ResponseMessage.badRequest,
           status: Status.removeFailure,
         ),
       ],
@@ -310,7 +311,7 @@ void main() {
         when(
           () => removeAppointment(),
         ).thenThrow(
-          http.ClientException(ApiErrorMessage.notFound),
+          http.ClientException(ResponseMessage.notFound),
         );
         return AppointmentBloc(
           appointmentRepository: appointmentRepo,
@@ -325,7 +326,7 @@ void main() {
       expect: () => <AppointmentState>[
         removeInProgressAppointmentState,
         removeInProgressAppointmentState.copyWith(
-          error: ApiErrorMessage.notFound,
+          error: ResponseMessage.notFound,
           status: Status.removeFailure,
         ),
       ],
