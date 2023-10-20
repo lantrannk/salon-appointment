@@ -204,7 +204,7 @@ void main() {
       act: (bloc) => bloc.add(
         const LoginEvent(
           phoneNumber: '0905123456',
-          password: '123456',
+          password: 'qwQW12!@',
         ),
       ),
       expect: () => <AuthState>[
@@ -219,7 +219,7 @@ void main() {
       act: (bloc) => bloc.add(
         const LoginEvent(
           phoneNumber: '0905999222',
-          password: '123456abcd',
+          password: '12opoOP!@',
         ),
       ),
       expect: () => <AuthState>[
