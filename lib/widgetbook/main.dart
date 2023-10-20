@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:salon_appointment/core/theme/theme.dart';
-import 'package:salon_appointment/widgetbook/buttons_widgetbook.dart';
-import 'package:salon_appointment/widgetbook/input_widgetbook.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:widgetbook/widgetbook.dart';
+
+import '../core/generated/l10n.dart';
+import '../core/theme/theme.dart';
+import 'buttons_widgetbook.dart';
+import 'dialog_widgetbook.dart';
+import 'drop_down_widgetbook.dart';
+import 'input_widgetbook.dart';
+import 'text_widgetbook.dart';
 
 void main() {
   runApp(const WidgetbookApp());
@@ -22,12 +28,12 @@ class WidgetbookApp extends StatelessWidget {
         ThemeAddon(
           themes: [
             WidgetbookTheme(
-              name: 'Light',
-              data: AppTheme().themeData,
-            ),
-            WidgetbookTheme(
               name: 'Dark',
               data: AppDarkTheme().themeData,
+            ),
+            WidgetbookTheme(
+              name: 'Light',
+              data: AppTheme().themeData,
             ),
           ],
           themeBuilder: (context, theme, child) {
@@ -40,14 +46,30 @@ class WidgetbookApp extends StatelessWidget {
         ),
         BuilderAddon(
           name: 'Scaffold',
-          builder: (context, child) => Scaffold(
-            body: child,
+          builder: (context, child) => MaterialApp(
+            debugShowCheckedModeBanner: false,
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: S.delegate.supportedLocales,
+            home: Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.background,
+              body: child,
+            ),
           ),
         ),
       ],
       directories: [
-        buttonsWidgetComponent,
-        inputWidgetComponent,
+        WidgetbookFolder(name: 'Common widgets', children: [
+          buttonsWidgetComponent,
+          inputWidgetComponent,
+          dropDownWidgetComponent,
+          dialogWidgetComponent,
+          textWidgetComponent,
+        ]),
       ],
     );
   }
