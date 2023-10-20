@@ -21,6 +21,7 @@ class TimePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = S.of(context);
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -28,8 +29,11 @@ class TimePicker extends StatelessWidget {
         SAText.timePicker(
           text: l10n.fromText,
         ),
-        OutlinedButton(
+        SAButton.outlined(
           onPressed: onStartTimePressed,
+          height: context.getHeight(32),
+          width: context.getWidth(90),
+          outlinedColor: colorScheme.primaryContainer,
           child: SAText.timePicker(
             text: formatTime(startTime),
           ),
@@ -40,8 +44,11 @@ class TimePicker extends StatelessWidget {
             text: l10n.toText,
           ),
         ),
-        OutlinedButton(
+        SAButton.outlined(
           onPressed: onEndTimePressed,
+          height: context.getHeight(32),
+          width: context.getWidth(90),
+          outlinedColor: colorScheme.primaryContainer,
           child: SAText.timePicker(
             text: formatTime(endTime),
           ),
