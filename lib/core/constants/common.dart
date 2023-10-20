@@ -16,3 +16,5 @@ const String phoneNumberRegExpPattern = r'^(?:[+0][1-9])?[0-9]{10,12}$';
 
 const String passwordRegExpPattern =
     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+
+const String unknownUserImagePath = 'assets/images/unknown_user.jpg';

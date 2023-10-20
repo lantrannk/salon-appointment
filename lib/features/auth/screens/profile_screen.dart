@@ -20,6 +20,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final double indicatorHeight = MediaQuery.of(context).size.height / 2;
+    final double imageSize = context.imageSize(170);
     final TextTheme textTheme = Theme.of(context).textTheme;
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final l10n = S.of(context);
@@ -64,25 +65,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               },
               builder: (context, state) {
+                if (state is UserLoadFailure) {
+                  return Center(
+                    child: SAText(
+                      text: state.error!,
+                      style: textTheme.bodySmall,
+                    ),
+                  );
+                }
                 if (state is UserLoadSuccess) {
                   return Column(
                     children: [
                       Expanded(
-                        child: Container(
-                          width: context.imageSize(170),
-                          height: context.imageSize(170),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: colorScheme.onPrimary,
-                            image: DecorationImage(
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(imageSize / 2),
+                            child: FadeInImage.assetNetwork(
+                              placeholder: unknownUserImagePath,
+                              image: state.avatar,
+                              imageErrorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  Icons.account_circle_rounded,
+                                  size: imageSize,
+                                  color: colorScheme.secondaryContainer,
+                                );
+                              },
                               fit: BoxFit.cover,
-                              image: NetworkImage(state.avatar),
+                              width: imageSize,
+                              height: imageSize,
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(
-                        height: 12,
+                        height: 24,
                       ),
                       SizedBox(
                         child: SAText(
