@@ -391,4 +391,9 @@ and although many small businesses do offer both sets of treatments.''',
     allAppointments,
     DateTime(2023, 8, 15),
   )..sort((e1, e2) => e1.startTime.compareTo(e2.startTime));
+
+  static final List<Appointment> oneAppointmentOfDay = groupByDate(
+    allAppointments,
+    DateTime(2023, 7, 21),
+  )..sort((e1, e2) => e1.startTime.compareTo(e2.startTime));
 }
