@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:salon_appointment/core/error_handle/exception_handler.dart';
 import 'package:salon_appointment/features/appointments/api/appointment_api.dart';
 
 import '../constants/constants.dart';
@@ -60,7 +61,7 @@ void main() {
 
         expect(
           await appointmentApi.getAppointments(),
-          ApiErrorMessage.notModified,
+          ResponseMessage.notModified,
         );
       },
     );
@@ -77,7 +78,7 @@ void main() {
 
         expect(
           await appointmentApi.getAppointments(),
-          ApiErrorMessage.badRequest,
+          ResponseMessage.badRequest,
         );
       },
     );
@@ -94,24 +95,24 @@ void main() {
 
         expect(
           await appointmentApi.getAppointments(),
-          ApiErrorMessage.notFound,
+          ResponseMessage.notFound,
         );
       },
     );
 
     test(
-      'get appointments with error code 504',
+      'get appointments with error code 500',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
           () => client.get(allAppointmentsUrl),
         ).thenAnswer(
-          (_) async => ApiError.gatewayTimeoutError,
+          (_) async => ApiError.internalServerError,
         );
 
         expect(
           await appointmentApi.getAppointments(),
-          ApiErrorMessage.gatewayTimeout,
+          ResponseMessage.internalServerError,
         );
       },
     );
@@ -159,7 +160,7 @@ void main() {
 
         expect(
           await appointmentApi.addAppointment(MockDataAppointment.appointment),
-          ApiErrorMessage.notModified,
+          ResponseMessage.notModified,
         );
       },
     );
@@ -180,7 +181,7 @@ void main() {
 
         expect(
           await appointmentApi.addAppointment(MockDataAppointment.appointment),
-          ApiErrorMessage.badRequest,
+          ResponseMessage.badRequest,
         );
       },
     );
@@ -201,13 +202,13 @@ void main() {
 
         expect(
           await appointmentApi.addAppointment(MockDataAppointment.appointment),
-          ApiErrorMessage.notFound,
+          ResponseMessage.notFound,
         );
       },
     );
 
     test(
-      'add appointment with error code 504',
+      'add appointment with error code 500',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -217,12 +218,12 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => ApiError.gatewayTimeoutError,
+          (_) async => ApiError.internalServerError,
         );
 
         expect(
           await appointmentApi.addAppointment(MockDataAppointment.appointment),
-          ApiErrorMessage.gatewayTimeout,
+          ResponseMessage.internalServerError,
         );
       },
     );
@@ -274,7 +275,7 @@ void main() {
           await appointmentApi.updateAppointment(
             MockDataAppointment.appointment,
           ),
-          ApiErrorMessage.notModified,
+          ResponseMessage.notModified,
         );
       },
     );
@@ -297,7 +298,7 @@ void main() {
           await appointmentApi.updateAppointment(
             MockDataAppointment.appointment,
           ),
-          ApiErrorMessage.badRequest,
+          ResponseMessage.badRequest,
         );
       },
     );
@@ -320,13 +321,13 @@ void main() {
           await appointmentApi.updateAppointment(
             MockDataAppointment.appointment,
           ),
-          ApiErrorMessage.notFound,
+          ResponseMessage.notFound,
         );
       },
     );
 
     test(
-      'update appointment with error code 504',
+      'update appointment with error code 500',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
@@ -336,14 +337,14 @@ void main() {
             headers: headers,
           ),
         ).thenAnswer(
-          (_) async => ApiError.gatewayTimeoutError,
+          (_) async => ApiError.internalServerError,
         );
 
         expect(
           await appointmentApi.updateAppointment(
             MockDataAppointment.appointment,
           ),
-          ApiErrorMessage.gatewayTimeout,
+          ResponseMessage.internalServerError,
         );
       },
     );
@@ -383,7 +384,7 @@ void main() {
 
         expect(
           await appointmentApi.deleteAppointment('84'),
-          ApiErrorMessage.notModified,
+          ResponseMessage.notModified,
         );
       },
     );
@@ -400,7 +401,7 @@ void main() {
 
         expect(
           await appointmentApi.deleteAppointment('84'),
-          ApiErrorMessage.badRequest,
+          ResponseMessage.badRequest,
         );
       },
     );
@@ -417,24 +418,24 @@ void main() {
 
         expect(
           await appointmentApi.deleteAppointment('84'),
-          ApiErrorMessage.notFound,
+          ResponseMessage.notFound,
         );
       },
     );
 
     test(
-      'delete appointment with error code 504',
+      'delete appointment with error code 500',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
           () => client.delete(appointmentUrl),
         ).thenAnswer(
-          (_) async => ApiError.gatewayTimeoutError,
+          (_) async => ApiError.internalServerError,
         );
 
         expect(
           await appointmentApi.deleteAppointment('84'),
-          ApiErrorMessage.gatewayTimeout,
+          ResponseMessage.internalServerError,
         );
       },
     );

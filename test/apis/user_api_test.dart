@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:salon_appointment/core/error_handle/exception_handler.dart';
 import 'package:salon_appointment/features/auth/api/user_api.dart';
 
 import '../constants/constants.dart';
@@ -46,7 +47,7 @@ void main() {
 
         expect(
           await userApi.getUsers(client),
-          ApiErrorMessage.notModified,
+          ResponseMessage.notModified,
         );
       },
     );
@@ -63,7 +64,7 @@ void main() {
 
         expect(
           await userApi.getUsers(client),
-          ApiErrorMessage.badRequest,
+          ResponseMessage.badRequest,
         );
       },
     );
@@ -80,24 +81,24 @@ void main() {
 
         expect(
           await userApi.getUsers(client),
-          ApiErrorMessage.notFound,
+          ResponseMessage.notFound,
         );
       },
     );
 
     test(
-      'get users with error code 504',
+      'get users with error code 500',
       timeout: const Timeout(Duration(seconds: 5)),
       () async {
         when(
           () => client.get(allUsersUrl),
         ).thenAnswer(
-          (_) async => ApiError.gatewayTimeoutError,
+          (_) async => ApiError.internalServerError,
         );
 
         expect(
           await userApi.getUsers(client),
-          ApiErrorMessage.gatewayTimeout,
+          ResponseMessage.internalServerError,
         );
       },
     );
