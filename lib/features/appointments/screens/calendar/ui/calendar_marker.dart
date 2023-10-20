@@ -8,14 +8,14 @@ import '../../../model/appointment.dart';
 class CalendarMarker extends StatelessWidget {
   const CalendarMarker({
     required this.events,
-    required this.iconColor,
-    required this.timeColor,
+    this.iconColor,
+    this.timeColor,
     super.key,
   });
 
   final List<Appointment> events;
-  final Color iconColor;
-  final Color timeColor;
+  final Color? iconColor;
+  final Color? timeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class CalendarMarker extends StatelessWidget {
             alignment: Alignment.topLeft,
             child: SAIcons(
               icon: Assets.differentIcon,
-              color: iconColor,
+              color: iconColor ?? colorScheme.primary,
               size: context.imageSize(12),
             ),
           ),
@@ -49,7 +49,7 @@ class CalendarMarker extends StatelessWidget {
                         fit: BoxFit.contain,
                         child: SAText.timeCell(
                           text: timeFormat.format(events[i].startTime),
-                          color: timeColor,
+                          color: timeColor ?? colorScheme.primaryContainer,
                         ),
                       ),
                     ),

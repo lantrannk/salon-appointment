@@ -68,11 +68,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     iconColor: colorScheme.onPrimary,
                                     timeColor: colorScheme.onPrimary,
                                   )
-                                : CalendarMarker(
-                                    events: events,
-                                    iconColor: colorScheme.primary,
-                                    timeColor: colorScheme.primaryContainer,
-                                  )
+                                : CalendarMarker(events: events)
                             : null;
                       },
                       todayBuilder: (context, day, _) {
